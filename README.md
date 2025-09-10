@@ -49,15 +49,7 @@ npm install
 yarn install
 ```
 
-3. Create environment file:
-
-```bash
-cp .env.example .env.local
-```
-
-4. Update the environment variables in `.env.local` with your backend configuration
-
-5. Start the development server:
+3. Start the development server:
 
 ```bash
 npm start
