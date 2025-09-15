@@ -1,58 +1,69 @@
-# TutorMe-FE
+# React + TypeScript + Vite
 
-A modern React TypeScript frontend application for connecting mentors and students in an educational platform.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🚀 Features
+Currently, two official plugins are available:
 
-- **Student Dashboard**: Browse available tutors, book sessions, and track learning progress
-- **Tutor Dashboard**: Manage availability, view student requests, and conduct sessions
-- **Real-time Communication**: Chat and video calling capabilities for seamless interaction
-- **Session Management**: Schedule, reschedule, and manage tutoring sessions
-- **User Authentication**: Secure login/signup for both students and tutors
-- **Profile Management**: Comprehensive user profiles with skills, experience, and ratings
-- **Search & Filter**: Advanced search functionality to find the perfect tutor match
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## 🛠️ Tech Stack
+## Expanding the ESLint configuration
 
-- **Frontend Framework**: React 18+ with TypeScript
-- **State Management**: Redux Toolkit / Context API
-- **Styling**: Tailwind CSS / Material-UI
-- **HTTP Client**: Axios
-- **Routing**: React Router v6
-- **Real-time**: Socket.io-client
-- **Form Handling**: React Hook Form
-- **Testing**: Jest + React Testing Library
-- **Build Tool**: Vite / Create React App
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## 📋 Prerequisites
+```js
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-Before running this project, make sure you have:
+      // Remove tseslint.configs.recommended and replace with this
+      ...tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      ...tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      ...tseslint.configs.stylisticTypeChecked,
 
-- Node.js (v16 or higher)
-- npm or yarn package manager
-- Access to the TutorMe backend API
-
-## 🔧 Installation
-
-1. Clone the repository:
-
-```bash
-git clone <repository-url>
-cd TutorMe-FE
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-2. Install dependencies:
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```bash
-npm install
-# or
-yarn install
-```
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-3. Start the development server:
-
-```bash
-npm start
-# or
-yarn start
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
