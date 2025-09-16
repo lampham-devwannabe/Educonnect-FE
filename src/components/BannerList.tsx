@@ -1,4 +1,6 @@
 'use client'
+
+import * as React from 'react'
 import {
   Table,
   TableBody,
@@ -6,35 +8,38 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from '@/components/ui/card'
-import {
-  Pencil,
-  Trash2,
-  ToggleLeft,
-  ToggleRight,
-  ChevronUp,
-  ChevronDown,
-} from 'lucide-react'
+} from './ui/table'
+import { Badge } from './ui/badge'
+import { Button } from './ui/button'
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from './ui/card'
+import { Pencil, Trash2, ToggleLeft, ToggleRight } from 'lucide-react'
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination'
+} from './ui/pagination'
 
-import Image from 'next/image'
+interface Banner {
+  _id: string
+  title: string
+  image: string
+  isActive: boolean
+  position?: number
+}
+
+interface BannerListProps {
+  banners: Banner[]
+  currentPage: number
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>
+  totalPages: number
+  onStatusChange: (id: string) => void
+  onEdit: (banner: Banner) => void
+  onDelete: (id: string) => void
+  onPositionChange?: (id: string, direction: 'up' | 'down') => void
+}
 
 export function BannerList({
   banners,
@@ -45,12 +50,13 @@ export function BannerList({
   onEdit,
   onDelete,
   onPositionChange,
-}) {
+}: BannerListProps) {
   return (
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Banner List</CardTitle>
       </CardHeader>
+
       <CardContent>
         <Table>
           <TableHeader>
@@ -62,25 +68,26 @@ export function BannerList({
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
+
           <TableBody>
             {banners?.map(banner => (
               <TableRow key={banner._id}>
                 <TableCell className="font-medium">{banner.title}</TableCell>
                 <TableCell>
-                  <Image
+                  <img
                     src={banner.image}
                     alt={banner.title}
                     height={400}
                     width={600}
                     className="w-20 h-10 object-cover rounded"
-                  ></Image>
+                  />
                 </TableCell>
                 <TableCell>
                   <Badge variant={banner.isActive ? 'success' : 'secondary'}>
                     {banner.isActive ? 'Active' : 'Inactive'}
                   </Badge>
                 </TableCell>
-                <TableCell>{banner.position || 'N/A'}</TableCell>
+                <TableCell>{banner.position ?? 'N/A'}</TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <Button
@@ -108,24 +115,6 @@ export function BannerList({
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
-                    {/* <div className="flex flex-col">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onPositionChange(banner.id, "up")}
-                        disabled={banner.position === 1}
-                      >
-                        <ChevronUp className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onPositionChange(banner.id, "down")}
-                        disabled={banner.position === banners.length}
-                      >
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </div> */}
                   </div>
                 </TableCell>
               </TableRow>
@@ -133,35 +122,46 @@ export function BannerList({
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter>
+
+      <CardFooter className="flex items-center justify-between w-full">
         <div className="text-xs text-muted-foreground">
           Showing <strong>{(currentPage - 1) * 5 + 1}</strong> to{' '}
-          <strong>{(currentPage - 1) * 5 + 5}</strong> Banner
+          <strong>{Math.min(currentPage * 5, banners.length)}</strong> Banner
         </div>
         <Pagination>
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                onClick={e => {
+                  e.preventDefault()
+                  setCurrentPage(prev => Math.max(prev - 1, 1))
+                }}
               />
             </PaginationItem>
+
             {[...Array(totalPages).keys()].map(page => (
               <PaginationItem key={page}>
                 <PaginationLink
                   href="#"
-                  onClick={() => setCurrentPage(page + 1)}
+                  isActive={page + 1 === currentPage}
+                  onClick={e => {
+                    e.preventDefault()
+                    setCurrentPage(page + 1)
+                  }}
                 >
                   {page + 1}
                 </PaginationLink>
               </PaginationItem>
             ))}
+
             <PaginationItem>
               <PaginationNext
                 href="#"
-                onClick={() =>
+                onClick={e => {
+                  e.preventDefault()
                   setCurrentPage(prev => Math.min(prev + 1, totalPages))
-                }
+                }}
               />
             </PaginationItem>
           </PaginationContent>
