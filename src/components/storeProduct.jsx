@@ -1,38 +1,40 @@
-
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { ShoppingCartIcon, Star } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import storeImg1 from "../../public/assets/storeImage/store1.png";
-import storeImg2 from "../../public/assets/storeImage/store2.png";
-import storeImg3 from "../../public/assets/storeImage/store3.png";
-import storeImg4 from "../../public/assets/storeImage/store4.png";
-import efty1 from "../../public/assets/custom-image/Eftyoffice.jpg";
+import { Card, CardContent, CardHeader } from './ui/card'
+import { ShoppingCartIcon, Star } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import storeImg1 from '../../public/assets/storeImage/store1.png'
+import storeImg2 from '../../public/assets/storeImage/store2.png'
+import storeImg3 from '../../public/assets/storeImage/store3.png'
+import storeImg4 from '../../public/assets/storeImage/store4.png'
+import efty1 from '../../public/assets/custom-image/Eftyoffice.jpg'
 
 const storeProduct = () => {
   const RatingStars = ({ rating }) => {
     return (
       <div className="flex items-center justify-left mt-2">
-        {[1, 2, 3, 4, 5].map((star) => (
+        {[1, 2, 3, 4, 5].map(star => (
           <Star
             key={star}
-            className={`w-5 h-5 mr-1 ${star <= Math.round(rating)
-              ? "text-yellow-400 fill-current"
-              : "text-gray-300"
-              }`}
+            className={`w-5 h-5 mr-1 ${
+              star <= Math.round(rating)
+                ? 'text-yellow-400 fill-current'
+                : 'text-gray-300'
+            }`}
           />
         ))}
         <span className="ml-1 text-sm px-2 bg-cyan-400 rounded-md text-white">
           {rating.toFixed(1)}
         </span>
       </div>
-    );
-  };
+    )
+  }
   return (
     <div className="container mx-auto px-8 py-8 ">
       <div className="lg:flex justify-between items-center text-left  lg:pt-10 pt-0 pb-10">
         <div>
-          <h1 className="font-bold text-xl lg:text-4xl text-primary">Store Products</h1>
+          <h1 className="font-bold text-xl lg:text-4xl text-primary">
+            Store Products
+          </h1>
           <h5 className="text-xs lg:text-lg mt-2 text-gray-600">
             Explore physical & virtual products
           </h5>
@@ -73,10 +75,10 @@ const storeProduct = () => {
                 </h5>
 
                 <h5 className="flex items-center">
-                  {" "}
+                  {' '}
                   <span className="mr-2">
                     <ShoppingCartIcon className="w-6 h-6 p-1 bg-cyan-400 text-white  rounded-full font-bold"></ShoppingCartIcon>
-                  </span>{" "}
+                  </span>{' '}
                 </h5>
               </div>
             </CardContent>
@@ -111,10 +113,10 @@ const storeProduct = () => {
                 </h5>
 
                 <h5 className="flex items-center">
-                  {" "}
+                  {' '}
                   <span className="mr-2">
                     <ShoppingCartIcon className="w-6 h-6 p-1 bg-cyan-400 text-white  rounded-full font-bold"></ShoppingCartIcon>
-                  </span>{" "}
+                  </span>{' '}
                 </h5>
               </div>
             </CardContent>
@@ -149,10 +151,10 @@ const storeProduct = () => {
                 </h5>
 
                 <h5 className="flex items-center">
-                  {" "}
+                  {' '}
                   <span className="mr-2">
                     <ShoppingCartIcon className="w-6 h-6 p-1 bg-cyan-400 text-white  rounded-full font-bold"></ShoppingCartIcon>
-                  </span>{" "}
+                  </span>{' '}
                 </h5>
               </div>
             </CardContent>
@@ -187,10 +189,10 @@ const storeProduct = () => {
                 </h5>
 
                 <h5 className="flex items-center">
-                  {" "}
+                  {' '}
                   <span className="mr-2">
                     <ShoppingCartIcon className="w-6 h-6 p-1 bg-cyan-400 text-white  rounded-full font-bold"></ShoppingCartIcon>
-                  </span>{" "}
+                  </span>{' '}
                 </h5>
               </div>
             </CardContent>
@@ -198,7 +200,7 @@ const storeProduct = () => {
         </Card>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default storeProduct;
+export default storeProduct

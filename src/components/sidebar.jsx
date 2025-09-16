@@ -1,6 +1,6 @@
-"use client";
-import { useState } from "react";
-import Link from "next/link";
+'use client'
+import { useState } from 'react'
+import Link from 'next/link'
 import {
   Home,
   Package,
@@ -26,14 +26,12 @@ import {
   Check,
   Megaphone,
   Video,
+} from 'lucide-react'
 
+import { Button } from './ui/button'
 
-} from "lucide-react";
-
-import { Button } from "./ui/button";
-
-import Image from "next/image";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import Image from 'next/image'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import {
   BadgeCheck,
   BellIcon,
@@ -41,7 +39,7 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
-} from "lucide-react";
+} from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,106 +48,103 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { GlobeAltIcon } from "@heroicons/react/24/outline";
-import { useNotificationHooks } from "@/hooks/useNotificationHooks";
-import { Badge } from "@/components/ui/badge"
-import { formatDateTime } from "@/utils/dateformate";
+} from '@/components/ui/dropdown-menu'
+import { GlobeAltIcon } from '@heroicons/react/24/outline'
+import { useNotificationHooks } from '@/hooks/useNotificationHooks'
+import { Badge } from '@/components/ui/badge'
+import { formatDateTime } from '@/utils/dateformate'
 
 export default function Sidebar({ user }) {
-  const [activeLink, setActiveLink] = useState("/dashboard");
-  const [categorySubmenuOpen, setCategorySubmenuOpen] = useState(false);
-  const [courseSubmenuOpen, setCourseSubmenuOpen] = useState(false);
-  const [mentorshipSubmenuOpen, setMentorshipSubmenuOpen] = useState(false);
-  const [userSubmenuOpen, setUserSubmenuOpen] = useState(false);
-  const [financialSubmenuOpen, setFinancialSubmenuOpen] = useState(false);
-  const [salesReportSubmenuOpen, setsalesReportSubmenuOpen] = useState();
+  const [activeLink, setActiveLink] = useState('/dashboard')
+  const [categorySubmenuOpen, setCategorySubmenuOpen] = useState(false)
+  const [courseSubmenuOpen, setCourseSubmenuOpen] = useState(false)
+  const [mentorshipSubmenuOpen, setMentorshipSubmenuOpen] = useState(false)
+  const [userSubmenuOpen, setUserSubmenuOpen] = useState(false)
+  const [financialSubmenuOpen, setFinancialSubmenuOpen] = useState(false)
+  const [salesReportSubmenuOpen, setsalesReportSubmenuOpen] = useState()
 
   const toggleCategorySubmenu = () => {
-    setCategorySubmenuOpen(!categorySubmenuOpen);
-  };
+    setCategorySubmenuOpen(!categorySubmenuOpen)
+  }
   const toggleCourseSubmenu = () => {
-    setCourseSubmenuOpen(!courseSubmenuOpen);
-  };
+    setCourseSubmenuOpen(!courseSubmenuOpen)
+  }
 
   const toggleMentorshipSubmenu = () => {
-    setMentorshipSubmenuOpen(!mentorshipSubmenuOpen);
-  };
+    setMentorshipSubmenuOpen(!mentorshipSubmenuOpen)
+  }
 
   const toggleFinancialSubmenu = () => {
-    setFinancialSubmenuOpen(!financialSubmenuOpen);
-  };
+    setFinancialSubmenuOpen(!financialSubmenuOpen)
+  }
   const toggleSalesReportSubmenu = () => {
-    setsalesReportSubmenuOpen(!salesReportSubmenuOpen);
-  };
+    setsalesReportSubmenuOpen(!salesReportSubmenuOpen)
+  }
 
-  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false)
 
   const { notificationData, fetchNotification } =
-    useNotificationHooks(notificationOpen);
+    useNotificationHooks(notificationOpen)
 
   const [loading, setLoading] = useState(false)
   const [markingAllRead, setMarkingAllRead] = useState(false)
-  const dashboardLinks = "/dashboard";
-  const courseLinks = "/dashboard/course";
-  const courseAddLinks = "/dashboard/course/add-new";
-  const courseManageLinks = "/dashboard/course/";
-  const courseTypeLinks = "/dashboard/course-type";
-  const mentorshipLinks = "/dashboard/mentorship";
-  const mentorshipAddLinks = "/dashboard/mentorship/add-new";
-  const mentorshipManageLinks = "/dashboard/mentorship/";
-  const categoryLinks = "/dashboard/category";
-  const categoryAddLinks = "/dashboard/category/add";
-  const categoryManageLinks = "/dashboard/category/manage";
-  const userLinks = "/dashboard/user";
-  const financialLinks = "/dashboard/financial";
-  const analyticsLinks = "/dashboard/analytics";
-  const feedPostLinks = "/dashboard/post-feed";
-  const messageLinks = "/dashboard/contact-message";
-  const notificationLinks = "/dashboard/notification";
-  const settingsLinks = "/dashboard/settings";
-  const transectionLinks = "/dashboard/transection";
-  const appsettingsLinks = "/dashboard/appsettings";
-  const salesReportLinks = "/dashboard/sales-report";
-  const courseSalesLinks = "/dashboard/sales-report/course";
-  const mentorshipSalesLinks = "/dashboard/sales-report/mentorship";
-  const paymentMehodLinks = "/dashboard/payment-method";
-  const paymentAccountLinks = "/dashboard/payment-account";
-  const withdrawGatewayLinks = "/dashboard/withdraw-getway";
-  const bannerLinks = "/dashboard/banners";
-
+  const dashboardLinks = '/dashboard'
+  const courseLinks = '/dashboard/course'
+  const courseAddLinks = '/dashboard/course/add-new'
+  const courseManageLinks = '/dashboard/course/'
+  const courseTypeLinks = '/dashboard/course-type'
+  const mentorshipLinks = '/dashboard/mentorship'
+  const mentorshipAddLinks = '/dashboard/mentorship/add-new'
+  const mentorshipManageLinks = '/dashboard/mentorship/'
+  const categoryLinks = '/dashboard/category'
+  const categoryAddLinks = '/dashboard/category/add'
+  const categoryManageLinks = '/dashboard/category/manage'
+  const userLinks = '/dashboard/user'
+  const financialLinks = '/dashboard/financial'
+  const analyticsLinks = '/dashboard/analytics'
+  const feedPostLinks = '/dashboard/post-feed'
+  const messageLinks = '/dashboard/contact-message'
+  const notificationLinks = '/dashboard/notification'
+  const settingsLinks = '/dashboard/settings'
+  const transectionLinks = '/dashboard/transection'
+  const appsettingsLinks = '/dashboard/appsettings'
+  const salesReportLinks = '/dashboard/sales-report'
+  const courseSalesLinks = '/dashboard/sales-report/course'
+  const mentorshipSalesLinks = '/dashboard/sales-report/mentorship'
+  const paymentMehodLinks = '/dashboard/payment-method'
+  const paymentAccountLinks = '/dashboard/payment-account'
+  const withdrawGatewayLinks = '/dashboard/withdraw-getway'
+  const bannerLinks = '/dashboard/banners'
 
   const handleLogout = async () => {
     const response = await fetch('/api/logout', {
       method: 'POST',
-    });
+    })
 
     if (response.ok) {
       // Handle successful logout (e.g., redirect to home page)
-      window.location.href = '/'; // Redirect to the home page or wherever you want
+      window.location.href = '/' // Redirect to the home page or wherever you want
     } else {
       // Handle errors
-      console.error('Logout failed');
+      console.error('Logout failed')
     }
-  };
+  }
   let hideTimeouts = {
     notification: null,
-
-  };
-  const handleMouseEnter = (type) => {
+  }
+  const handleMouseEnter = type => {
     // Clear any existing timeout to prevent premature hiding
-    clearTimeout(hideTimeouts[type]);
-    if (type === "notification") setNotificationOpen(true);
+    clearTimeout(hideTimeouts[type])
+    if (type === 'notification') setNotificationOpen(true)
+  }
 
-  };
-
-  const handleMouseLeave = (type) => {
+  const handleMouseLeave = type => {
     // Set a timeout to hide the dropdown after a short delay
     hideTimeouts[type] = setTimeout(() => {
-      if (type === "notification") setNotificationOpen(false);
-    }, 300); // Adjust the delay as needed
-  };
-  const getNotificationIcon = (type) => {
+      if (type === 'notification') setNotificationOpen(false)
+    }, 300) // Adjust the delay as needed
+  }
+  const getNotificationIcon = type => {
     const iconMap = {
       CoursePurchase: <BookOpen className="w-5 h-5" />,
       BookMentorShip: <Users className="w-5 h-5" />,
@@ -158,33 +153,32 @@ export default function Sidebar({ user }) {
       Broadcast: <Radio className="w-5 h-5" />,
       Other: <MoreHorizontal className="w-5 h-5" />,
     }
-    return iconMap[type] || iconMap["Other"]
+    return iconMap[type] || iconMap['Other']
   }
 
-  const getNotificationColor = (type) => {
+  const getNotificationColor = type => {
     const colorMap = {
-      CoursePurchase: "bg-blue-100 text-blue-600",
-      BookMentorShip: "bg-purple-100 text-purple-600",
-      Referral: "bg-green-100 text-green-600",
-      AdminNotification: "bg-red-100 text-red-600",
-      Broadcast: "bg-orange-100 text-orange-600",
-      Other: "bg-gray-100 text-gray-600",
+      CoursePurchase: 'bg-blue-100 text-blue-600',
+      BookMentorShip: 'bg-purple-100 text-purple-600',
+      Referral: 'bg-green-100 text-green-600',
+      AdminNotification: 'bg-red-100 text-red-600',
+      Broadcast: 'bg-orange-100 text-orange-600',
+      Other: 'bg-gray-100 text-gray-600',
     }
-    return colorMap[type] || colorMap["Other"]
+    return colorMap[type] || colorMap['Other']
   }
-
 
   // Mark single notification as read
-  const markAsRead = async (notificationId) => {
+  const markAsRead = async notificationId => {
     try {
       setLoading(true)
 
       const formData = new FormData()
-      formData.append("notification_id", notificationId)
-      formData.append("status", "true")
+      formData.append('notification_id', notificationId)
+      formData.append('status', 'true')
 
-      const response = await fetch("/api/notification/update-status", {
-        method: "POST",
+      const response = await fetch('/api/notification/update-status', {
+        method: 'POST',
         body: formData,
       })
 
@@ -193,13 +187,11 @@ export default function Sidebar({ user }) {
       if (result.status === 200) {
         // Refetch notifications to get updated data
         await fetchNotification()
-
       } else {
         throw new Error(result.message)
       }
     } catch (error) {
-      console.error("Error marking notification as read:", error)
-
+      console.error('Error marking notification as read:', error)
     } finally {
       setLoading(false)
     }
@@ -211,10 +203,10 @@ export default function Sidebar({ user }) {
       setMarkingAllRead(true)
 
       const formData = new FormData()
-      formData.append("markAllRead", "true")
+      formData.append('markAllRead', 'true')
 
-      const response = await fetch("/api/notification/update", {
-        method: "POST",
+      const response = await fetch('/api/notification/update', {
+        method: 'POST',
         body: formData,
       })
 
@@ -223,21 +215,19 @@ export default function Sidebar({ user }) {
       if (result.status === 200) {
         // Refetch notifications to get updated data
         await fetchNotification()
-
       } else {
         throw new Error(result.message)
       }
     } catch (error) {
-      console.error("Error marking all notifications as read:", error)
-
+      console.error('Error marking all notifications as read:', error)
     } finally {
       setMarkingAllRead(false)
     }
   }
 
-  const unreadCount = notificationData?.filter((n) => !n.isRead).length || 0
+  const unreadCount = notificationData?.filter(n => !n.isRead).length || 0
 
-  const handleNotificationClick = async (notification) => {
+  const handleNotificationClick = async notification => {
     // Mark as read if not already read
     if (!notification.isRead) {
       await markAsRead(notification._id)
@@ -253,7 +243,10 @@ export default function Sidebar({ user }) {
     <div className="hidden  mb-5 border-r bg-muted/40 md:block">
       <div className="flex flex-col h-full fixed md:w-[200px] lg:w-[280px]  justify-between">
         <div className="flex h-14 py-3 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link href="/" className="flex items-center mt-2 mb-2 gap-2 font-semibold">
+          <Link
+            href="/"
+            className="flex items-center mt-2 mb-2 gap-2 font-semibold"
+          >
             <Image
               src="/assets/icon/logo.png" // Corrected path
               alt="smart academy"
@@ -261,11 +254,15 @@ export default function Sidebar({ user }) {
               height={50}
             />
           </Link>
-          <Button onClick={() => handleMouseEnter("notification")} variant="outline" size="icon" className="ml-auto h-8 w-8">
-
+          <Button
+            onClick={() => handleMouseEnter('notification')}
+            variant="outline"
+            size="icon"
+            className="ml-auto h-8 w-8"
+          >
             <div
-              onMouseEnter={() => handleMouseEnter("notification")}
-              onMouseLeave={() => handleMouseLeave("notification")}
+              onMouseEnter={() => handleMouseEnter('notification')}
+              onMouseLeave={() => handleMouseLeave('notification')}
               className="relative font-[sans-serif] w-max mx-auto"
             >
               <svg
@@ -294,16 +291,25 @@ export default function Sidebar({ user }) {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <Bell className="w-5 h-5 text-blue-600" />
-                        <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Notifications
+                        </h3>
                         {unreadCount > 0 && (
-                          <Badge variant="destructive" className="text-xs px-2 py-1">
+                          <Badge
+                            variant="destructive"
+                            className="text-xs px-2 py-1"
+                          >
                             {unreadCount}
                           </Badge>
                         )}
                       </div>
                       <div className="flex items-center gap-3">
                         <Link href="/notification">
-                          <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                          >
                             View All
                           </Button>
                         </Link>
@@ -334,16 +340,24 @@ export default function Sidebar({ user }) {
                         {notificationData.map((notification, index) => (
                           <div
                             key={notification._id || index}
-                            className={`p-4 hover:bg-gray-50 transition-all duration-200 cursor-pointer relative ${!notification.isRead ? "bg-blue-50/30 border-l-4 border-l-blue-500" : ""
-                              }`}
-                            onClick={() => handleNotificationClick(notification)}
+                            className={`p-4 hover:bg-gray-50 transition-all duration-200 cursor-pointer relative ${
+                              !notification.isRead
+                                ? 'bg-blue-50/30 border-l-4 border-l-blue-500'
+                                : ''
+                            }`}
+                            onClick={() =>
+                              handleNotificationClick(notification)
+                            }
                           >
                             <div className="flex items-start gap-4">
                               {/* Notification Icon/Image */}
                               <div className="flex-shrink-0">
                                 {notification.imageUrl ? (
                                   <Image
-                                    src={notification.imageUrl || "/placeholder.svg"}
+                                    src={
+                                      notification.imageUrl ||
+                                      '/placeholder.svg'
+                                    }
                                     alt="Notification"
                                     className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
                                     width={48}
@@ -362,8 +376,11 @@ export default function Sidebar({ user }) {
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-start justify-between">
                                   <h4
-                                    className={`text-sm font-medium line-clamp-2 leading-5 ${!notification.isRead ? "text-gray-900" : "text-gray-700"
-                                      }`}
+                                    className={`text-sm font-medium line-clamp-2 leading-5 ${
+                                      !notification.isRead
+                                        ? 'text-gray-900'
+                                        : 'text-gray-700'
+                                    }`}
                                   >
                                     {notification.title}
                                   </h4>
@@ -372,20 +389,29 @@ export default function Sidebar({ user }) {
                                   )}
                                 </div>
 
-                                <p className="text-sm text-gray-600 mt-1 line-clamp-2 leading-5">{notification.message}</p>
+                                <p className="text-sm text-gray-600 mt-1 line-clamp-2 leading-5">
+                                  {notification.message}
+                                </p>
 
                                 <div className="flex items-center justify-between mt-3">
-                                  <Badge variant="secondary" className="text-xs px-2 py-1">
-                                    {notification.type.replace(/([A-Z])/g, " $1").trim()}
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-xs px-2 py-1"
+                                  >
+                                    {notification.type
+                                      .replace(/([A-Z])/g, ' $1')
+                                      .trim()}
                                   </Badge>
-                                  <span className="text-xs text-gray-500">{formatDateTime(notification.createdAt)}</span>
+                                  <span className="text-xs text-gray-500">
+                                    {formatDateTime(notification.createdAt)}
+                                  </span>
                                 </div>
                               </div>
 
                               {/* Mark as Read Button */}
                               {!notification.isRead && (
                                 <button
-                                  onClick={(e) => {
+                                  onClick={e => {
                                     e.stopPropagation()
                                     markAsRead(notification._id)
                                   }}
@@ -393,7 +419,11 @@ export default function Sidebar({ user }) {
                                   className="flex-shrink-0 p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors duration-200 disabled:opacity-50"
                                   aria-label="Mark as read"
                                 >
-                                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                  {loading ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                  ) : (
+                                    <Check className="w-4 h-4" />
+                                  )}
                                 </button>
                               )}
                             </div>
@@ -406,9 +436,12 @@ export default function Sidebar({ user }) {
                         <div className="w-20 h-20 mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                           <Bell className="w-10 h-10 text-gray-400" />
                         </div>
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No notifications yet</h3>
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">
+                          No notifications yet
+                        </h3>
                         <p className="text-sm text-gray-500 text-center max-w-sm">
-                          When you have new notifications, they&apos;ll appear here to keep you updated.
+                          When you have new notifications, they&apos;ll appear
+                          here to keep you updated.
                         </p>
                       </div>
                     )}
@@ -418,7 +451,10 @@ export default function Sidebar({ user }) {
                   {notificationData && notificationData.length > 0 && (
                     <div className="px-6 py-3 border-t border-gray-100 bg-gray-50">
                       <Link href="/notification">
-                        <Button variant="outline" className="w-full text-gray-700 hover:bg-gray-100">
+                        <Button
+                          variant="outline"
+                          className="w-full text-gray-700 hover:bg-gray-100"
+                        >
                           View All Notifications
                         </Button>
                       </Link>
@@ -429,16 +465,20 @@ export default function Sidebar({ user }) {
             </div>
           </Button>
         </div>
-        <div className="flex h-fit max-h-screen overflow-y-scroll flex-col gap-2 mt-3 mx-1" style={{ scrollbarWidth: "none" }}>
+        <div
+          className="flex h-fit max-h-screen overflow-y-scroll flex-col gap-2 mt-3 mx-1"
+          style={{ scrollbarWidth: 'none' }}
+        >
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               <Link
                 href="/dashboard"
-                onClick={() => setActiveLink("/dashboard")}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard"
-                  ? "bg-muted text-primary"
-                  : "text-muted-foreground hover:text-primary"
-                  }`}
+                onClick={() => setActiveLink('/dashboard')}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  activeLink === '/dashboard'
+                    ? 'bg-muted text-primary'
+                    : 'text-muted-foreground hover:text-primary'
+                }`}
               >
                 <Home className="h-4 w-4" />
                 Dashboard
@@ -447,16 +487,18 @@ export default function Sidebar({ user }) {
               <div>
                 <button
                   onClick={toggleCourseSubmenu}
-                  className={`flex  w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/course"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  className={`flex  w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/course'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <MonitorPlay className="h-4 w-4" />
                   Course
                   <ChevronDown
-                    className={`h-4 w-4 ml-auto transition-transform ${categorySubmenuOpen ? "rotate-180" : ""
-                      }`}
+                    className={`h-4 w-4 ml-auto transition-transform ${
+                      categorySubmenuOpen ? 'rotate-180' : ''
+                    }`}
                   />
                 </button>
 
@@ -464,32 +506,35 @@ export default function Sidebar({ user }) {
                   <div className="ml-8 flex flex-col gap-1">
                     <Link
                       href="/dashboard/course/add-new"
-                      onClick={() => setActiveLink("/dashboard/course/add-new")}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/course/add-new"
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                        }`}
+                      onClick={() => setActiveLink('/dashboard/course/add-new')}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        activeLink === '/dashboard/course/add-new'
+                          ? 'bg-muted text-primary'
+                          : 'text-muted-foreground hover:text-primary'
+                      }`}
                     >
                       Add Course
                     </Link>
                     <Link
                       href="/dashboard/course/"
-                      onClick={() => setActiveLink("/dashboard/course/")}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/course/"
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                        }`}
+                      onClick={() => setActiveLink('/dashboard/course/')}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        activeLink === '/dashboard/course/'
+                          ? 'bg-muted text-primary'
+                          : 'text-muted-foreground hover:text-primary'
+                      }`}
                     >
                       Manage Course
                     </Link>
-                    {user.role === "admin" && (
+                    {user.role === 'admin' && (
                       <Link
                         href="/dashboard/course-type"
-                        onClick={() => setActiveLink("/dashboard/course-type")}
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/course-type"
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                          }`}
+                        onClick={() => setActiveLink('/dashboard/course-type')}
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          activeLink === '/dashboard/course-type'
+                            ? 'bg-muted text-primary'
+                            : 'text-muted-foreground hover:text-primary'
+                        }`}
                       >
                         Course Type
                       </Link>
@@ -501,16 +546,18 @@ export default function Sidebar({ user }) {
               <div>
                 <button
                   onClick={toggleMentorshipSubmenu}
-                  className={`flex  w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/mentorship"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  className={`flex  w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/mentorship'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <UserCheck className="h-4 w-4" />
                   Mentorship
                   <ChevronDown
-                    className={`h-4 w-4 ml-auto transition-transform ${categorySubmenuOpen ? "rotate-180" : ""
-                      }`}
+                    className={`h-4 w-4 ml-auto transition-transform ${
+                      categorySubmenuOpen ? 'rotate-180' : ''
+                    }`}
                   />
                 </button>
 
@@ -519,56 +566,61 @@ export default function Sidebar({ user }) {
                     <Link
                       href="/dashboard/mentorship/add-plan"
                       onClick={() =>
-                        setActiveLink("dashboard/mentorship/add-plan")
+                        setActiveLink('dashboard/mentorship/add-plan')
                       }
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "dashboard/mentorship/add-plan"
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                        }`}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        activeLink === 'dashboard/mentorship/add-plan'
+                          ? 'bg-muted text-primary'
+                          : 'text-muted-foreground hover:text-primary'
+                      }`}
                     >
                       Add Plan
                     </Link>
                     <Link
                       href="/dashboard/mentorship/all-plan"
                       onClick={() =>
-                        setActiveLink("/dashboard/mentorship/all-plan")
+                        setActiveLink('/dashboard/mentorship/all-plan')
                       }
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/mentorship/all-plan"
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                        }`}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        activeLink === '/dashboard/mentorship/all-plan'
+                          ? 'bg-muted text-primary'
+                          : 'text-muted-foreground hover:text-primary'
+                      }`}
                     >
                       Manage Plan
                     </Link>
-                      <Link
+                    <Link
                       href="/dashboard/mentorship/booked-mentorship"
                       onClick={() =>
-                        setActiveLink("/dashboard/mentorship/booked-mentorship")
+                        setActiveLink('/dashboard/mentorship/booked-mentorship')
                       }
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/mentorship/booked-mentorship"
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                        }`}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        activeLink === '/dashboard/mentorship/booked-mentorship'
+                          ? 'bg-muted text-primary'
+                          : 'text-muted-foreground hover:text-primary'
+                      }`}
                     >
                       Booked Mentorship
                     </Link>
                   </div>
                 )}
               </div>
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <div>
                   <button
                     onClick={toggleCategorySubmenu}
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/category"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground hover:text-primary"
-                      }`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      activeLink === '/dashboard/category'
+                        ? 'bg-muted text-primary'
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
                   >
                     <Package className="h-4 w-4" />
                     Categories
                     <ChevronDown
-                      className={`h-4 w-4 ml-auto transition-transform ${categorySubmenuOpen ? "rotate-180" : ""
-                        }`}
+                      className={`h-4 w-4 ml-auto transition-transform ${
+                        categorySubmenuOpen ? 'rotate-180' : ''
+                      }`}
                     />
                   </button>
                   {categorySubmenuOpen && (
@@ -587,12 +639,13 @@ export default function Sidebar({ user }) {
                       <Link
                         href="/dashboard/category"
                         onClick={() =>
-                          setActiveLink("/dashboard/category/manage")
+                          setActiveLink('/dashboard/category/manage')
                         }
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/category/manage"
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                          }`}
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          activeLink === '/dashboard/category/manage'
+                            ? 'bg-muted text-primary'
+                            : 'text-muted-foreground hover:text-primary'
+                        }`}
                       >
                         Manage Categories
                       </Link>
@@ -600,14 +653,15 @@ export default function Sidebar({ user }) {
                   )}
                 </div>
               )}
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <Link
                   href="/dashboard/user"
-                  onClick={() => setActiveLink("/dashboard/user")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/user"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  onClick={() => setActiveLink('/dashboard/user')}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/user'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <Users className="h-4 w-4" />
                   User
@@ -617,16 +671,18 @@ export default function Sidebar({ user }) {
               <div>
                 <button
                   onClick={toggleSalesReportSubmenu}
-                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/sales-report"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/sales-report'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <BarChart2Icon className="h-4 w-4" />
                   Sales Report
                   <ChevronDown
-                    className={`h-4 w-4 ml-auto transition-transform ${salesReportSubmenuOpen ? "rotate-180" : ""
-                      }`}
+                    className={`h-4 w-4 ml-auto transition-transform ${
+                      salesReportSubmenuOpen ? 'rotate-180' : ''
+                    }`}
                   />
                 </button>
                 {salesReportSubmenuOpen && (
@@ -634,20 +690,22 @@ export default function Sidebar({ user }) {
                     <Link
                       href={courseSalesLinks}
                       onClick={() => setActiveLink(courseSalesLinks)}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === courseSalesLinks
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                        }`}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        activeLink === courseSalesLinks
+                          ? 'bg-muted text-primary'
+                          : 'text-muted-foreground hover:text-primary'
+                      }`}
                     >
                       Course Sales
                     </Link>
                     <Link
                       href={mentorshipSalesLinks}
                       onClick={() => setActiveLink(mentorshipSalesLinks)}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === mentorshipSalesLinks
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                        }`}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        activeLink === mentorshipSalesLinks
+                          ? 'bg-muted text-primary'
+                          : 'text-muted-foreground hover:text-primary'
+                      }`}
                     >
                       Mentorship Sales
                     </Link>
@@ -658,75 +716,82 @@ export default function Sidebar({ user }) {
               <div>
                 <button
                   onClick={toggleFinancialSubmenu}
-                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/category"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/category'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <CreditCardIcon className="h-4 w-4" />
                   Financial
                   <ChevronDown
-                    className={`h-4 w-4 ml-auto transition-transform ${financialSubmenuOpen ? "rotate-180" : ""
-                      }`}
+                    className={`h-4 w-4 ml-auto transition-transform ${
+                      financialSubmenuOpen ? 'rotate-180' : ''
+                    }`}
                   />
                 </button>
                 {financialSubmenuOpen && (
                   <div className="ml-8 flex flex-col gap-1">
                     <Link
                       href="/dashboard/payment"
-                      onClick={() => setActiveLink("/dashboard/payment")}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/payment"
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                        }`}
+                      onClick={() => setActiveLink('/dashboard/payment')}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        activeLink === '/dashboard/payment'
+                          ? 'bg-muted text-primary'
+                          : 'text-muted-foreground hover:text-primary'
+                      }`}
                     >
                       Payment
                     </Link>
                     <Link
                       href={paymentAccountLinks}
                       onClick={() => setActiveLink(paymentAccountLinks)}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === paymentAccountLinks
-                        ? "bg-muted text-primary"
-                        : "text-muted-foreground hover:text-primary"
-                        }`}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        activeLink === paymentAccountLinks
+                          ? 'bg-muted text-primary'
+                          : 'text-muted-foreground hover:text-primary'
+                      }`}
                     >
                       Manage Account
                     </Link>
-                    {user.role === "admin" && (
+                    {user.role === 'admin' && (
                       <Link
                         href={paymentMehodLinks}
                         onClick={() => setActiveLink(paymentMehodLinks)}
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === paymentMehodLinks
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                          }`}
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          activeLink === paymentMehodLinks
+                            ? 'bg-muted text-primary'
+                            : 'text-muted-foreground hover:text-primary'
+                        }`}
                       >
                         Payment Method
                       </Link>
                     )}
 
-                    {user.role === "admin" && (
+                    {user.role === 'admin' && (
                       <Link
                         href="/dashboard/payment-request"
                         onClick={() =>
-                          setActiveLink("/dashboard/payment-request")
+                          setActiveLink('/dashboard/payment-request')
                         }
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/payment-request"
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                          }`}
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          activeLink === '/dashboard/payment-request'
+                            ? 'bg-muted text-primary'
+                            : 'text-muted-foreground hover:text-primary'
+                        }`}
                       >
                         Payment Request
                       </Link>
                     )}
-                    {user.role === "admin" && (
+                    {user.role === 'admin' && (
                       <Link
                         href={withdrawGatewayLinks}
                         onClick={() => setActiveLink(withdrawGatewayLinks)}
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === withdrawGatewayLinks
-                          ? "bg-muted text-primary"
-                          : "text-muted-foreground hover:text-primary"
-                          }`}
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                          activeLink === withdrawGatewayLinks
+                            ? 'bg-muted text-primary'
+                            : 'text-muted-foreground hover:text-primary'
+                        }`}
                       >
                         Withdraw Gateway
                       </Link>
@@ -734,108 +799,114 @@ export default function Sidebar({ user }) {
                   </div>
                 )}
               </div>
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <Link
                   href="/dashboard/banners"
-                  onClick={() => setActiveLink("/dashboard/banners")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/banners"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  onClick={() => setActiveLink('/dashboard/banners')}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/banners'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <SlidersHorizontal className="h-4 w-4" />
                   Banners
                 </Link>
               )}
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <Link
                   href="/dashboard/post-feed"
-                  onClick={() => setActiveLink("/dashboard/post-feed")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/post-feed"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  onClick={() => setActiveLink('/dashboard/post-feed')}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/post-feed'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <GlobeAltIcon className="h-4 w-4" />
                   Feed Post
                 </Link>
               )}
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <Link
                   href="/dashboard/contact-message"
-                  onClick={() => setActiveLink("/dashboard/contact-message")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/contact-message"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  onClick={() => setActiveLink('/dashboard/contact-message')}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/contact-message'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <MessageSquare className="h-4 w-4" />
                   Contact Message
                 </Link>
               )}
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <Link
                   href="/dashboard/admission-message"
-                  onClick={() => setActiveLink("/dashboard/admission-message")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/admission-message"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  onClick={() => setActiveLink('/dashboard/admission-message')}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/admission-message'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <LucideMessageSquareCode className="h-4 w-4" />
                   Admission Box
                 </Link>
               )}
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <Link
                   href="/dashboard/notification"
-                  onClick={() => setActiveLink("/dashboard/notification")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/notification"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  onClick={() => setActiveLink('/dashboard/notification')}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/notification'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <Bell className="h-4 w-4" />
                   Notification
                 </Link>
               )}
 
+              <Link
+                href="/meeting"
+                onClick={() => setActiveLink('/meeting')}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  activeLink === '/meeting'
+                    ? 'bg-muted text-primary'
+                    : 'text-muted-foreground hover:text-primary'
+                }`}
+              >
+                <Video className="h-4 w-4" />
+                Online Class
+              </Link>
 
-                 <Link
-                  href="/meeting"
-                  onClick={() => setActiveLink("/meeting")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/meeting"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
-                >
-                  <Video className="h-4 w-4" />
-                  Online Class
-                </Link>
-
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <Link
                   href="/dashboard/ads-promo"
-                  onClick={() => setActiveLink("/dashboard/ads-promo")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/ads-promo"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  onClick={() => setActiveLink('/dashboard/ads-promo')}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/ads-promo'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <Megaphone className="h-4 w-4" />
                   Ads-Promo
                 </Link>
               )}
 
-
-              {user.role === "admin" && (
+              {user.role === 'admin' && (
                 <Link
                   href="/dashboard/settings"
-                  onClick={() => setActiveLink("/dashboard/settings")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/settings"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground hover:text-primary"
-                    }`}
+                  onClick={() => setActiveLink('/dashboard/settings')}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                    activeLink === '/dashboard/settings'
+                      ? 'bg-muted text-primary'
+                      : 'text-muted-foreground hover:text-primary'
+                  }`}
                 >
                   <Settings className="h-4 w-4" />
                   Setting
@@ -844,11 +915,12 @@ export default function Sidebar({ user }) {
 
               <Link
                 href="/dashboard/transection"
-                onClick={() => setActiveLink("/dashboard/transection")}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${activeLink === "/dashboard/transection"
-                  ? "bg-muted text-primary"
-                  : "text-muted-foreground hover:text-primary"
-                  }`}
+                onClick={() => setActiveLink('/dashboard/transection')}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  activeLink === '/dashboard/transection'
+                    ? 'bg-muted text-primary'
+                    : 'text-muted-foreground hover:text-primary'
+                }`}
               >
                 <BadgeDollarSign className="h-4 w-4" />
                 Transaction
@@ -861,10 +933,7 @@ export default function Sidebar({ user }) {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="w-full justify-start">
                 <Avatar className="mr-2 h-8 w-8">
-                  <AvatarImage
-                    src={user.image}
-                    alt="User's name"
-                  />
+                  <AvatarImage src={user.image} alt="User's name" />
                   <AvatarFallback>UN</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col items-start">
@@ -895,7 +964,6 @@ export default function Sidebar({ user }) {
                     <span>Account</span>
                   </DropdownMenuItem>
                 </Link>
-
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
@@ -907,5 +975,5 @@ export default function Sidebar({ user }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

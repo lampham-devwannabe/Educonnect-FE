@@ -27,7 +27,8 @@ const commenter = () => {
                 <a
                   href="#"
                   target="_blank"
-                  className="whitespace-pre-line break-inside-avoid-page">
+                  className="whitespace-pre-line break-inside-avoid-page"
+                >
                   The courses on Tutor Plans are incredibly detailed and
                   well-organized. As a student looking to enhance my skills in
                   various subjects, I found exactly what I needed here. The
@@ -59,13 +60,14 @@ const commenter = () => {
                 <a
                   href="@"
                   target="_blank"
-                  className="whitespace-pre-line break-inside-avoid-page">
+                  className="whitespace-pre-line break-inside-avoid-page"
+                >
                   <span>
                     I love the variety of mentors available on this platform.
-                    There&apos;s truly something for everyone, no matter what you&apos;re
-                    interested in learning. The mentors are knowledgeable and
-                    passionate, which makes the learning experience enjoyable
-                    and rewarding.
+                    There&apos;s truly something for everyone, no matter what
+                    you&apos;re interested in learning. The mentors are
+                    knowledgeable and passionate, which makes the learning
+                    experience enjoyable and rewarding.
                   </span>
                 </a>
               </div>
@@ -93,7 +95,8 @@ const commenter = () => {
                 <a
                   href=""
                   target="_blank"
-                  className="whitespace-pre-line break-inside-avoid-page">
+                  className="whitespace-pre-line break-inside-avoid-page"
+                >
                   <span>
                     The online sessions are very interactive and engaging. I
                     feel like I&apos;m in a real classroom with the level of
@@ -126,13 +129,14 @@ const commenter = () => {
                 <a
                   href="#"
                   target="_blank"
-                  className="whitespace-pre-line break-inside-avoid-page">
+                  className="whitespace-pre-line break-inside-avoid-page"
+                >
                   <span>
                     Uploading and managing my courses as a mentor on Tutor Plans
                     is seamless and efficient. The platform provides all the
                     tools I need to create high-quality courses and engage with
-                    my students. It&apos;s a great way to share my expertise and help
-                    others grow.
+                    my students. It&apos;s a great way to share my expertise and
+                    help others grow.
                   </span>
                 </a>
               </div>
@@ -160,7 +164,8 @@ const commenter = () => {
                 <a
                   href=""
                   target="_blank"
-                  className="whitespace-pre-line break-inside-avoid-page">
+                  className="whitespace-pre-line break-inside-avoid-page"
+                >
                   <span>
                     I appreciate the flexibility of learning at my own pace with
                     the video lessons on Tutor Plans. The quality of the videos
@@ -193,9 +198,10 @@ const commenter = () => {
                 <a
                   href="#"
                   target="_blank"
-                  className="whitespace-pre-line break-inside-avoid-page">
+                  className="whitespace-pre-line break-inside-avoid-page"
+                >
                   <span>
-                    {" "}
+                    {' '}
                     I&apos;ve gained so much knowledge and confidence from the
                     courses on Tutor Plans. The mentors are supportive and
                     provide valuable feedback that helps me improve. I feel
@@ -228,9 +234,10 @@ const commenter = () => {
                 <a
                   href="#"
                   target="_blank"
-                  className="whitespace-pre-line break-inside-avoid-page">
+                  className="whitespace-pre-line break-inside-avoid-page"
+                >
                   <span>
-                    {" "}
+                    {' '}
                     The mentor-student interaction on Tutor Plans is fantastic.
                     I receive personalized feedback that is invaluable for my
                     learning process. The ability to communicate directly with
@@ -263,9 +270,10 @@ const commenter = () => {
                 <a
                   href="#"
                   target="_blank"
-                  className="whitespace-pre-line break-inside-avoid-page">
+                  className="whitespace-pre-line break-inside-avoid-page"
+                >
                   <span>
-                    {" "}
+                    {' '}
                     The quality of content on Tutor Plans is top-notch. I feel
                     like I&apos;m getting real value for my money with the
                     comprehensive and well-structured courses.
@@ -277,7 +285,7 @@ const commenter = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default commenter;
+export default commenter

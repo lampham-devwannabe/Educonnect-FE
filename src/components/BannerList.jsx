@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import {
   Table,
   TableBody,
@@ -6,11 +6,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Pencil, Trash2, ToggleLeft, ToggleRight, ChevronUp, ChevronDown } from "lucide-react";
+} from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from '@/components/ui/card'
+import {
+  Pencil,
+  Trash2,
+  ToggleLeft,
+  ToggleRight,
+  ChevronUp,
+  ChevronDown,
+} from 'lucide-react'
 import {
   Pagination,
   PaginationContent,
@@ -19,10 +32,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from '@/components/ui/pagination'
 
-import Image from "next/image";
-
+import Image from 'next/image'
 
 export function BannerList({
   banners,
@@ -51,27 +63,24 @@ export function BannerList({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {banners?.map((banner) => (
+            {banners?.map(banner => (
               <TableRow key={banner._id}>
                 <TableCell className="font-medium">{banner.title}</TableCell>
                 <TableCell>
-
                   <Image
                     src={banner.image}
                     alt={banner.title}
                     height={400}
                     width={600}
                     className="w-20 h-10 object-cover rounded"
-                  >
-
-                  </Image>
+                  ></Image>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={banner.isActive ? "success" : "secondary"}>
-                    {banner.isActive ? "Active" : "Inactive"}
+                  <Badge variant={banner.isActive ? 'success' : 'secondary'}>
+                    {banner.isActive ? 'Active' : 'Inactive'}
                   </Badge>
                 </TableCell>
-                <TableCell>{banner.position || "N/A"}</TableCell>
+                <TableCell>{banner.position || 'N/A'}</TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <Button
@@ -79,7 +88,11 @@ export function BannerList({
                       size="icon"
                       onClick={() => onStatusChange(banner._id)}
                     >
-                      {banner.isActive ? <ToggleRight className="h-4 w-4" /> : <ToggleLeft className="h-4 w-4" />}
+                      {banner.isActive ? (
+                        <ToggleRight className="h-4 w-4" />
+                      ) : (
+                        <ToggleLeft className="h-4 w-4" />
+                      )}
                     </Button>
                     <Button
                       variant="ghost"
@@ -122,7 +135,7 @@ export function BannerList({
       </CardContent>
       <CardFooter>
         <div className="text-xs text-muted-foreground">
-          Showing <strong>{(currentPage - 1) * 5 + 1}</strong> to{" "}
+          Showing <strong>{(currentPage - 1) * 5 + 1}</strong> to{' '}
           <strong>{(currentPage - 1) * 5 + 5}</strong> Banner
         </div>
         <Pagination>
@@ -130,12 +143,10 @@ export function BannerList({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                onClick={() =>
-                  setCurrentPage((prev) => Math.max(prev - 1, 1))
-                }
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               />
             </PaginationItem>
-            {[...Array(totalPages).keys()].map((page) => (
+            {[...Array(totalPages).keys()].map(page => (
               <PaginationItem key={page}>
                 <PaginationLink
                   href="#"
@@ -149,7 +160,7 @@ export function BannerList({
               <PaginationNext
                 href="#"
                 onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  setCurrentPage(prev => Math.min(prev + 1, totalPages))
                 }
               />
             </PaginationItem>
@@ -157,5 +168,5 @@ export function BannerList({
         </Pagination>
       </CardFooter>
     </Card>
-  );
+  )
 }

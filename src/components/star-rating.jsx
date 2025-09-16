@@ -1,42 +1,42 @@
-"use client";
+'use client'
 
-import { Star, StarHalf } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { Star, StarHalf } from 'lucide-react'
+import { cn } from '../../lib/utils'
 
-export function StarRating({ rating, size = "md", className }) {
-  const normalizedRating = Math.min(Math.max(rating, 0), 5);
+export function StarRating({ rating, size = 'md', className }) {
+  const normalizedRating = Math.min(Math.max(rating, 0), 5)
 
-  const fullStars = Math.floor(normalizedRating);
-  const hasHalfStar = normalizedRating % 1 >= 0.5;
-  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+  const fullStars = Math.floor(normalizedRating)
+  const hasHalfStar = normalizedRating % 1 >= 0.5
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0)
 
   const starSizes = {
-    sm: "w-3.5 h-3.5",
-    md: "w-5 h-5",
-    lg: "w-6 h-6",
-  };
+    sm: 'w-3.5 h-3.5',
+    md: 'w-5 h-5',
+    lg: 'w-6 h-6',
+  }
 
-  const starSize = starSizes[size];
+  const starSize = starSizes[size]
 
   return (
-    <div className={cn("flex", className)}>
+    <div className={cn('flex', className)}>
       {Array.from({ length: fullStars }).map((_, i) => (
         <Star
           key={`full-${i}`}
-          className={cn(starSize, "fill-amber-400 text-amber-400")}
+          className={cn(starSize, 'fill-amber-400 text-amber-400')}
         />
       ))}
 
       {hasHalfStar && (
-        <StarHalf className={cn(starSize, "fill-amber-400 text-amber-400")} />
+        <StarHalf className={cn(starSize, 'fill-amber-400 text-amber-400')} />
       )}
 
       {Array.from({ length: emptyStars }).map((_, i) => (
         <Star
           key={`empty-${i}`}
-          className={cn(starSize, "text-gray-200 dark:text-gray-700")}
+          className={cn(starSize, 'text-gray-200 dark:text-gray-700')}
         />
       ))}
     </div>
-  );
+  )
 }

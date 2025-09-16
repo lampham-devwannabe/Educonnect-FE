@@ -1,4 +1,4 @@
-import { Award, BarChart, GraduationCap, Users } from 'lucide-react';
+import { Award, BarChart, GraduationCap, Users } from 'lucide-react'
 
 const StatesCounter = () => {
   return (
@@ -29,12 +29,14 @@ const StatesCounter = () => {
           </div>
           <div>
             <h5 className="font-bold text-lg text-white/90">97K+</h5>
-            <h5 className="text-xs text-white/90">Classes Completed Satisfaction Rate</h5>
+            <h5 className="text-xs text-white/90">
+              Classes Completed Satisfaction Rate
+            </h5>
           </div>
         </div>
         <div className="flex items-center gap-3 text-gray-600">
           <div className="bg-white p-2 rounded-full ">
-             <Users className="w-7 h-7" />
+            <Users className="w-7 h-7" />
           </div>
           <div>
             <h5 className="font-bold text-lg text-white/90">102K+</h5>
@@ -46,4 +48,4 @@ const StatesCounter = () => {
   )
 }
 
-export default StatesCounter;
+export default StatesCounter

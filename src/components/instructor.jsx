@@ -1,44 +1,44 @@
-"use client";
-import Image from "next/image";
-import { Button } from "./ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import starImg from "../../public/assets/custom-image/starImg.png";
-import { useCallback, useEffect, useRef, useState } from "react";
-import Slider from "react-slick";
-import Link from "next/link";
-import { Badge } from "./ui/badge";
+'use client'
+import Image from 'next/image'
+import { Button } from './ui/button'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import starImg from '../../public/assets/custom-image/starImg.png'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import Slider from 'react-slick'
+import Link from 'next/link'
+import { Badge } from './ui/badge'
 
 const Instructor = () => {
-  const [userData, setUserData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [userData, setUserData] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
   const fetchUsers = useCallback(async () => {
     try {
-      const formdata = new FormData();
-      formdata.set("page", currentPage);
-      formdata.set("pagination", 12);
-      formdata.set("role", "instructor");
-      const res = await fetch("/api/user", {
-        cache: "no-store",
-        method: "POST",
+      const formdata = new FormData()
+      formdata.set('page', currentPage)
+      formdata.set('pagination', 12)
+      formdata.set('role', 'instructor')
+      const res = await fetch('/api/user', {
+        cache: 'no-store',
+        method: 'POST',
         body: formdata,
-      });
+      })
 
-      const data = await res.json();
-      setUserData(data.data);
-      setTotalPages(Math.ceil(data.total / 5));
+      const data = await res.json()
+      setUserData(data.data)
+      setTotalPages(Math.ceil(data.total / 5))
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error('Error fetching user data:', error)
     }
-  }, [currentPage]);
+  }, [currentPage])
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    fetchUsers()
+  }, [fetchUsers])
 
   //--- slider start ---
-  const sliderRef = useRef(null);
+  const sliderRef = useRef(null)
   var settings = {
     autoplay: true,
     autoplaySpeed: 2000,
@@ -76,7 +76,7 @@ const Instructor = () => {
         },
       },
     ],
-  };
+  }
   //   ---- slider end ----
 
   return (
@@ -116,11 +116,15 @@ const Instructor = () => {
           <div className="slider-container">
             <Slider ref={sliderRef} {...settings}>
               {userData.map((mentor, index) => (
-              <Link key={index} href={`/mentor?id=${mentor._id}`} className="block group">
-                    <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02]">
-                      <div className="relative h-64 overflow-hidden">
+                <Link
+                  key={index}
+                  href={`/mentor?id=${mentor._id}`}
+                  className="block group"
+                >
+                  <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02]">
+                    <div className="relative h-64 overflow-hidden">
                       <Image
-                        src={mentor.image || "/placeholder.svg"}
+                        src={mentor.image || '/placeholder.svg'}
                         alt={`${mentor.name} - ${mentor.profession}`}
                         width={300}
                         height={300}
@@ -136,28 +140,27 @@ const Instructor = () => {
                           <p className="text-sm text-gray-200">
                             {mentor.profession}
                           </p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-  {mentor.expartise?.[0] && (
-    <Badge
-      variant="secondary"
-      className="bg-white/20 text-white font-thin hover:bg-white/30 px-3 py-1 text-xs rounded-full"
-      title={mentor.expartise[0]}
-    >
-      {mentor.expartise[0]}
-    </Badge>
-  )}
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {mentor.expartise?.[0] && (
+                              <Badge
+                                variant="secondary"
+                                className="bg-white/20 text-white font-thin hover:bg-white/30 px-3 py-1 text-xs rounded-full"
+                                title={mentor.expartise[0]}
+                              >
+                                {mentor.expartise[0]}
+                              </Badge>
+                            )}
 
-  {mentor.expartise?.length > 1 && (
-    <Badge
-      variant="secondary"
-      className="bg-white/20 text-white font-thin hover:bg-white/30 px-3 py-1 text-xs rounded-full"
-      title={`${mentor.expartise.length - 1} more skills`}
-    >
-      +{mentor.expartise.length - 1}
-    </Badge>
-  )}
-</div>
-
+                            {mentor.expartise?.length > 1 && (
+                              <Badge
+                                variant="secondary"
+                                className="bg-white/20 text-white font-thin hover:bg-white/30 px-3 py-1 text-xs rounded-full"
+                                title={`${mentor.expartise.length - 1} more skills`}
+                              >
+                                +{mentor.expartise.length - 1}
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -169,7 +172,7 @@ const Instructor = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Instructor;
+export default Instructor

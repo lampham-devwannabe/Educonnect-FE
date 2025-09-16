@@ -1,5 +1,5 @@
-"use client";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+'use client'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
   Star,
   CalendarDays,
@@ -9,19 +9,19 @@ import {
   Users,
   LucideGavel,
   BookText,
-} from "lucide-react";
-import textCircle from "../../public/assets/custom-image/textCircle.png";
+} from 'lucide-react'
+import textCircle from '../../public/assets/custom-image/textCircle.png'
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import InfoTitle from "./infoTitle";
-import { Button } from "./ui/button";
-import Slider from "react-slick";
+import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
+import InfoTitle from './infoTitle'
+import { Button } from './ui/button'
+import Slider from 'react-slick'
 
 const PopularSliderCourse = ({ user }) => {
   //--- slider start ---
-  const sliderRef = useRef(null);
+  const sliderRef = useRef(null)
   var settings = {
     autoplay: true,
     autoplaySpeed: 2000,
@@ -58,41 +58,41 @@ const PopularSliderCourse = ({ user }) => {
         },
       },
     ],
-  };
+  }
   //   ---- slider end ----
 
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState([])
 
   useEffect(() => {
     const getCourses = async () => {
       try {
-        const formData = new FormData();
-        formData.set("page", 1);
-        formData.set("pagination", 4);
-        const res = await fetch("api/course", {
-          method: "POST",
+        const formData = new FormData()
+        formData.set('page', 1)
+        formData.set('pagination', 4)
+        const res = await fetch('api/course', {
+          method: 'POST',
           body: formData,
-        });
-        const courseData = await res.json();
-        console.log(courseData.data);
-        setCourses(courseData.data);
+        })
+        const courseData = await res.json()
+        console.log(courseData.data)
+        setCourses(courseData.data)
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error)
       }
-    };
-    getCourses();
-  }, []);
+    }
+    getCourses()
+  }, [])
 
   const RatingStars = ({ rating }) => {
     return (
       <div className="flex items-center justify-left mt-2">
-        {[1, 2, 3, 4, 5].map((star) => (
+        {[1, 2, 3, 4, 5].map(star => (
           <Star
             key={star}
             className={`w-4 h-4 mr-1 ${
               star <= Math.round(rating)
-                ? "text-[#FC6441] fill-current"
-                : "text-gray-300"
+                ? 'text-[#FC6441] fill-current'
+                : 'text-gray-300'
             }`}
           />
         ))}
@@ -100,8 +100,8 @@ const PopularSliderCourse = ({ user }) => {
           {rating.toFixed(1)}k
         </span>
       </div>
-    );
-  };
+    )
+  }
   return (
     <div className="popular-bg-img bg-purple-50 w-full pb-5 lg:pb-20">
       <div className="container mx-auto px-8 py-8 ">
@@ -114,7 +114,7 @@ const PopularSliderCourse = ({ user }) => {
               <Image className="w-36 h-16" alt="" src={textCircle}></Image>
             </div>
             <InfoTitle
-              heading={"Our popular Course student can join with us."}
+              heading={'Our popular Course student can join with us.'}
             ></InfoTitle>
           </div>
           <div className="flex items-center gap-3">
@@ -135,7 +135,7 @@ const PopularSliderCourse = ({ user }) => {
         </div>
         <div className="slider-container">
           <Slider ref={sliderRef} {...settings}>
-            {courses.map((course) => (
+            {courses.map(course => (
               <Card
                 className="w-full bg-blue-50/25 border-dashed border-[#c5b5ff] rounded-xl overflow-hidden p-5 transition-all duration-300 hover:shadow-xl"
                 key={course._id}
@@ -144,8 +144,8 @@ const PopularSliderCourse = ({ user }) => {
                 <Link href={`/course/details?id=${course._id}`}>
                   <CardHeader className="p-0 relative w-[100%] h-[200px]">
                     <Image
-                      src={course?.thumbnail || "/placeholder.png"} // fallback image
-                      alt={course?.title || "Course Thumbnail"} // better alt text for SEO
+                      src={course?.thumbnail || '/placeholder.png'} // fallback image
+                      alt={course?.title || 'Course Thumbnail'} // better alt text for SEO
                       width={450}
                       height={300}
                       className="w-full h-full object-cover rounded-lg"
@@ -219,7 +219,7 @@ const PopularSliderCourse = ({ user }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PopularSliderCourse;
+export default PopularSliderCourse

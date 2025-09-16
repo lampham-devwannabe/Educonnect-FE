@@ -1,125 +1,145 @@
-"use client";
-import * as React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useCartHooks } from "@/hooks/useCartHooks";
-import { useNotificationHooks } from "@/hooks/useNotificationHooks";
-import { formatDateTime } from "@/utils/dateformate";
-import { BadgeMinus, Delete, DeleteIcon } from "lucide-react";
+'use client'
+import * as React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
+import { useCartHooks } from '@/hooks/useCartHooks'
+import { useNotificationHooks } from '@/hooks/useNotificationHooks'
+import { formatDateTime } from '@/utils/dateformate'
+import { BadgeMinus, Delete, DeleteIcon } from 'lucide-react'
 
 export default function NavbarBottom({ user }) {
-  const [cartOpen, setCartOpen] = useState(false);
-  const { cartData } = useCartHooks(cartOpen);
-  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false)
+  const { cartData } = useCartHooks(cartOpen)
+  const [notificationOpen, setNotificationOpen] = useState(false)
 
   const { notificationData, fetchNotification } =
-    useNotificationHooks(notificationOpen);
+    useNotificationHooks(notificationOpen)
 
-  const [collapseMenu, setCollapseMenu] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const router = useRouter();
+  const [collapseMenu, setCollapseMenu] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const router = useRouter()
 
   const menus = [
-    { title: "Home", path: "/your-path" },
-    { title: "Blog", path: "/your-path" },
-    { title: "About Us", path: "/your-path" },
-    { title: "Contact Us", path: "/your-path" },
-    { title: "Login", path: "/your-path" },
-  ];
+    { title: 'Home', path: '/your-path' },
+    { title: 'Blog', path: '/your-path' },
+    { title: 'About Us', path: '/your-path' },
+    { title: 'Contact Us', path: '/your-path' },
+    { title: 'Login', path: '/your-path' },
+  ]
 
   const toggleDropdown = () => {
-    setCollapseMenu(!collapseMenu);
-  };
+    setCollapseMenu(!collapseMenu)
+  }
 
   const toggleMenu = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+    setDropdownOpen(!dropdownOpen)
+  }
 
   let hideTimeouts = {
     notification: null,
     dropdown: null,
     cart: null,
-  };
+  }
 
-  const handleMouseEnter = (type) => {
+  const handleMouseEnter = type => {
     // Clear any existing timeout to prevent premature hiding
-    clearTimeout(hideTimeouts[type]);
-    if (type === "notification") setNotificationOpen(true);
-    if (type === "dropdown") setDropdownOpen(true);
-    if (type === "cart") setCartOpen(true);
-  };
+    clearTimeout(hideTimeouts[type])
+    if (type === 'notification') setNotificationOpen(true)
+    if (type === 'dropdown') setDropdownOpen(true)
+    if (type === 'cart') setCartOpen(true)
+  }
 
-  const handleMouseLeave = (type) => {
+  const handleMouseLeave = type => {
     // Set a timeout to hide the dropdown after a short delay
     hideTimeouts[type] = setTimeout(() => {
-      if (type === "notification") setNotificationOpen(false);
-      if (type === "dropdown") setDropdownOpen(false);
-      if (type === "cart") setCartOpen(false);
-    }, 300); // Adjust the delay as needed
-  };
+      if (type === 'notification') setNotificationOpen(false)
+      if (type === 'dropdown') setDropdownOpen(false)
+      if (type === 'cart') setCartOpen(false)
+    }, 300) // Adjust the delay as needed
+  }
   const toggleCart = () => {
-    setCartOpen(!cartOpen);
-  };
+    setCartOpen(!cartOpen)
+  }
 
   const logOut = async () => {
-    const res = await fetch("/api/logout/", {
-      method: "POST",
-    });
+    const res = await fetch('/api/logout/', {
+      method: 'POST',
+    })
 
     if (res.ok) {
-      router.push("/login");
+      router.push('/login')
     }
-  };
-  const [searchQuery, setSearchQuery] = useState("");
+  }
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      router.push(`/courselist?search=${encodeURIComponent(searchQuery)}`);
+  const handleKeyDown = event => {
+    if (event.key === 'Enter') {
+      router.push(`/courselist?search=${encodeURIComponent(searchQuery)}`)
     }
-  };
+  }
   const routeCheckout = () => {
-    setCartOpen(false);
-    router.push("/checkout");
-  };
+    setCartOpen(false)
+    router.push('/checkout')
+  }
 
   const removeItem = async (cartId, itemId) => {
-    const formData = new FormData();
-    formData.append("cartId", cartId);
-    formData.append("itemId", itemId);
+    const formData = new FormData()
+    formData.append('cartId', cartId)
+    formData.append('itemId', itemId)
     const res = await fetch(`/api/cart/delete`, {
-      method: "DELETE",
+      method: 'DELETE',
       body: formData,
-    });
+    })
 
-    const data = await res.json();
+    const data = await res.json()
     if (data.status === 200) {
     }
-  };
+  }
 
   return (
     <div className="lg:hidden block">
       <div className="fixed z-[999] bottom-0 left-0 w-full flex shadow-sm  font-[sans-serif] h-[80px] ">
         <div className=" container flex flex-wrap  justify-center items-center sm:px-10  relative lg:gap-y-4 gap-y-6 gap-x-4 w-full">
           <div className="flex items-center space-x-8 bg-slate-50 bg-opacity-30 px-7 py-2 rounded-full backdrop-blur-sm">
-
-
             <Link href="post-feed">
-              <svg className="w-6 h-6 text-[#333] dark:text-white size-6" xmlns="http://www.w3.org/2000/svg" width="24"
-                height="24" fill="none" viewBox="0 0 24 24"
-                //stroke-width="1.5" 
-                stroke="currentColor">
+              <svg
+                className="w-6 h-6 text-[#333] dark:text-white size-6"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+                //stroke-width="1.5"
+                stroke="currentColor"
+              >
                 <path
                   // stroke-linecap="round"
-                  // stroke-linejoin="round" 
-                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                  // stroke-linejoin="round"
+                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                />
               </svg>
             </Link>
 
-            <Link href='/cart'>
-              <div className="relative font-[sans-serif] w-max mx-auto"><span className="relative fill-[#333]"><svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" className="cursor-pointer hover:fill-[#007bff] inline" viewBox="0 0 512 512"><path d="M164.96 300.004h.024c.02 0 .04-.004.059-.004H437a15.003 15.003 0 0 0 14.422-10.879l60-210a15.003 15.003 0 0 0-2.445-13.152A15.006 15.006 0 0 0 497 60H130.367l-10.722-48.254A15.003 15.003 0 0 0 105 0H15C6.715 0 0 6.715 0 15s6.715 15 15 15h77.969c1.898 8.55 51.312 230.918 54.156 243.71C131.184 280.64 120 296.536 120 315c0 24.812 20.188 45 45 45h272c8.285 0 15-6.715 15-15s-6.715-15-15-15H165c-8.27 0-15-6.73-15-15 0-8.258 6.707-14.977 14.96-14.996zM477.114 90l-51.43 180H177.032l-40-180zM150 405c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm167 15c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm0 0" data-original="#000000"></path></svg></span></div>
+            <Link href="/cart">
+              <div className="relative font-[sans-serif] w-max mx-auto">
+                <span className="relative fill-[#333]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20px"
+                    height="20px"
+                    className="cursor-pointer hover:fill-[#007bff] inline"
+                    viewBox="0 0 512 512"
+                  >
+                    <path
+                      d="M164.96 300.004h.024c.02 0 .04-.004.059-.004H437a15.003 15.003 0 0 0 14.422-10.879l60-210a15.003 15.003 0 0 0-2.445-13.152A15.006 15.006 0 0 0 497 60H130.367l-10.722-48.254A15.003 15.003 0 0 0 105 0H15C6.715 0 0 6.715 0 15s6.715 15 15 15h77.969c1.898 8.55 51.312 230.918 54.156 243.71C131.184 280.64 120 296.536 120 315c0 24.812 20.188 45 45 45h272c8.285 0 15-6.715 15-15s-6.715-15-15-15H165c-8.27 0-15-6.73-15-15 0-8.258 6.707-14.977 14.96-14.996zM477.114 90l-51.43 180H177.032l-40-180zM150 405c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm167 15c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm0 0"
+                      data-original="#000000"
+                    ></path>
+                  </svg>
+                </span>
+              </div>
             </Link>
             <Link href="/" className="bg-indigo-300 p-2 rounded-full">
               <svg
@@ -139,7 +159,7 @@ export default function NavbarBottom({ user }) {
               // onMouseLeave={() => handleMouseLeave("notification")}
               className="relative font-[sans-serif] w-max mx-auto"
             >
-              <Link href='/notification'>
+              <Link href="/notification">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20px"
@@ -150,14 +170,12 @@ export default function NavbarBottom({ user }) {
                     d="M305.402 234.794v-70.54c0-52.396-33.533-98.085-79.702-115.151.539-2.695.838-5.449.838-8.204C226.539 18.324 208.215 0 185.64 0s-40.899 18.324-40.899 40.899c0 2.695.299 5.389.778 7.964-15.868 5.629-30.539 14.551-43.054 26.647-23.593 22.755-36.587 53.354-36.587 86.169v73.115c0 2.575-2.096 4.731-4.731 4.731-22.096 0-40.959 16.647-42.995 37.845-1.138 11.797 2.755 23.533 10.719 32.276 7.904 8.683 19.222 13.713 31.018 13.713h72.217c2.994 26.887 25.869 47.905 53.534 47.905s50.54-21.018 53.534-47.905h72.217c11.797 0 23.114-5.03 31.018-13.713 7.904-8.743 11.797-20.479 10.719-32.276-2.036-21.198-20.958-37.845-42.995-37.845a4.704 4.704 0 0 1-4.731-4.731zM185.64 23.952c9.341 0 16.946 7.605 16.946 16.946 0 .778-.12 1.497-.24 2.275-4.072-.599-8.204-1.018-12.336-1.138-7.126-.24-14.132.24-21.078 1.198-.12-.778-.24-1.497-.24-2.275.002-9.401 7.607-17.006 16.948-17.006zm0 323.358c-14.431 0-26.527-10.3-29.342-23.952h58.683c-2.813 13.653-14.909 23.952-29.341 23.952zm143.655-67.665c.479 5.15-1.138 10.12-4.551 13.892-3.533 3.773-8.204 5.868-13.353 5.868H59.89c-5.15 0-9.82-2.096-13.294-5.868-3.473-3.772-5.09-8.743-4.611-13.892.838-9.042 9.282-16.168 19.162-16.168 15.809 0 28.683-12.874 28.683-28.683v-73.115c0-26.228 10.419-50.719 29.282-68.923 18.024-17.425 41.498-26.887 66.528-26.887 1.198 0 2.335 0 3.533.06 50.839 1.796 92.277 45.929 92.277 98.325v70.54c0 15.809 12.874 28.683 28.683 28.683 9.88 0 18.264 7.126 19.162 16.168z"
                     data-original="#000000"
                   />
-
                 </svg>
               </Link>
 
               {notificationData && notificationData.length > 0 && (
                 <span className="bg-red-500 text-[10px] px-1.5 font-semibold min-w-[16px] h-4 flex items-center justify-center text-white rounded-full absolute -top-2 left-[60%]">
                   {notificationData.length}
-
                 </span>
               )}
               {notificationOpen && (
@@ -186,7 +204,6 @@ export default function NavbarBottom({ user }) {
                                 src="https://readymadeui.com/profile_2.webp"
                                 className="w-12 h-12 rounded-full shrink-0"
                               />
-
                             ) : (
                               <span className="text-white bg-indigo-300 rounded-xl p-5 text-xl font-medium">
                                 {notification?.title.charAt(0).toUpperCase()}
@@ -209,15 +226,12 @@ export default function NavbarBottom({ user }) {
                     ))
                   ) : (
                     <div className="flex flex-col items-center justify-center px-4 mt-4">
-
                       <Image
                         src="/assets/no-notification.svg"
                         alt="no notification"
                         height={400}
                         width={600}
-                      >
-
-                      </Image>
+                      ></Image>
                       <p className="text-xl font-mono mt-3 cursor-pointer">
                         Cart is empty
                       </p>
@@ -230,7 +244,7 @@ export default function NavbarBottom({ user }) {
             {user.token ? (
               <div className="relative w-[30px] h-[30px]">
                 {!user.image ? (
-                  <Link href='/profile'>
+                  <Link href="/profile">
                     <svg
                       // onMouseEnter={() => handleMouseEnter("dropdown")}
                       // onMouseLeave={() => handleMouseLeave("dropdown")}
@@ -245,9 +259,8 @@ export default function NavbarBottom({ user }) {
                       />
                     </svg>
                   </Link>
-
                 ) : (
-                  <Link href='/profile'>
+                  <Link href="/profile">
                     <Image
                       // onMouseEnter={() => handleMouseEnter("dropdown")}
                       // onMouseLeave={() => handleMouseLeave("dropdown")}
@@ -258,14 +271,12 @@ export default function NavbarBottom({ user }) {
                       className="cursor-pointer w-8 h-8 rounded-full"
                     />
                   </Link>
-
-
                 )}
 
                 {dropdownOpen && (
                   <div
-                    onMouseEnter={() => handleMouseEnter("dropdown")}
-                    onMouseLeave={() => handleMouseLeave("dropdown")}
+                    onMouseEnter={() => handleMouseEnter('dropdown')}
+                    onMouseLeave={() => handleMouseLeave('dropdown')}
                     className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 "
                   >
                     <ul className="absolute block shadow-lg bg-white py-2 z-[1000] min-w-full w-max rounded-lg max-h-96 overflow-auto">
@@ -285,7 +296,7 @@ export default function NavbarBottom({ user }) {
                           View profile
                         </li>
                       </Link>
-                      {user.role === "instructor" && (
+                      {user.role === 'instructor' && (
                         <Link href="/dashboard">
                           <li className="py-2.5 px-5 flex items-center hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
                             <svg
@@ -333,5 +344,5 @@ export default function NavbarBottom({ user }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,4 +1,5 @@
-import { useToast } from "@/hooks/use-toast"
+import React from 'react'
+import { useToast } from '../../hooks/use-toast'
 import {
   Toast,
   ToastClose,
@@ -6,16 +7,16 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "@/components/ui/toast"
+} from './toast'
 
-export function Toaster() {
+export function Toaster(): React.JSX.Element {
   const { toasts } = useToast()
 
   return (
-    (<ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
+    <ToastProvider>
+      {toasts.map(({ id, title, description, action, ...props }) => {
         return (
-          (<Toast key={id} {...props}>
+          <Toast key={id} {...props}>
             <div className="grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (
@@ -24,10 +25,10 @@ export function Toaster() {
             </div>
             {action}
             <ToastClose />
-          </Toast>)
-        );
+          </Toast>
+        )
       })}
       <ToastViewport />
-    </ToastProvider>)
-  );
+    </ToastProvider>
+  )
 }

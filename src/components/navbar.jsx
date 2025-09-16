@@ -1,15 +1,15 @@
-"use client";
-import * as React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useCart } from "@/utils/CartContext";
-import { useNotificationHooks } from "@/hooks/useNotificationHooks";
-import { formatDateTime } from "@/utils/dateformate";
-import { BadgeMinus, Search } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+'use client'
+import * as React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
+import { useCart } from '@/utils/CartContext'
+import { useNotificationHooks } from '@/hooks/useNotificationHooks'
+import { formatDateTime } from '@/utils/dateformate'
+import { BadgeMinus, Search } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 
 import {
   Bell,
@@ -22,109 +22,109 @@ import {
   Check,
   CheckCheck,
   Loader2,
-} from "lucide-react";
+} from 'lucide-react'
 
-import { Jost } from "next/font/google";
-import Payment from "@/app/(frontend)/testpage/page";
+import { Jost } from 'next/font/google'
+import Payment from '@/app/(frontend)/testpage/page'
 
 const jost = Jost({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"], // Adjust as needed
-});
+  subsets: ['latin'],
+  weight: ['400', '500', '600'], // Adjust as needed
+})
 
 export default function Navbar({ user }) {
-  const [cartOpen, setCartOpen] = useState(false);
-  const { cartData, fetchCart } = useCart(cartOpen);
-  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false)
+  const { cartData, fetchCart } = useCart(cartOpen)
+  const [notificationOpen, setNotificationOpen] = useState(false)
 
   const { notificationData, fetchNotification } =
-    useNotificationHooks(notificationOpen);
+    useNotificationHooks(notificationOpen)
 
-  const [loading, setLoading] = useState(false);
-  const [markingAllRead, setMarkingAllRead] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [markingAllRead, setMarkingAllRead] = useState(false)
 
-  const [collapseMenu, setCollapseMenu] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const router = useRouter();
+  const [collapseMenu, setCollapseMenu] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const router = useRouter()
 
   const toggleDropdown = () => {
-    setCollapseMenu(!collapseMenu);
-  };
+    setCollapseMenu(!collapseMenu)
+  }
 
   const toggleMenu = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+    setDropdownOpen(!dropdownOpen)
+  }
 
   let hideTimeouts = {
     notification: null,
     dropdown: null,
     cart: null,
-  };
+  }
 
-  const handleMouseEnter = (type) => {
+  const handleMouseEnter = type => {
     // Clear any existing timeout to prevent premature hiding
-    clearTimeout(hideTimeouts[type]);
-    if (type === "notification") setNotificationOpen(true);
-    if (type === "dropdown") setDropdownOpen(true);
-    if (type === "cart") setCartOpen(true);
-  };
+    clearTimeout(hideTimeouts[type])
+    if (type === 'notification') setNotificationOpen(true)
+    if (type === 'dropdown') setDropdownOpen(true)
+    if (type === 'cart') setCartOpen(true)
+  }
 
-  const handleMouseLeave = (type) => {
+  const handleMouseLeave = type => {
     // Set a timeout to hide the dropdown after a short delay
     hideTimeouts[type] = setTimeout(() => {
-      if (type === "notification") setNotificationOpen(false);
-      if (type === "dropdown") setDropdownOpen(false);
-      if (type === "cart") setCartOpen(false);
-    }, 300); // Adjust the delay as needed
-  };
+      if (type === 'notification') setNotificationOpen(false)
+      if (type === 'dropdown') setDropdownOpen(false)
+      if (type === 'cart') setCartOpen(false)
+    }, 300) // Adjust the delay as needed
+  }
   const toggleCart = () => {
-    setCartOpen(!cartOpen);
-  };
+    setCartOpen(!cartOpen)
+  }
 
   const logOut = async () => {
-    const res = await fetch("/api/logout/", {
-      method: "POST",
-    });
+    const res = await fetch('/api/logout/', {
+      method: 'POST',
+    })
 
     if (res.ok) {
-      router.push("/login");
+      router.push('/login')
     }
-  };
-  const [searchQuery, setSearchQuery] = useState("");
+  }
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      router.push(`/courselist?search=${encodeURIComponent(searchQuery)}`);
-      setSearchOpen(false);
+  const handleKeyDown = event => {
+    if (event.key === 'Enter') {
+      router.push(`/courselist?search=${encodeURIComponent(searchQuery)}`)
+      setSearchOpen(false)
     }
-  };
+  }
   const routeCheckout = () => {
-    setCartOpen(false);
-    router.push("/checkout");
-  };
+    setCartOpen(false)
+    router.push('/checkout')
+  }
 
   const removeItem = async (cartId, itemId) => {
-    const formData = new FormData();
-    formData.append("cartId", cartId);
-    formData.append("itemId", itemId);
+    const formData = new FormData()
+    formData.append('cartId', cartId)
+    formData.append('itemId', itemId)
     const res = await fetch(`/api/cart/delete`, {
-      method: "DELETE",
+      method: 'DELETE',
       body: formData,
-    });
+    })
 
-    const data = await res.json();
+    const data = await res.json()
     if (data.status === 200) {
-      await fetchCart();
+      await fetchCart()
     }
-  };
+  }
 
   // mobile search option open or close
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false)
   const handleSearchOpen = () => {
-    setSearchOpen(!searchOpen);
-  };
+    setSearchOpen(!searchOpen)
+  }
 
-  const getNotificationIcon = (type) => {
+  const getNotificationIcon = type => {
     const iconMap = {
       CoursePurchase: <BookOpen className="w-5 h-5" />,
       BookMentorShip: <Users className="w-5 h-5" />,
@@ -134,92 +134,92 @@ export default function Navbar({ user }) {
       Other: <MoreHorizontal className="w-5 h-5" />,
       WithdrawalRequest: <BadgeMinus className="w-5 h-5" />,
       PaymentRequest: <Check className="w-5 h-5" />,
-    };
-    return iconMap[type] || iconMap["Other"];
-  };
+    }
+    return iconMap[type] || iconMap['Other']
+  }
 
-  const getNotificationColor = (type) => {
+  const getNotificationColor = type => {
     const colorMap = {
-      CoursePurchase: "bg-blue-100 text-blue-600",
-      BookMentorShip: "bg-purple-100 text-purple-600",
-      Referral: "bg-green-100 text-green-600",
-      AdminNotification: "bg-red-100 text-red-600",
-      Broadcast: "bg-orange-100 text-orange-600",
-      Other: "bg-gray-100 text-gray-600",
-    };
-    return colorMap[type] || colorMap["Other"];
-  };
+      CoursePurchase: 'bg-blue-100 text-blue-600',
+      BookMentorShip: 'bg-purple-100 text-purple-600',
+      Referral: 'bg-green-100 text-green-600',
+      AdminNotification: 'bg-red-100 text-red-600',
+      Broadcast: 'bg-orange-100 text-orange-600',
+      Other: 'bg-gray-100 text-gray-600',
+    }
+    return colorMap[type] || colorMap['Other']
+  }
 
   // Mark single notification as read
-  const markAsRead = async (notificationId) => {
+  const markAsRead = async notificationId => {
     try {
-      setLoading(true);
+      setLoading(true)
 
-      const formData = new FormData();
-      formData.append("notification_id", notificationId);
-      formData.append("status", "true");
+      const formData = new FormData()
+      formData.append('notification_id', notificationId)
+      formData.append('status', 'true')
 
-      const response = await fetch("/api/notification/update-status", {
-        method: "POST",
+      const response = await fetch('/api/notification/update-status', {
+        method: 'POST',
         body: formData,
-      });
+      })
 
-      const result = await response.json();
+      const result = await response.json()
 
       if (result.status === 200) {
         // Refetch notifications to get updated data
-        await fetchNotification();
+        await fetchNotification()
       } else {
-        throw new Error(result.message);
+        throw new Error(result.message)
       }
     } catch (error) {
-      console.error("Error marking notification as read:", error);
+      console.error('Error marking notification as read:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   // Mark all notifications as read
   const markAllAsRead = async () => {
     try {
-      setMarkingAllRead(true);
+      setMarkingAllRead(true)
 
-      const formData = new FormData();
-      formData.append("markAllRead", "true");
+      const formData = new FormData()
+      formData.append('markAllRead', 'true')
 
-      const response = await fetch("/api/notification/update", {
-        method: "POST",
+      const response = await fetch('/api/notification/update', {
+        method: 'POST',
         body: formData,
-      });
+      })
 
-      const result = await response.json();
+      const result = await response.json()
 
       if (result.status === 200) {
         // Refetch notifications to get updated data
-        await fetchNotification();
+        await fetchNotification()
       } else {
-        throw new Error(result.message);
+        throw new Error(result.message)
       }
     } catch (error) {
-      console.error("Error marking all notifications as read:", error);
+      console.error('Error marking all notifications as read:', error)
     } finally {
-      setMarkingAllRead(false);
+      setMarkingAllRead(false)
     }
-  };
+  }
 
-  const unreadCount = notificationData?.filter((n) => !n.isRead).length || 0;
+  const unreadCount = notificationData?.filter(n => !n.isRead).length || 0
 
-  const handleNotificationClick = async (notification) => {
+  const handleNotificationClick = async notification => {
     // Mark as read if not already read
     if (!notification.isRead) {
-      await markAsRead(notification._id);
+      await markAsRead(notification._id)
     }
 
     // Navigate to action link if available
     if (notification.actionLink) {
-      window.location.href = notification.actionLink;
+      window.location.href = notification.actionLink
     }
-  };
+  }
 
   return (
     <header
@@ -259,27 +259,27 @@ export default function Navbar({ user }) {
         </div>
         <div className="navMenu lg:block md:block hidden">
           <ul className="flex gap-5">
-            <Link href={"/"}>
+            <Link href={'/'}>
               <li className="cursor-pointer text-bold hover:text-[#007bff] text-lg">
                 Home
               </li>
             </Link>
-            <Link href={"/courselist"}>
+            <Link href={'/courselist'}>
               <li className="cursor-pointer text-bold hover:text-[#007bff] text-lg">
                 Course
               </li>
             </Link>
-            <Link href={"/mentorlist"}>
+            <Link href={'/mentorlist'}>
               <li className="cursor-pointer text-bold hover:text-[#007bff] text-lg">
                 Mentor
               </li>
             </Link>
-            <Link href={"/post-feed"}>
+            <Link href={'/post-feed'}>
               <li className="cursor-pointer text-bold hover:text-[#007bff] text-lg">
                 Community
               </li>
             </Link>
-            <Link href={"/mobileApp"}>
+            <Link href={'/mobileApp'}>
               <li className="cursor-pointer text-bold hover:text-[#007bff] text-lg">
                 App
               </li>
@@ -300,7 +300,7 @@ export default function Navbar({ user }) {
               type="text"
               placeholder="Search..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               className="w-full outline-none bg-transparent text-[#333] text-sm"
             />
@@ -323,7 +323,7 @@ export default function Navbar({ user }) {
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={e => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   className="w-full outline-none bg-transparent text-[#333] text-sm"
                 />
@@ -351,8 +351,8 @@ export default function Navbar({ user }) {
             </Link>
 
             <div
-              onMouseEnter={() => handleMouseEnter("cart")}
-              onMouseLeave={() => handleMouseLeave("cart")}
+              onMouseEnter={() => handleMouseEnter('cart')}
+              onMouseLeave={() => handleMouseLeave('cart')}
               className="relative font-[sans-serif] w-max mx-auto"
             >
               <span className="relative fill-[#333]">
@@ -374,7 +374,7 @@ export default function Navbar({ user }) {
                     {cartData?.data?.items.length}
                   </span>
                 ) : (
-                  ""
+                  ''
                 )}
               </span>
               {cartOpen && (
@@ -390,8 +390,8 @@ export default function Navbar({ user }) {
                           Shopping Cart
                         </h3>
                         <p className="text-sm text-gray-500 mt-1">
-                          {cartData.data.items.length}{" "}
-                          {cartData.data.items.length === 1 ? "item" : "items"}
+                          {cartData.data.items.length}{' '}
+                          {cartData.data.items.length === 1 ? 'item' : 'items'}
                         </p>
                       </div>
 
@@ -408,7 +408,7 @@ export default function Navbar({ user }) {
                                   <Image
                                     src={
                                       item.course.thumbnail ||
-                                      "/placeholder.svg"
+                                      '/placeholder.svg'
                                     }
                                     className="w-16 h-12 rounded-lg object-cover border border-gray-200"
                                     alt={item.course.title}
@@ -427,9 +427,9 @@ export default function Navbar({ user }) {
                                 </div>
 
                                 <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    removeItem(cartData?.data?._id, item._id);
+                                  onClick={e => {
+                                    e.stopPropagation()
+                                    removeItem(cartData?.data?._id, item._id)
                                   }}
                                   className="flex-shrink-0 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors duration-200"
                                   aria-label="Remove item"
@@ -504,8 +504,8 @@ export default function Navbar({ user }) {
             </Link> */}
 
             <div
-              onMouseEnter={() => handleMouseEnter("notification")}
-              onMouseLeave={() => handleMouseLeave("notification")}
+              onMouseEnter={() => handleMouseEnter('notification')}
+              onMouseLeave={() => handleMouseLeave('notification')}
               className="relative font-[sans-serif] w-max mx-auto"
             >
               <svg
@@ -585,8 +585,8 @@ export default function Navbar({ user }) {
                             key={notification._id || index}
                             className={`p-4 hover:bg-gray-50 transition-all duration-200 cursor-pointer relative ${
                               !notification.isRead
-                                ? "bg-blue-50/30 border-l-4 border-l-blue-500"
-                                : ""
+                                ? 'bg-blue-50/30 border-l-4 border-l-blue-500'
+                                : ''
                             }`}
                             onClick={() =>
                               handleNotificationClick(notification)
@@ -599,7 +599,7 @@ export default function Navbar({ user }) {
                                   <Image
                                     src={
                                       notification.imageUrl ||
-                                      "/placeholder.svg"
+                                      '/placeholder.svg'
                                     }
                                     alt="Notification"
                                     className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
@@ -623,8 +623,8 @@ export default function Navbar({ user }) {
                                   <h4
                                     className={`text-sm font-medium line-clamp-2 leading-5 ${
                                       !notification.isRead
-                                        ? "text-gray-900"
-                                        : "text-gray-700"
+                                        ? 'text-gray-900'
+                                        : 'text-gray-700'
                                     }`}
                                   >
                                     {notification.title}
@@ -644,7 +644,7 @@ export default function Navbar({ user }) {
                                     className="text-xs px-2 py-1"
                                   >
                                     {notification.type
-                                      .replace(/([A-Z])/g, " $1")
+                                      .replace(/([A-Z])/g, ' $1')
                                       .trim()}
                                   </Badge>
                                   <span className="text-xs text-gray-500">
@@ -656,9 +656,9 @@ export default function Navbar({ user }) {
                               {/* Mark as Read Button */}
                               {!notification.isRead && (
                                 <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    markAsRead(notification._id);
+                                  onClick={e => {
+                                    e.stopPropagation()
+                                    markAsRead(notification._id)
                                   }}
                                   disabled={loading}
                                   className="flex-shrink-0 p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors duration-200 disabled:opacity-50"
@@ -713,8 +713,8 @@ export default function Navbar({ user }) {
               <div className="relative">
                 {!user.image ? (
                   <svg
-                    onMouseEnter={() => handleMouseEnter("dropdown")}
-                    onMouseLeave={() => handleMouseLeave("dropdown")}
+                    onMouseEnter={() => handleMouseEnter('dropdown')}
+                    onMouseLeave={() => handleMouseLeave('dropdown')}
                     xmlns="http://www.w3.org/2000/svg"
                     width="20px"
                     className="cursor-pointer fill-[#333] hover:fill-[#077bff]"
@@ -727,13 +727,13 @@ export default function Navbar({ user }) {
                   </svg>
                 ) : (
                   <div
-                    onMouseEnter={() => handleMouseEnter("dropdown")}
-                    onMouseLeave={() => handleMouseLeave("dropdown")}
+                    onMouseEnter={() => handleMouseEnter('dropdown')}
+                    onMouseLeave={() => handleMouseLeave('dropdown')}
                     className="relative w-8 h-8 cursor-pointer"
                   >
                     <Image
-                      src={user?.image || "/assets/default-avatar.png"}
-                      alt={user?.name || "User avatar"}
+                      src={user?.image || '/assets/default-avatar.png'}
+                      alt={user?.name || 'User avatar'}
                       fill
                       className="rounded-full object-cover border border-gray-200 shadow-sm"
                       sizes="32px"
@@ -744,8 +744,8 @@ export default function Navbar({ user }) {
 
                 {dropdownOpen && (
                   <div
-                    onMouseEnter={() => handleMouseEnter("dropdown")}
-                    onMouseLeave={() => handleMouseLeave("dropdown")}
+                    onMouseEnter={() => handleMouseEnter('dropdown')}
+                    onMouseLeave={() => handleMouseLeave('dropdown')}
                     className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 "
                   >
                     <ul className="absolute block shadow-lg bg-white py-2 z-[1000] min-w-full w-max rounded-lg max-h-96 overflow-auto">
@@ -765,8 +765,8 @@ export default function Navbar({ user }) {
                           {user.role} profile
                         </li>
                       </Link>
-                      {(user.role === "instructor" ||
-                        user.role === "admin") && (
+                      {(user.role === 'instructor' ||
+                        user.role === 'admin') && (
                         <Link href="/dashboard">
                           <li className="py-2.5 px-5 flex items-center capitalize hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
                             <svg
@@ -919,5 +919,5 @@ export default function Navbar({ user }) {
         </div>
       )}
     </header>
-  );
+  )
 }

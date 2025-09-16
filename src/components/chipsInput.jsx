@@ -1,5 +1,5 @@
-import { XMarkIcon } from "@heroicons/react/20/solid";
-import { Label } from "@/components/ui/label";
+import { XMarkIcon } from '@heroicons/react/20/solid'
+import { Label } from '@/components/ui/label'
 
 const ChipInput = ({
   label,
@@ -9,21 +9,21 @@ const ChipInput = ({
   setInputValue,
   maxChips,
 }) => {
-  const handleKeyDown = (e) => {
+  const handleKeyDown = e => {
     if (
-      e.key === "Enter" &&
-      inputValue.trim() !== "" &&
+      e.key === 'Enter' &&
+      inputValue.trim() !== '' &&
       chips.length < maxChips
     ) {
-      e.preventDefault();
-      setChips([...chips, inputValue.trim()]);
-      setInputValue("");
+      e.preventDefault()
+      setChips([...chips, inputValue.trim()])
+      setInputValue('')
     }
-  };
+  }
 
-  const handleDelete = (chipToDelete) => {
-    setChips(chips.filter((chip) => chip !== chipToDelete));
-  };
+  const handleDelete = chipToDelete => {
+    setChips(chips.filter(chip => chip !== chipToDelete))
+  }
 
   return (
     <div className="grid gap-3">
@@ -47,7 +47,7 @@ const ChipInput = ({
           <input
             className="flex-grow  col-span-3 w-full first-line:text-sm px-2 py-1 border-none focus:ring-0 outline-none"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={e => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             fontSize="sm"
             placeholder="Type and press Enter"
@@ -55,7 +55,7 @@ const ChipInput = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ChipInput;
+export default ChipInput

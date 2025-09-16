@@ -1,24 +1,24 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { Star } from "lucide-react";
-import blogImg1 from "../assets/blog-image/blog1.png";
-import blogImg2 from "../assets/blog-image/blog2.png";
-import blogImg3 from "../assets/blog-image/blog3.png";
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { Card, CardContent, CardHeader } from './ui/card'
+import { Star } from 'lucide-react'
+import blogImg1 from '../assets/blog-image/blog1.png'
+import blogImg2 from '../assets/blog-image/blog2.png'
+import blogImg3 from '../assets/blog-image/blog3.png'
 
 type RatingStarsProps = {
-  rating: number;
-};
+  rating: number
+}
 
 const RatingStars: React.FC<RatingStarsProps> = ({ rating }) => (
   <div className="flex items-center justify-left mt-2">
-    {[1, 2, 3, 4, 5].map((star) => (
+    {[1, 2, 3, 4, 5].map(star => (
       <Star
         key={star}
         className={`w-5 h-5 mr-1 ${
           star <= Math.round(rating)
-            ? "text-yellow-400 fill-current"
-            : "text-gray-300"
+            ? 'text-yellow-400 fill-current'
+            : 'text-gray-300'
         }`}
       />
     ))}
@@ -26,7 +26,7 @@ const RatingStars: React.FC<RatingStarsProps> = ({ rating }) => (
       {rating.toFixed(1)}
     </span>
   </div>
-);
+)
 
 const Blog: React.FC = () => {
   return (
@@ -77,7 +77,7 @@ const Blog: React.FC = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog

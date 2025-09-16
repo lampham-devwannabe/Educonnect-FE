@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import {
   Pagination,
@@ -8,10 +8,8 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
-import { CardFooter } from "@/components/ui/card"
-
-
+} from '@/components/ui/pagination'
+import { CardFooter } from '@/components/ui/card'
 
 export default function GlobalPagination({
   currentPage,
@@ -24,20 +22,26 @@ export default function GlobalPagination({
   return (
     <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-2">
       <div className="text-xs text-muted-foreground">
-        Showing <strong>{currentPageDataLength ? (currentPage - 1) * pageSize + 1 : 0}</strong> to{" "}
-        <strong>{(currentPage - 1) * pageSize + currentPageDataLength}</strong> of{" "}
-        <strong>{totalItems}</strong> data
+        Showing{' '}
+        <strong>
+          {currentPageDataLength ? (currentPage - 1) * pageSize + 1 : 0}
+        </strong>{' '}
+        to{' '}
+        <strong>{(currentPage - 1) * pageSize + currentPageDataLength}</strong>{' '}
+        of <strong>{totalItems}</strong> data
       </div>
       <Pagination>
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
               href="#"
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault()
                 if (currentPage > 1) onPageChange(currentPage - 1)
               }}
-              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+              className={
+                currentPage === 1 ? 'pointer-events-none opacity-50' : ''
+              }
             />
           </PaginationItem>
 
@@ -47,7 +51,7 @@ export default function GlobalPagination({
               <PaginationItem key={pageNumber}>
                 <PaginationLink
                   href="#"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.preventDefault()
                     onPageChange(pageNumber)
                   }}
@@ -67,7 +71,7 @@ export default function GlobalPagination({
               <PaginationItem>
                 <PaginationLink
                   href="#"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.preventDefault()
                     onPageChange(totalPages)
                   }}
@@ -82,11 +86,15 @@ export default function GlobalPagination({
           <PaginationItem>
             <PaginationNext
               href="#"
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault()
                 if (currentPage < totalPages) onPageChange(currentPage + 1)
               }}
-              className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+              className={
+                currentPage === totalPages
+                  ? 'pointer-events-none opacity-50'
+                  : ''
+              }
             />
           </PaginationItem>
         </PaginationContent>

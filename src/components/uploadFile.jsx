@@ -1,38 +1,34 @@
-"use client";
-import { CldUploadWidget,CldVideoPlayer } from "next-cloudinary";
-import { useState } from "react";
-import Image from "next/image";
-import {
- 
-  Upload,
-
-} from "lucide-react";
+'use client'
+import { CldUploadWidget, CldVideoPlayer } from 'next-cloudinary'
+import { useState } from 'react'
+import Image from 'next/image'
+import { Upload } from 'lucide-react'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card'
 const UploadWidget = ({ onUpload }) => {
-  const [thumbnail, setthumbnail] = useState(null);
-  const [video, setvideo] = useState(null);
+  const [thumbnail, setthumbnail] = useState(null)
+  const [video, setvideo] = useState(null)
   return (
     <CldUploadWidget
       options={{
-        sources: ["local", "google_drive", "facebook"],
+        sources: ['local', 'google_drive', 'facebook'],
         multiple: false,
         maxVideoFileSize: 30000000,
-        resourceType: "video",
+        resourceType: 'video',
       }}
       signatureEndpoint="/api/uploadimage"
       onSuccess={(result, { widget }) => {
         if (onUpload) {
-          onUpload(result?.info);
-          setthumbnail(result?.info?.thumbnail_url);
-          setvideo(result?.info?.secure_url);
+          onUpload(result?.info)
+          setthumbnail(result?.info?.thumbnail_url)
+          setvideo(result?.info?.secure_url)
         }
-        widget.close();
+        widget.close()
       }}
     >
       {({ open }) => (
@@ -83,8 +79,8 @@ const UploadWidget = ({ onUpload }) => {
                 alt="Product image"
                 className="aspect-square w-full rounded-md object-cover"
                 height="300"
-                src={thumbnail===null? "/assets/placeholder.jpg":thumbnail}
-                width="300" 
+                src={thumbnail === null ? '/assets/placeholder.jpg' : thumbnail}
+                width="300"
               />
               <div className="grid grid-cols-3 gap-2">
                 <button>
@@ -97,9 +93,9 @@ const UploadWidget = ({ onUpload }) => {
                   />
                 </button>
                 <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    open();
+                  onClick={e => {
+                    e.preventDefault()
+                    open()
                   }}
                   className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed"
                 >
@@ -112,7 +108,7 @@ const UploadWidget = ({ onUpload }) => {
         </Card>
       )}
     </CldUploadWidget>
-  ) 
-};
+  )
+}
 
-export default UploadWidget;
+export default UploadWidget

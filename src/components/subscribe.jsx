@@ -1,21 +1,22 @@
-import React from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Star, Dot, DotIcon } from "lucide-react";
-import efty1 from "../../public/assets/custom-image/Eftyoffice.jpg";
-import subscribeImg1 from "../../public/assets/custom-image/bronze1.png";
-import subscribeImg2 from "../../public/assets/custom-image/gold2.png";
-import subscribeImg3 from "../../public/assets/custom-image/silver3.png";
+import React from 'react'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Star, Dot, DotIcon } from 'lucide-react'
+import efty1 from '../../public/assets/custom-image/Eftyoffice.jpg'
+import subscribeImg1 from '../../public/assets/custom-image/bronze1.png'
+import subscribeImg2 from '../../public/assets/custom-image/gold2.png'
+import subscribeImg3 from '../../public/assets/custom-image/silver3.png'
 
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image'
+import Link from 'next/link'
 
 const Subscribe = () => {
-
   return (
     <div className="container mx-auto px-8 py-8 ">
       <div className="flex justify-center text-center  lg:pt-10 pt-0 pb-10">
         <div>
-          <h1 className="font-bold text-3xl lg:text-4xl text-primary">Subscribe Now!</h1>
+          <h1 className="font-bold text-3xl lg:text-4xl text-primary">
+            Subscribe Now!
+          </h1>
           <h5 className="text-lg mt-2  text-gray-600">
             Choose a subscription plan and save money!
           </h5>
@@ -45,13 +46,13 @@ const Subscribe = () => {
                 <h5 className="flex items-center text-xl font-semibold">
                   <span className="">
                     <DotIcon className="w-8"></DotIcon>
-                  </span>{" "}
+                  </span>{' '}
                   15 days of subscription
                 </h5>
                 <h5 className="flex items-center text-xl font-semibold">
                   <span className="">
                     <DotIcon className="w-8"></DotIcon>
-                  </span>{" "}
+                  </span>{' '}
                   100 subscribes
                 </h5>
               </div>
@@ -84,13 +85,13 @@ const Subscribe = () => {
                 <h5 className="flex items-center text-xl font-semibold">
                   <span className="">
                     <DotIcon className="w-8"></DotIcon>
-                  </span>{" "}
+                  </span>{' '}
                   15 days of subscription
                 </h5>
                 <h5 className="flex items-center text-xl font-semibold">
                   <span className="">
                     <DotIcon className="w-8"></DotIcon>
-                  </span>{" "}
+                  </span>{' '}
                   100 subscribes
                 </h5>
               </div>
@@ -123,13 +124,13 @@ const Subscribe = () => {
                 <h5 className="flex items-center text-xl font-semibold">
                   <span className="">
                     <DotIcon className="w-8"></DotIcon>
-                  </span>{" "}
+                  </span>{' '}
                   15 days of subscription
                 </h5>
                 <h5 className="flex items-center text-xl font-semibold">
                   <span className="">
                     <DotIcon className="w-8"></DotIcon>
-                  </span>{" "}
+                  </span>{' '}
                   100 subscribes
                 </h5>
               </div>
@@ -141,7 +142,7 @@ const Subscribe = () => {
         </Card>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Subscribe;
+export default Subscribe

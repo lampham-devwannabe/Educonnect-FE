@@ -1,6 +1,6 @@
 // components/GlobalSkeletonLoader.js
-import React from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import React from 'react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const GlobalSkeletonLoader = ({
   count = 9,
@@ -30,7 +30,7 @@ const GlobalSkeletonLoader = ({
           </div>
         ))}
     </>
-  );
-};
+  )
+}
 
-export default GlobalSkeletonLoader;
+export default GlobalSkeletonLoader
