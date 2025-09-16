@@ -1,4 +1,11 @@
-const InfoTitle = ({ heading, description }) => {
+import * as React from 'react'
+
+interface InfoTitleProps {
+  heading?: string
+  description?: string
+}
+
+const InfoTitle: React.FC<InfoTitleProps> = ({ heading, description }) => {
   return (
     <div className="items-center">
       <h4 className="text-xl lg:text-4xl font-bold">{heading}</h4>
