@@ -10,7 +10,8 @@ const search = () => {
           <form action="/search">
             <label
               className="mx-auto mt-8 relative bg-white min-w-sm max-w-2xl flex flex-col md:flex-row items-center justify-center border py-2 px-2 rounded-2xl gap-2 shadow-2xl focus-within:border-gray-300"
-              htmlFor="search-bar">
+              htmlFor="search-bar"
+            >
               <input
                 id="search-bar"
                 placeholder="your keyword here"
@@ -20,7 +21,8 @@ const search = () => {
               />
               <button
                 type="submit"
-                className="w-full md:w-auto px-6 py-3 bg-black border-black text-white fill-white active:scale-95 duration-100 border will-change-transform overflow-hidden relative rounded-xl transition-all">
+                className="w-full md:w-auto px-6 py-3 bg-black border-black text-white fill-white active:scale-95 duration-100 border will-change-transform overflow-hidden relative rounded-xl transition-all"
+              >
                 <div className="flex items-center transition-all opacity-1">
                   <span className="text-sm font-semibold whitespace-nowrap truncate mx-auto">
                     Search
@@ -29,12 +31,10 @@ const search = () => {
               </button>
             </label>
           </form>
-
-    
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default search;
+export default search

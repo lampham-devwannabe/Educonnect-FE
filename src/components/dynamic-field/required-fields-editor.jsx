@@ -1,14 +1,18 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { PlusCircle, X } from 'lucide-react'
-
-
 
 export function RequiredFieldsEditor({ fields, onChange }) {
   const addField = () => {
-    onChange([...fields, { fieldName: "", fieldType: "string" }])
+    onChange([...fields, { fieldName: '', fieldType: 'string' }])
   }
 
   const updateField = (index, field) => {
@@ -17,7 +21,7 @@ export function RequiredFieldsEditor({ fields, onChange }) {
     onChange(newFields)
   }
 
-  const removeField = (index) => {
+  const removeField = index => {
     onChange(fields.filter((_, i) => i !== index))
   }
 
@@ -28,13 +32,16 @@ export function RequiredFieldsEditor({ fields, onChange }) {
         <div key={index} className="flex items-center space-x-2">
           <Input
             value={field.fieldName}
-            onChange={(e) => updateField(index, { ...field, fieldName: e.target.value })}
+            onChange={e =>
+              updateField(index, { ...field, fieldName: e.target.value })
+            }
             placeholder="Field Name"
           />
           <Select
             value={field.fieldType}
-            onValueChange={(value) => updateField(index, { ...field, fieldType: value })}
-
+            onValueChange={value =>
+              updateField(index, { ...field, fieldType: value })
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Field Type" />
@@ -46,7 +53,12 @@ export function RequiredFieldsEditor({ fields, onChange }) {
               <SelectItem value="date">Date</SelectItem>
             </SelectContent>
           </Select>
-          <Button type="button" variant="outline" size="icon" onClick={() => removeField(index)}>
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={() => removeField(index)}
+          >
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -57,4 +69,3 @@ export function RequiredFieldsEditor({ fields, onChange }) {
     </div>
   )
 }
-

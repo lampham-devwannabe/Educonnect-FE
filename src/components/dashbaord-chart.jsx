@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   Bar,
@@ -11,8 +11,8 @@ import {
   CartesianGrid,
   PieChart,
   Pie,
-} from "recharts";
-import { TrendingUp } from "lucide-react";
+} from 'recharts'
+import { TrendingUp } from 'lucide-react'
 
 import {
   Card,
@@ -21,36 +21,36 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card'
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
-} from "@/components/ui/chart";
-import { Separator } from "@/components/ui/separator";
+} from '@/components/ui/chart'
+import { Separator } from '@/components/ui/separator'
 import {
   useCoursPlanChartHooks,
   useTopCategoryHooks,
   useLastWeekCheckoutHooks,
-} from "@/hooks/useDashboardSummryHooks";
+} from '@/hooks/useDashboardSummryHooks'
 
 export function Charts() {
-  const { coursePlanChartData } = useCoursPlanChartHooks();
-  const { topCategoryData, chartConfig } = useTopCategoryHooks();
-  const { lastWeekCheckoutData } = useLastWeekCheckoutHooks();
+  const { coursePlanChartData } = useCoursPlanChartHooks()
+  const { topCategoryData, chartConfig } = useTopCategoryHooks()
+  const { lastWeekCheckoutData } = useLastWeekCheckoutHooks()
 
   const chartConfigBar = {
     courses: {
-      label: "Course",
-      color: "hsl(var(--chart-1))",
+      label: 'Course',
+      color: 'hsl(var(--chart-1))',
     },
     plans: {
-      label: "Plans",
-      color: "hsl(var(--chart-2))",
+      label: 'Plans',
+      color: 'hsl(var(--chart-2))',
     },
-  };
+  }
 
   return (
     <div className="chart-wrapper">
@@ -70,8 +70,8 @@ export function Charts() {
             <ChartContainer
               config={{
                 amount: {
-                  label: "amount",
-                  color: "hsl(var(--chart-1))",
+                  label: 'amount',
+                  color: 'hsl(var(--chart-1))',
                 },
               }}
             >
@@ -95,9 +95,9 @@ export function Charts() {
                   tickLine={false}
                   axisLine={false}
                   tickMargin={4}
-                  tickFormatter={(value) =>
-                    new Date(value).toLocaleDateString("en-US", {
-                      weekday: "short",
+                  tickFormatter={value =>
+                    new Date(value).toLocaleDateString('en-US', {
+                      weekday: 'short',
                     })
                   }
                 />
@@ -106,11 +106,11 @@ export function Charts() {
                   content={
                     <ChartTooltipContent
                       hideIndicator
-                      labelFormatter={(value) =>
-                        new Date(value).toLocaleDateString("en-US", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
+                      labelFormatter={value =>
+                        new Date(value).toLocaleDateString('en-US', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
                         })
                       }
                     />
@@ -164,7 +164,7 @@ export function Charts() {
                   tickLine={false}
                   tickMargin={10}
                   axisLine={false}
-                  tickFormatter={(value) => value.slice(0, 3)}
+                  tickFormatter={value => value.slice(0, 3)}
                 />
                 <ChartTooltip content={<ChartTooltipContent hideLabel />} />
                 <ChartLegend content={<ChartLegendContent />} />
@@ -185,7 +185,7 @@ export function Charts() {
           </CardContent>
           <CardFooter className="flex-col items-start gap-2 text-sm">
             <div className="flex gap-2 font-medium leading-none">
-              Summary of Course & Plan Checkout{" "}
+              Summary of Course & Plan Checkout{' '}
               <TrendingUp className="h-4 w-4" />
             </div>
             <div className="leading-none text-muted-foreground">
@@ -222,11 +222,11 @@ export function Charts() {
                       className="fill-background"
                       stroke="none"
                       fontSize={10}
-                      formatter={(value) => {
+                      formatter={value => {
                         const key = Object.keys(chartConfig).find(
-                          (configKey) => chartConfig[configKey].label === value
-                        );
-                        return key ? chartConfig[key]?.label : value;
+                          configKey => chartConfig[configKey].label === value
+                        )
+                        return key ? chartConfig[key]?.label : value
                       }}
                     />
                   </Pie>
@@ -245,5 +245,5 @@ export function Charts() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

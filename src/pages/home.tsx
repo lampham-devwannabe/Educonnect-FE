@@ -1,5 +1,5 @@
-import React from "react";
-import "tailwindcss";
+import React from 'react'
+import 'tailwindcss'
 export default function Home() {
   return (
     <section className="w-full flex-center flex-col">
@@ -69,7 +69,7 @@ export default function Home() {
           {/* Size selection */}
           <div className="flex items-baseline mt-4 mb-6 pb-6 border-b border-slate-200">
             <div className="space-x-2 flex text-sm font-bold">
-              {["XS", "S", "M", "L", "XL"].map((size, i) => (
+              {['XS', 'S', 'M', 'L', 'XL'].map((size, i) => (
                 <label key={i}>
                   <input
                     className="sr-only peer"
@@ -127,5 +127,5 @@ export default function Home() {
         </form>
       </div>
     </section>
-  );
+  )
 }

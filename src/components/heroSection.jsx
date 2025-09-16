@@ -1,6 +1,6 @@
-"use client";
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+'use client'
+import React, { useState } from 'react'
+import { motion } from 'framer-motion'
 import {
   BookOpen,
   GraduationCap,
@@ -8,26 +8,23 @@ import {
   PenTool,
   SquareUser,
   UsersIcon,
-} from "lucide-react";
-import Image from "next/image";
-import heroImg1 from "../../public/assets/hero-image/hero-img.png";
-import instructorImg1 from "../../public/assets/instructor-image/instructor1.png";
-import instructorImg2 from "../../public/assets/instructor-image/Eftyoffice.jpg";
-import instructorImg3 from "../../public/assets/instructor-image/instructor3.png";
-import instructorImg4 from "../../public/assets/instructor-image/instructor4.png";
-import bgImg1 from "../../public/assets/bg-image/bg-img1.png";
-import arrowImg from "../../public/assets/bg-image/arrow.png";
-import { useRouter } from "next/navigation";
-
-
-
+} from 'lucide-react'
+import Image from 'next/image'
+import heroImg1 from '../../public/assets/hero-image/hero-img.png'
+import instructorImg1 from '../../public/assets/instructor-image/instructor1.png'
+import instructorImg2 from '../../public/assets/instructor-image/Eftyoffice.jpg'
+import instructorImg3 from '../../public/assets/instructor-image/instructor3.png'
+import instructorImg4 from '../../public/assets/instructor-image/instructor4.png'
+import bgImg1 from '../../public/assets/bg-image/bg-img1.png'
+import arrowImg from '../../public/assets/bg-image/arrow.png'
+import { useRouter } from 'next/navigation'
 
 const HeroSection = () => {
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.6 },
-  };
+  }
 
   const stagger = {
     animate: {
@@ -35,29 +32,20 @@ const HeroSection = () => {
         staggerChildren: 0.1,
       },
     },
-  };
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
-
-
-
-
-  const handleSearch = async () => {
-
-
-    router.push(`/courselist?search=${encodeURIComponent(searchQuery)}`);
-
-
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
   }
 
+  const [searchQuery, setSearchQuery] = useState('')
+  const router = useRouter()
 
+  const handleSearch = async () => {
+    router.push(`/courselist?search=${encodeURIComponent(searchQuery)}`)
+  }
+
+  const handleKeyDown = event => {
+    if (event.key === 'Enter') {
+      handleSearch()
+    }
+  }
 
   return (
     <div className=" hero-img-bg bg-purple-50 relative overflow-hidden w-full mt-[0px] z-0 ">
@@ -72,7 +60,9 @@ const HeroSection = () => {
             className="w-full order-2 lg:order-1 lg:w-1/2 lg:pr-36 relative"
             variants={fadeInUp}
           >
-            <h5 className=" uppercase text-xs lg:text-sm text-[--primary] ">Welcome Smart academy  online courses</h5>
+            <h5 className=" uppercase text-xs lg:text-sm text-[--primary] ">
+              Welcome Smart academy online courses
+            </h5>
             <h1 className="text-2xl sm:text-2xl lg:text-4xl xl:text-5xl font-bold text-gray-900">
               Achieving Your Dreams Through Education
             </h1>
@@ -85,13 +75,35 @@ const HeroSection = () => {
             </div>
 
             <div className="p-3 lg:p-5 pr-4 lg:pr-10 bg-white lg:absolute rounded-md -bottom-12 lg:-right-24">
-              <h5 className="text-xl mb-2"><span className="text-[--primary]">200+</span> Instructor</h5>
+              <h5 className="text-xl mb-2">
+                <span className="text-[--primary]">200+</span> Instructor
+              </h5>
               <div className="flex -space-x-3 ">
-                <Image className="w-8 h-8 rounded-full" src={instructorImg1} alt="instructorImg" />
-                <Image className="w-8 h-8 rounded-full" src={instructorImg2} alt="instructorImg" />
-                <Image className="w-8 h-8 rounded-full" src={instructorImg3} alt="instructorImg" />
-                <Image className="w-8 h-8 rounded-full" src={instructorImg4} alt="instructorImg" />
-                <Image className="w-8 h-8 rounded-full" src={instructorImg1} alt="instructorImg" />
+                <Image
+                  className="w-8 h-8 rounded-full"
+                  src={instructorImg1}
+                  alt="instructorImg"
+                />
+                <Image
+                  className="w-8 h-8 rounded-full"
+                  src={instructorImg2}
+                  alt="instructorImg"
+                />
+                <Image
+                  className="w-8 h-8 rounded-full"
+                  src={instructorImg3}
+                  alt="instructorImg"
+                />
+                <Image
+                  className="w-8 h-8 rounded-full"
+                  src={instructorImg4}
+                  alt="instructorImg"
+                />
+                <Image
+                  className="w-8 h-8 rounded-full"
+                  src={instructorImg1}
+                  alt="instructorImg"
+                />
               </div>
             </div>
 
@@ -103,25 +115,25 @@ const HeroSection = () => {
                 className="w-full py-1 lg:py-2 px-2  text-gray-500 text-md rounded-full bg-white focus-visible:outline-none "
                 type="text"
                 placeholder="Search courses..."
-
-
-
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
               />
               <motion.button
                 className="px-2 lg:px-8 text-nowrap py-1 lg:py-2 bg-[--primary] text-white rounded-full transition duration-300 text-sm sm:text-base"
                 onClick={handleSearch}
-              // whilehover={{ scale: 1.05 }}
-              // whileTap={{ scale: 0.95 }}
+                // whilehover={{ scale: 1.05 }}
+                // whileTap={{ scale: 0.95 }}
               >
-
                 Search Now
               </motion.button>
 
               <div className="absolute rounded-md top-5 -right-6 -z-10">
-                <Image className="w-52 lg:w-72" src={arrowImg} alt="instructorImg" />
+                <Image
+                  className="w-52 lg:w-72"
+                  src={arrowImg}
+                  alt="instructorImg"
+                />
               </div>
             </motion.div>
           </motion.div>
@@ -208,7 +220,7 @@ const HeroSection = () => {
         </motion.div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default HeroSection;
+export default HeroSection

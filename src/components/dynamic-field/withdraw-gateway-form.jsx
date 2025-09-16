@@ -1,38 +1,40 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { RequiredFieldsEditor } from "./required-fields-editor";
+} from '@/components/ui/select'
+import { RequiredFieldsEditor } from './required-fields-editor'
 
 export function WithdrawGatewayForm({ gateway, onSave, onCancel }) {
-  const [name, setName] = useState(gateway?.name || "");
-  const [requiredFields, setRequiredFields] = useState(gateway?.requiredFields || []);
-  const [status, setStatus] = useState(gateway?.status || "Active");
+  const [name, setName] = useState(gateway?.name || '')
+  const [requiredFields, setRequiredFields] = useState(
+    gateway?.requiredFields || []
+  )
+  const [status, setStatus] = useState(gateway?.status || 'Active')
 
   useEffect(() => {
     if (gateway) {
-      setName(gateway.name);
-      setRequiredFields(gateway.requiredFields);
-      setStatus(gateway.status);
+      setName(gateway.name)
+      setRequiredFields(gateway.requiredFields)
+      setStatus(gateway.status)
     }
-  }, [gateway]);
+  }, [gateway])
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     onSave({
-      id: gateway?.id || "",
+      id: gateway?.id || '',
       name,
       requiredFields,
       status,
-    });
-  };
+    })
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -41,7 +43,7 @@ export function WithdrawGatewayForm({ gateway, onSave, onCancel }) {
         <Input
           id="name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
           required
         />
       </div>
@@ -51,7 +53,7 @@ export function WithdrawGatewayForm({ gateway, onSave, onCancel }) {
       />
       <div>
         <Label htmlFor="status">Status</Label>
-        <Select value={status} onValueChange={(value) => setStatus(value)}>
+        <Select value={status} onValueChange={value => setStatus(value)}>
           <SelectTrigger id="status">
             <SelectValue placeholder="Select status" />
           </SelectTrigger>
@@ -68,5 +70,5 @@ export function WithdrawGatewayForm({ gateway, onSave, onCancel }) {
         <Button type="submit">Save</Button>
       </div>
     </form>
-  );
+  )
 }

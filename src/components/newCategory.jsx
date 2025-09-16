@@ -1,47 +1,46 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { Skeleton } from "@/components/ui/skeleton";
-import { BookOpen } from "lucide-react";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import InfoTitle from "./infoTitle";
-import { Button } from "./ui/button";
+import Link from 'next/link'
+import { Skeleton } from '@/components/ui/skeleton'
+import { BookOpen } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import InfoTitle from './infoTitle'
+import { Button } from './ui/button'
 
 const NewCategory = () => {
-  const [categoryData, setCategoryData] = useState([]);
+  const [categoryData, setCategoryData] = useState([])
 
   useEffect(() => {
     const getCategory = async () => {
       try {
-    
-        const res = await fetch("/api/category?page=1&limit=9", {
-          method: "GET",
-        });
+        const res = await fetch('/api/category?page=1&limit=9', {
+          method: 'GET',
+        })
 
-        const data = await res.json();
+        const data = await res.json()
         // console.log("Category data:", data);
-        setCategoryData(data.data);
+        setCategoryData(data.data)
       } catch (error) {
-        console.error("Error fetching category data:", error);
+        console.error('Error fetching category data:', error)
       }
-    };
+    }
 
-    getCategory();
-  }, []);
+    getCategory()
+  }, [])
 
   const bgGradients = [
-    "bg-gradient-to-br from-yellow-50 to-amber-100",
-    "bg-gradient-to-br from-amber-50 to-yellow-100",
-    "bg-gradient-to-br from-cyan-50 to-blue-100",
-    "bg-gradient-to-br from-blue-50 to-sky-100",
-    "bg-gradient-to-br from-pink-50 to-rose-100",
-    "bg-gradient-to-br from-emerald-50 to-green-100",
-    "bg-gradient-to-br from-purple-50 to-fuchsia-100",
-    "bg-gradient-to-br from-red-50 to-orange-100",
-    "bg-gradient-to-br from-lime-50 to-green-100",
-    "bg-gradient-to-br from-indigo-50 to-violet-100",
-  ];
+    'bg-gradient-to-br from-yellow-50 to-amber-100',
+    'bg-gradient-to-br from-amber-50 to-yellow-100',
+    'bg-gradient-to-br from-cyan-50 to-blue-100',
+    'bg-gradient-to-br from-blue-50 to-sky-100',
+    'bg-gradient-to-br from-pink-50 to-rose-100',
+    'bg-gradient-to-br from-emerald-50 to-green-100',
+    'bg-gradient-to-br from-purple-50 to-fuchsia-100',
+    'bg-gradient-to-br from-red-50 to-orange-100',
+    'bg-gradient-to-br from-lime-50 to-green-100',
+    'bg-gradient-to-br from-indigo-50 to-violet-100',
+  ]
 
   return (
     <section className="w-full py-12 lg:py-20 pb-20 bg-white">
@@ -50,9 +49,9 @@ const NewCategory = () => {
           <h5 className="text-xs whitespace-nowrap lg:text-sm bg-purple-50 px-5 py-1 inline-block text-[--primary] uppercase rounded-full mb-2">
             Categories
           </h5>
-          <InfoTitle heading={"Browse By Categories"}></InfoTitle>
+          <InfoTitle heading={'Browse By Categories'}></InfoTitle>
         </div>
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {categoryData.length === 0
             ? Array(9)
                 .fill(0)
@@ -66,8 +65,7 @@ const NewCategory = () => {
                 return (
                   <Link
                     key={category._id}
-                   href={`/courselist?category=${category._id}`}
-
+                    href={`/courselist?category=${category._id}`}
                     className={`${
                       bgGradients[index % bgGradients.length]
                     } rounded-xl overflow-hidden transition-all hover:shadow-lg group`}
@@ -77,8 +75,8 @@ const NewCategory = () => {
                         <div className="w-14 h-14 rounded-full flex items-center justify-center bg-gray-100 mr-4 shadow-sm">
                           <span className="text-2xl">
                             <Image
-                              src={category.image || "/assets/placeholder.jpg"} 
-                              alt={category.name || "Category image"}
+                              src={category.image || '/assets/placeholder.jpg'}
+                              alt={category.name || 'Category image'}
                               width={40}
                               height={40}
                               className="w-10 h-10 rounded-lg"
@@ -105,7 +103,7 @@ const NewCategory = () => {
                       </div>
                     </div>
                   </Link>
-                );
+                )
               })}
         </div>
         <div className="mt-10 text-center">
@@ -115,7 +113,7 @@ const NewCategory = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default NewCategory;
+export default NewCategory
