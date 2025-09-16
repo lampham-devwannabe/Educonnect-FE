@@ -1,6 +1,6 @@
 // hooks/useOrderNotifications.js
 import { useEffect } from 'react'
-import { notifyOrder } from '../utils/notifications'
+import { notifyOrder } from '../utils/notifications.tsx'
 
 const useOrderNotifications = () => {
   useEffect(() => {
