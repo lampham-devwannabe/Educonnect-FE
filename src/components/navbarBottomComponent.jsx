@@ -1,7 +1,7 @@
 import React from 'react'
 import { cookies } from 'next/headers'
-import Navbar from './navbar'
-import NavbarBottom from './navbarBottom'
+import Navbar from './navbar.js'
+import NavbarBottom from './navbarBottom.js'
 // import Navbar from "./navbarNew";
 
 const NavbarBottomComponent = async () => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { cookies } from 'next/headers'
-import Navbar from './navbar'
+import Navbar from './navbar.js'
 import { getUserFromCookies } from '@/utils/cookies'
 
 const NavbarComponent = async () => {
