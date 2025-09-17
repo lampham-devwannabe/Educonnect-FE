@@ -1,5 +1,5 @@
-const currency = "$";
+const currency = '$'
 
-export const formatCurrency = (amount) => {
-    return `${currency}${amount}`;
-    };
+export const formatCurrency = amount => {
+  return `${currency}${amount}`
+}
