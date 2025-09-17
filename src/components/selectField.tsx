@@ -1,15 +1,28 @@
-import { Label } from '@/components/ui/label'
+import React from 'react'
+import { Label } from './ui/label'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectGroup,
-  SelectLabel,
-} from '@/components/ui/select'
+} from './ui/select'
 
-const SelectField = ({
+interface Option {
+  _id: string
+  [key: string]: string
+}
+
+interface SelectFieldProps {
+  label: string
+  options: string[] | Option[]
+  value: string
+  field: string
+  onChange: (value: string) => void
+  placeholder?: string
+}
+
+const SelectField: React.FC<SelectFieldProps> = ({
   label,
   options,
   value,
@@ -25,12 +38,12 @@ const SelectField = ({
       </SelectTrigger>
       <SelectContent>
         {field === ''
-          ? options.map(options => (
-              <SelectItem className="capitalize" key={options} value={options}>
-                {options}
+          ? (options as string[]).map(option => (
+              <SelectItem className="capitalize" key={option} value={option}>
+                {option}
               </SelectItem>
             ))
-          : options.map(option => (
+          : (options as Option[]).map(option => (
               <SelectItem
                 className="capitalize"
                 key={option._id}

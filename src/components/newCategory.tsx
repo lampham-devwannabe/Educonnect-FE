@@ -1,15 +1,24 @@
-'use client'
-
-import Link from 'next/link'
-import { Skeleton } from '@/components/ui/skeleton'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { BookOpen } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
 import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
 
-const NewCategory = () => {
-  const [categoryData, setCategoryData] = useState([])
+// TypeScript interfaces
+interface Category {
+  _id: string
+  categoryName: string
+  image?: string
+  courseCount: number
+}
+
+// Skeleton component (simplified)
+const Skeleton: React.FC<{ className?: string }> = ({ className }) => {
+  return <div className={`animate-pulse bg-gray-200 ${className}`}></div>
+}
+
+const NewCategory: React.FC = () => {
+  const [categoryData, setCategoryData] = useState<Category[]>([])
 
   useEffect(() => {
     const getCategory = async () => {
@@ -19,7 +28,6 @@ const NewCategory = () => {
         })
 
         const data = await res.json()
-        // console.log("Category data:", data);
         setCategoryData(data.data)
       } catch (error) {
         console.error('Error fetching category data:', error)
@@ -49,7 +57,7 @@ const NewCategory = () => {
           <h5 className="text-xs whitespace-nowrap lg:text-sm bg-purple-50 px-5 py-1 inline-block text-[--primary] uppercase rounded-full mb-2">
             Categories
           </h5>
-          <InfoTitle heading={'Browse By Categories'}></InfoTitle>
+          <InfoTitle heading={'Browse By Categories'} />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {categoryData.length === 0
@@ -65,7 +73,7 @@ const NewCategory = () => {
                 return (
                   <Link
                     key={category._id}
-                    href={`/courselist?category=${category._id}`}
+                    to={`/courselist?category=${category._id}`}
                     className={`${
                       bgGradients[index % bgGradients.length]
                     } rounded-xl overflow-hidden transition-all hover:shadow-lg group`}
@@ -74,11 +82,9 @@ const NewCategory = () => {
                       <div className="flex items-center mb-4">
                         <div className="w-14 h-14 rounded-full flex items-center justify-center bg-gray-100 mr-4 shadow-sm">
                           <span className="text-2xl">
-                            <Image
+                            <img
                               src={category.image || '/assets/placeholder.jpg'}
-                              alt={category.name || 'Category image'}
-                              width={40}
-                              height={40}
+                              alt={category.categoryName || 'Category image'}
                               className="w-10 h-10 rounded-lg"
                             />
                           </span>
@@ -107,7 +113,7 @@ const NewCategory = () => {
               })}
         </div>
         <div className="mt-10 text-center">
-          <Link href="/categorylist">
+          <Link to="/categorylist">
             <Button variant="outline">All Categories</Button>
           </Link>
         </div>

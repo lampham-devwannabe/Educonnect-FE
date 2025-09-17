@@ -1,28 +1,91 @@
-'use client'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import React, { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 import {
   Star,
-  CalendarDays,
-  Clock,
   ArrowRight,
   ArrowLeft,
   Users,
   LucideGavel,
   BookText,
 } from 'lucide-react'
-import textCircle from '../../public/assets/custom-image/textCircle.png'
-
-import Image from 'next/image'
-import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
 import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
-import Slider from 'react-slick'
+import textCircleImg from '../assets/images/textCircle.png'
 
-const PopularSliderCourse = ({ user }) => {
-  //--- slider start ---
-  const sliderRef = useRef(null)
-  var settings = {
+// TypeScript interfaces
+interface Instructor {
+  _id: string
+  name: string
+  image: string
+}
+
+interface Course {
+  _id: string
+  title: string
+  price: number
+  discount?: number
+  thumbnail?: string
+  courseBadge: string
+  level: string
+  totalSeat: number
+  instructor?: Instructor
+}
+
+interface PopularSliderCourseProps {
+  user?: {
+    id?: string
+    name?: string
+    role?: string
+  }
+}
+
+// Card components
+const Card: React.FC<{
+  className?: string
+  children: React.ReactNode
+}> = ({ className, children }) => {
+  return <div className={className}>{children}</div>
+}
+
+const CardHeader: React.FC<{
+  className?: string
+  children: React.ReactNode
+}> = ({ className, children }) => {
+  return <div className={className}>{children}</div>
+}
+
+const CardContent: React.FC<{
+  className?: string
+  children: React.ReactNode
+}> = ({ className, children }) => {
+  return <div className={className}>{children}</div>
+}
+
+const RatingStars: React.FC<{ rating: number }> = ({ rating }) => {
+  return (
+    <div className="flex items-center justify-left mt-2">
+      {[1, 2, 3, 4, 5].map(star => (
+        <Star
+          key={star}
+          className={`w-4 h-4 mr-1 ${
+            star <= Math.round(rating)
+              ? 'text-[#FC6441] fill-current'
+              : 'text-gray-300'
+          }`}
+        />
+      ))}
+      <span className="text-sm px-2 text-gray-700">{rating.toFixed(1)}k</span>
+    </div>
+  )
+}
+
+const PopularSliderCourse: React.FC<PopularSliderCourseProps> = () => {
+  // Slider configuration
+  const sliderRef = useRef<Slider | null>(null)
+  const settings = {
     autoplay: true,
     autoplaySpeed: 2000,
     dots: true,
@@ -59,77 +122,61 @@ const PopularSliderCourse = ({ user }) => {
       },
     ],
   }
-  //   ---- slider end ----
 
-  const [courses, setCourses] = useState([])
+  const [courses, setCourses] = useState<Course[]>([])
 
   useEffect(() => {
     const getCourses = async () => {
       try {
         const formData = new FormData()
-        formData.set('page', 1)
-        formData.set('pagination', 4)
-        const res = await fetch('api/course', {
+        formData.set('page', '1')
+        formData.set('pagination', '4')
+
+        const res = await fetch('/api/course', {
           method: 'POST',
           body: formData,
         })
+
         const courseData = await res.json()
-        console.log(courseData.data)
         setCourses(courseData.data)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
     }
+
     getCourses()
   }, [])
 
-  const RatingStars = ({ rating }) => {
-    return (
-      <div className="flex items-center justify-left mt-2">
-        {[1, 2, 3, 4, 5].map(star => (
-          <Star
-            key={star}
-            className={`w-4 h-4 mr-1 ${
-              star <= Math.round(rating)
-                ? 'text-[#FC6441] fill-current'
-                : 'text-gray-300'
-            }`}
-          />
-        ))}
-        <span className=" text-sm px-2  text-gray-700">
-          {rating.toFixed(1)}k
-        </span>
-      </div>
-    )
-  }
   return (
     <div className="popular-bg-img bg-purple-50 w-full pb-5 lg:pb-20">
       <div className="container mx-auto px-8 py-8 ">
-        <div className="lg:flex justify-between items-center text-left  lg:pt-10 pt-0 pb-10">
+        <div className="lg:flex justify-between items-center text-left lg:pt-10 pt-0 pb-10">
           <div className="relative w-full lg:w-1/2 lg:pr-20">
             <h5 className="text-xs whitespace-nowrap lg:text-sm bg-white px-5 py-1 inline-block text-[--primary] uppercase rounded-full mb-2">
               Top Popular Course
             </h5>
             <div className="hidden lg:block absolute top-6 right-48">
-              <Image className="w-36 h-16" alt="" src={textCircle}></Image>
+              <img className="w-36 h-16" alt="" src={textCircleImg} />
             </div>
             <InfoTitle
               heading={'Our popular Course student can join with us.'}
-            ></InfoTitle>
+            />
           </div>
           <div className="flex items-center gap-3">
-            <button className="text-white bg-[--primary] lg:text-lg text-sm  hover:text-white duration-100 lg:px-5 lg:py-2 px-2 py-1 rounded-full">
-              Explore courses
-            </button>
+            <Link to="/courses">
+              <button className="text-white bg-[--primary] lg:text-lg text-sm hover:text-white duration-100 lg:px-5 lg:py-2 px-2 py-1 rounded-full">
+                Explore courses
+              </button>
+            </Link>
             <div className="flex gap-2 items-center">
               <ArrowLeft
                 className="cursor-pointer text-[--primary] w-7 h-7 lg:w-10 lg:h-10 p-1 border-2 border-[--primary] rounded-full"
                 onClick={() => sliderRef.current?.slickPrev()}
-              ></ArrowLeft>
+              />
               <ArrowRight
                 className="cursor-pointer text-[--primary] w-7 h-7 lg:w-10 lg:h-10 p-1 border-2 border-[--primary] rounded-full"
                 onClick={() => sliderRef.current?.slickNext()}
-              ></ArrowRight>
+              />
             </div>
           </div>
         </div>
@@ -139,27 +186,22 @@ const PopularSliderCourse = ({ user }) => {
               <Card
                 className="w-full bg-blue-50/25 border-dashed border-[#c5b5ff] rounded-xl overflow-hidden p-5 transition-all duration-300 hover:shadow-xl"
                 key={course._id}
-                course={course}
               >
-                <Link href={`/course/details?id=${course._id}`}>
+                <Link to={`/course/details/${course._id}`}>
                   <CardHeader className="p-0 relative w-[100%] h-[200px]">
-                    <Image
-                      src={course?.thumbnail || '/placeholder.png'} // fallback image
-                      alt={course?.title || 'Course Thumbnail'} // better alt text for SEO
-                      width={450}
-                      height={300}
+                    <img
+                      src={course?.thumbnail || '/placeholder.png'}
+                      alt={course?.title || 'Course Thumbnail'}
                       className="w-full h-full object-cover rounded-lg"
-                      priority={false} // use true if above-the-fold
-                      quality={80} // optimize quality
                     />
-                    <h5 className=" py-2 px-3 text-gray-300 text-xs bg-[#17254E] absolute bottom-3 left-3 rounded-md">
-                      Digital Merketing
+                    <h5 className="py-2 px-3 text-gray-300 text-xs bg-[#17254E] absolute bottom-3 left-3 rounded-md">
+                      Digital Marketing
                     </h5>
                   </CardHeader>
                   <CardContent className="mt-3 pb-2 px-0">
                     <div className="flex justify-between items-center">
-                      <RatingStars rating={5.3}></RatingStars>
-                      <h5 className=" w-fit text-md py-1 mt-3 text-[--primary] font-semibold  ">
+                      <RatingStars rating={5.3} />
+                      <h5 className="w-fit text-md py-1 mt-3 text-[--primary] font-semibold">
                         {course.discount ? (
                           <span>
                             <del className="font-normal text-md mr-2">
@@ -197,17 +239,14 @@ const PopularSliderCourse = ({ user }) => {
                     </div>
                     <div className="lg:flex justify-between items-center mt-5">
                       <div className="flex gap-3">
-                        <Image
+                        <img
                           className="w-8 h-8 rounded-full"
                           src={course.instructor?.image}
                           alt="Author Image"
-                          width={50}
-                          height={50}
-                        ></Image>
-
+                        />
                         <h3>{course.instructor?.name}</h3>
                       </div>
-                      <Button className="mt-2 text-sm font-normal h-8 bg-[--primary] px-3 py-0 rounded-full hover:bg-[--primary]  hover:text-white  text-white ">
+                      <Button className="mt-2 text-sm font-normal h-8 bg-[--primary] px-3 py-0 rounded-full hover:bg-[--primary] hover:text-white text-white">
                         Enroll <ArrowRight className="text-xs w-5 h-4" />
                       </Button>
                     </div>

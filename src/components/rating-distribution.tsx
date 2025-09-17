@@ -1,8 +1,17 @@
-'use client'
+import React from 'react'
+import { cn } from '../lib/utils'
 
-import { cn } from '../../lib/utils'
+interface RatingDistributionProps {
+  distribution: {
+    [key: number]: number
+  }
+  className?: string
+}
 
-export function RatingDistribution({ distribution, className }) {
+export const RatingDistribution: React.FC<RatingDistributionProps> = ({
+  distribution,
+  className,
+}) => {
   // Calculate total reviews
   const totalReviews = Object.values(distribution).reduce(
     (sum, count) => sum + count,
@@ -10,12 +19,12 @@ export function RatingDistribution({ distribution, className }) {
   )
 
   // Calculate percentages for each rating
-  const percentages = {
-    5: totalReviews > 0 ? (distribution[5] / totalReviews) * 100 : 0,
-    4: totalReviews > 0 ? (distribution[4] / totalReviews) * 100 : 0,
-    3: totalReviews > 0 ? (distribution[3] / totalReviews) * 100 : 0,
-    2: totalReviews > 0 ? (distribution[2] / totalReviews) * 100 : 0,
-    1: totalReviews > 0 ? (distribution[1] / totalReviews) * 100 : 0,
+  const percentages: Record<number, number> = {
+    5: totalReviews > 0 ? ((distribution[5] || 0) / totalReviews) * 100 : 0,
+    4: totalReviews > 0 ? ((distribution[4] || 0) / totalReviews) * 100 : 0,
+    3: totalReviews > 0 ? ((distribution[3] || 0) / totalReviews) * 100 : 0,
+    2: totalReviews > 0 ? ((distribution[2] || 0) / totalReviews) * 100 : 0,
+    1: totalReviews > 0 ? ((distribution[1] || 0) / totalReviews) * 100 : 0,
   }
 
   return (
@@ -41,10 +50,12 @@ export function RatingDistribution({ distribution, className }) {
           </div>
 
           <div className="w-12 text-sm text-muted-foreground">
-            {distribution[rating]}
+            {distribution[rating] || 0}
           </div>
         </div>
       ))}
     </div>
   )
 }
+
+export default RatingDistribution

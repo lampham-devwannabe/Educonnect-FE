@@ -1,5 +1,13 @@
-const VideoPlayer = ({ src, onClose }) => {
-  let videoId
+import React from 'react'
+import { X } from 'lucide-react'
+
+interface VideoPlayerProps {
+  src: string
+  onClose: () => void
+}
+
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, onClose }) => {
+  let videoId: string | null = null
 
   try {
     const url = new URL(src)
@@ -25,15 +33,17 @@ const VideoPlayer = ({ src, onClose }) => {
         frameBorder="0"
         allow="autoplay; fullscreen; picture-in-picture"
         allowFullScreen
+        title="YouTube video player"
       ></iframe>
       <button
         onClick={onClose}
-        className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1"
+        className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-1 hover:bg-opacity-70 transition-opacity"
         aria-label="Close video"
       >
-        ✖
+        <X className="w-4 h-4" />
       </button>
     </div>
   )
 }
+
 export default VideoPlayer

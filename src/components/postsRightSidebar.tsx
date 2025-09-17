@@ -1,10 +1,20 @@
-'use client'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
-export const PostsRightSidebar = () => {
-  const [promos, setPromos] = useState([])
+// Define TypeScript interfaces
+interface Promo {
+  _id: string
+  title: string
+  description: string
+  image: string
+  buttonText: string
+  buttonLink: string
+  isActive: boolean
+}
+
+export const PostsRightSidebar: React.FC = () => {
+  const [promos, setPromos] = useState<Promo[]>([])
+
   useEffect(() => {
     fetch('/api/ads-promo')
       .then(res => res.json())
@@ -16,37 +26,33 @@ export const PostsRightSidebar = () => {
     <div className="hidden lg:block w-[300px] flex-shrink-0">
       <div className="sticky top-4 space-y-4">
         {promos
-          .filter(prom => prom.isActive)
-          .map(prom => {
+          .filter(promo => promo.isActive)
+          .map(promo => {
             return (
               <div
-                key={prom._id}
+                key={promo._id}
                 className="relative h-[280px] rounded-2xl overflow-hidden border border-purple-300 shadow-xl group text-white text-center"
               >
-                <Image
-                  width={600}
-                  height={600}
-                  src={prom.image}
+                <img
+                  src={promo.image}
                   alt="Course"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
 
                 <div className="absolute inset-0 flex flex-col justify-between px-6 mt-3 z-10">
                   <div>
-                    {' '}
                     <h2 className="text-2xl font-extrabold mb-2 drop-shadow-lg transition-all duration-300 group-hover:scale-105 text-yellow-400 decoration-yellow-300">
-                      {prom.title}
+                      {promo.title}
                     </h2>
                     <p className="text-white font-semibold text-lg mb-2 drop-shadow-sm transition-all duration-300 group-hover:scale-105 ">
-                      {prom.description}
+                      {promo.description}
                     </p>
                   </div>
 
                   <div className="flex justify-center pb-4">
-                    {' '}
-                    <Link href={prom.buttonLink}>
+                    <Link to={promo.buttonLink}>
                       <button className="bg-yellow-400 text-black px-4 py-2 rounded-full font-semibold shadow-md transition-all duration-300 hover:bg-yellow-500 hover:scale-105">
-                        {prom.buttonText}
+                        {promo.buttonText}
                       </button>
                     </Link>
                   </div>
@@ -60,3 +66,5 @@ export const PostsRightSidebar = () => {
     </div>
   )
 }
+
+export default PostsRightSidebar

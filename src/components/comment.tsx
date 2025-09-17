@@ -1,23 +1,53 @@
 'use client'
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Separator } from '@/components/ui/separator'
+import React, { useState, useEffect } from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { Button } from './ui/button'
+import { Textarea } from './ui/textarea'
+import { Separator } from './ui/separator'
 import { ChevronDown, ChevronUp, Send, MessageSquare } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
-const Comment = ({ postId, currentUserId }) => {
-  const [comments, setComments] = useState([])
-  const [newComment, setNewComment] = useState('')
-  const [replyingTo, setReplyingTo] = useState(null)
-  const [replyText, setReplyText] = useState('')
-  const [expandedComments, setExpandedComments] = useState({})
-  const [refresh, setRefresh] = useState(false)
+interface User {
+  _id: string
+  name: string
+  image?: string
+}
+
+interface Reply {
+  _id: string
+  user: User
+  reply: string
+  createdAt: string
+}
+
+interface CommentType {
+  _id: string
+  user: User
+  comment: string
+  createdAt: string
+  replies: Reply[]
+}
+
+interface CommentProps {
+  postId: string
+  currentUserId: string
+}
+
+interface ExpandedCommentsState {
+  [key: string]: boolean
+}
+
+const Comment: React.FC<CommentProps> = ({ postId, currentUserId }) => {
+  const [comments, setComments] = useState<CommentType[]>([])
+  const [newComment, setNewComment] = useState<string>('')
+  const [replyingTo, setReplyingTo] = useState<string | null>(null)
+  const [replyText, setReplyText] = useState<string>('')
+  const [expandedComments, setExpandedComments] =
+    useState<ExpandedCommentsState>({})
+  const [refresh, setRefresh] = useState<boolean>(false)
 
   useEffect(() => {
-    const fetchComments = async () => {
+    const fetchComments = async (): Promise<void> => {
       const formData = new FormData()
       formData.append('postid', postId)
 
@@ -29,8 +59,8 @@ const Comment = ({ postId, currentUserId }) => {
       const data = await res.json()
       if (data?.data?.comments) {
         setComments(data.data.comments)
-        const initExpand = {}
-        data.data.comments.forEach(c => {
+        const initExpand: ExpandedCommentsState = {}
+        data.data.comments.forEach((c: CommentType) => {
           if (c.replies?.length > 0) initExpand[c._id] = false
         })
         setExpandedComments(initExpand)
@@ -39,7 +69,7 @@ const Comment = ({ postId, currentUserId }) => {
     fetchComments()
   }, [postId, refresh])
 
-  const handleAddComment = async () => {
+  const handleAddComment = async (): Promise<void> => {
     if (!newComment.trim()) return
 
     const formdata = new FormData()
@@ -55,7 +85,7 @@ const Comment = ({ postId, currentUserId }) => {
     setRefresh(!refresh)
   }
 
-  const handleAddReply = async commentId => {
+  const handleAddReply = async (commentId: string): Promise<void> => {
     const formdata = new FormData()
     formdata.append('postid', postId)
     formdata.append('userid', currentUserId)
@@ -72,7 +102,7 @@ const Comment = ({ postId, currentUserId }) => {
     setRefresh(!refresh)
   }
 
-  const toggleReplies = async commentId => {
+  const toggleReplies = (commentId: string): void => {
     setExpandedComments(prev => ({
       ...prev,
       [commentId]: !prev[commentId],
