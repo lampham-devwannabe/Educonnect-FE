@@ -1,13 +1,23 @@
-const search = () => {
+import React, { type FormEvent } from 'react'
+
+interface SearchProps {
+  content: string
+}
+
+const Search: React.FC<SearchProps> = () => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+  }
+
   return (
     <div>
       <div className="mx-auto max-w-screen-xl sm:px-6 lg:px-8 mt-12">
         <div className="relative isolate overflow-hidden bg-white px-6 py-20 text-center sm:px-16 sm:shadow-sm">
           <p className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Didn&apos;t find component you were looking for?
+            Didn't find component you were looking for?
           </p>
 
-          <form action="/search">
+          <form action="/search" onSubmit={handleSubmit}>
             <label
               className="mx-auto mt-8 relative bg-white min-w-sm max-w-2xl flex flex-col md:flex-row items-center justify-center border py-2 px-2 rounded-2xl gap-2 shadow-2xl focus-within:border-gray-300"
               htmlFor="search-bar"
@@ -17,7 +27,7 @@ const search = () => {
                 placeholder="your keyword here"
                 name="q"
                 className="px-6 py-2 w-full rounded-md flex-1 outline-none bg-white"
-                required=""
+                required
               />
               <button
                 type="submit"
@@ -37,4 +47,4 @@ const search = () => {
   )
 }
 
-export default search
+export default Search

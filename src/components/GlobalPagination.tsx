@@ -1,5 +1,4 @@
-'use client'
-
+import React from 'react'
 import {
   Pagination,
   PaginationContent,
@@ -8,17 +7,26 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination'
-import { CardFooter } from '@/components/ui/card'
+} from './ui/pagination'
+import { CardFooter } from './ui/card'
 
-export default function GlobalPagination({
+interface GlobalPaginationProps {
+  currentPage: number
+  totalPages: number
+  pageSize?: number
+  totalItems: number
+  currentPageDataLength: number
+  onPageChange: (page: number) => void
+}
+
+const GlobalPagination: React.FC<GlobalPaginationProps> = ({
   currentPage,
   totalPages,
   pageSize = 10,
   totalItems,
   currentPageDataLength,
   onPageChange,
-}) {
+}) => {
   return (
     <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-2">
       <div className="text-xs text-muted-foreground">
@@ -35,7 +43,7 @@ export default function GlobalPagination({
           <PaginationItem>
             <PaginationPrevious
               href="#"
-              onClick={e => {
+              onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                 e.preventDefault()
                 if (currentPage > 1) onPageChange(currentPage - 1)
               }}
@@ -51,7 +59,7 @@ export default function GlobalPagination({
               <PaginationItem key={pageNumber}>
                 <PaginationLink
                   href="#"
-                  onClick={e => {
+                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault()
                     onPageChange(pageNumber)
                   }}
@@ -71,7 +79,7 @@ export default function GlobalPagination({
               <PaginationItem>
                 <PaginationLink
                   href="#"
-                  onClick={e => {
+                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault()
                     onPageChange(totalPages)
                   }}
@@ -86,7 +94,7 @@ export default function GlobalPagination({
           <PaginationItem>
             <PaginationNext
               href="#"
-              onClick={e => {
+              onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                 e.preventDefault()
                 if (currentPage < totalPages) onPageChange(currentPage + 1)
               }}
@@ -102,3 +110,5 @@ export default function GlobalPagination({
     </CardFooter>
   )
 }
+
+export default GlobalPagination

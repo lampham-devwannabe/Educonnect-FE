@@ -1,6 +1,5 @@
-'use client'
-import { useState } from 'react'
-import Link from 'next/link'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Home,
   Package,
@@ -26,20 +25,14 @@ import {
   Check,
   Megaphone,
   Video,
-} from 'lucide-react'
-
-import { Button } from './ui/button'
-
-import Image from 'next/image'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import {
   BadgeCheck,
-  BellIcon,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from 'lucide-react'
+import { GlobeAltIcon } from '@heroicons/react/24/outline'
+import { formatDateTime } from '../utils/dateformate'
+import { Button } from './ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,24 +41,80 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { GlobeAltIcon } from '@heroicons/react/24/outline'
-import { useNotificationHooks } from '@/hooks/useNotificationHooks'
-import { Badge } from '@/components/ui/badge'
-import { formatDateTime } from '@/utils/dateformate'
+} from './ui/dropdown-menu'
+import { Badge } from './ui/badge'
 
-export default function Sidebar({ user }) {
-  const [activeLink, setActiveLink] = useState('/dashboard')
-  const [categorySubmenuOpen, setCategorySubmenuOpen] = useState(false)
-  const [courseSubmenuOpen, setCourseSubmenuOpen] = useState(false)
-  const [mentorshipSubmenuOpen, setMentorshipSubmenuOpen] = useState(false)
-  const [userSubmenuOpen, setUserSubmenuOpen] = useState(false)
-  const [financialSubmenuOpen, setFinancialSubmenuOpen] = useState(false)
-  const [salesReportSubmenuOpen, setsalesReportSubmenuOpen] = useState()
+interface User {
+  name: string
+  role: string
+  image?: string
+}
+
+interface Notification {
+  _id: string
+  title: string
+  message: string
+  type: string
+  isRead: boolean
+  createdAt: string
+  actionLink?: string
+  imageUrl?: string
+}
+
+interface SidebarProps {
+  user: User
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ user }) => {
+  const [activeLink, setActiveLink] = useState<string>('/dashboard')
+  const [categorySubmenuOpen, setCategorySubmenuOpen] = useState<boolean>(false)
+  const [courseSubmenuOpen, setCourseSubmenuOpen] = useState<boolean>(false)
+  const [mentorshipSubmenuOpen, setMentorshipSubmenuOpen] =
+    useState<boolean>(false)
+  // const [userSubmenuOpen, setUserSubmenuOpen] = useState<boolean>(false)
+  const [financialSubmenuOpen, setFinancialSubmenuOpen] =
+    useState<boolean>(false)
+  const [salesReportSubmenuOpen, setSalesReportSubmenuOpen] =
+    useState<boolean>(false)
+
+  const [notificationOpen, setNotificationOpen] = useState<boolean>(false)
+  const [notificationData, setNotificationData] = useState<Notification[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const [markingAllRead, setMarkingAllRead] = useState<boolean>(false)
+
+  // Links
+  // const dashboardLinks = '/dashboard'
+  // const courseLinks = '/dashboard/course'
+  // const courseAddLinks = '/dashboard/course/add-new'
+  // const courseManageLinks = '/dashboard/course/'
+  // const courseTypeLinks = '/dashboard/course-type'
+  // const mentorshipLinks = '/dashboard/mentorship'
+  // const mentorshipAddLinks = '/dashboard/mentorship/add-new'
+  // const mentorshipManageLinks = '/dashboard/mentorship/'
+  // const categoryLinks = '/dashboard/category'
+  // const categoryAddLinks = '/dashboard/category/add'
+  // const categoryManageLinks = '/dashboard/category/manage'
+  // const userLinks = '/dashboard/user'
+  // const financialLinks = '/dashboard/financial'
+  // const analyticsLinks = '/dashboard/analytics'
+  // const feedPostLinks = '/dashboard/post-feed'
+  // const messageLinks = '/dashboard/contact-message'
+  // const notificationLinks = '/dashboard/notification'
+  // const settingsLinks = '/dashboard/settings'
+  // const transectionLinks = '/dashboard/transection'
+  // const appsettingsLinks = '/dashboard/appsettings'
+  // const salesReportLinks = '/dashboard/sales-report'
+  const courseSalesLinks = '/dashboard/sales-report/course'
+  const mentorshipSalesLinks = '/dashboard/sales-report/mentorship'
+  const paymentMehodLinks = '/dashboard/payment-method'
+  const paymentAccountLinks = '/dashboard/payment-account'
+  const withdrawGatewayLinks = '/dashboard/withdraw-getway'
+  // const bannerLinks = '/dashboard/banners'
 
   const toggleCategorySubmenu = () => {
     setCategorySubmenuOpen(!categorySubmenuOpen)
   }
+
   const toggleCourseSubmenu = () => {
     setCourseSubmenuOpen(!courseSubmenuOpen)
   }
@@ -77,75 +126,46 @@ export default function Sidebar({ user }) {
   const toggleFinancialSubmenu = () => {
     setFinancialSubmenuOpen(!financialSubmenuOpen)
   }
+
   const toggleSalesReportSubmenu = () => {
-    setsalesReportSubmenuOpen(!salesReportSubmenuOpen)
+    setSalesReportSubmenuOpen(!salesReportSubmenuOpen)
   }
 
-  const [notificationOpen, setNotificationOpen] = useState(false)
-
-  const { notificationData, fetchNotification } =
-    useNotificationHooks(notificationOpen)
-
-  const [loading, setLoading] = useState(false)
-  const [markingAllRead, setMarkingAllRead] = useState(false)
-  const dashboardLinks = '/dashboard'
-  const courseLinks = '/dashboard/course'
-  const courseAddLinks = '/dashboard/course/add-new'
-  const courseManageLinks = '/dashboard/course/'
-  const courseTypeLinks = '/dashboard/course-type'
-  const mentorshipLinks = '/dashboard/mentorship'
-  const mentorshipAddLinks = '/dashboard/mentorship/add-new'
-  const mentorshipManageLinks = '/dashboard/mentorship/'
-  const categoryLinks = '/dashboard/category'
-  const categoryAddLinks = '/dashboard/category/add'
-  const categoryManageLinks = '/dashboard/category/manage'
-  const userLinks = '/dashboard/user'
-  const financialLinks = '/dashboard/financial'
-  const analyticsLinks = '/dashboard/analytics'
-  const feedPostLinks = '/dashboard/post-feed'
-  const messageLinks = '/dashboard/contact-message'
-  const notificationLinks = '/dashboard/notification'
-  const settingsLinks = '/dashboard/settings'
-  const transectionLinks = '/dashboard/transection'
-  const appsettingsLinks = '/dashboard/appsettings'
-  const salesReportLinks = '/dashboard/sales-report'
-  const courseSalesLinks = '/dashboard/sales-report/course'
-  const mentorshipSalesLinks = '/dashboard/sales-report/mentorship'
-  const paymentMehodLinks = '/dashboard/payment-method'
-  const paymentAccountLinks = '/dashboard/payment-account'
-  const withdrawGatewayLinks = '/dashboard/withdraw-getway'
-  const bannerLinks = '/dashboard/banners'
-
-  const handleLogout = async () => {
-    const response = await fetch('/api/logout', {
-      method: 'POST',
-    })
-
-    if (response.ok) {
-      // Handle successful logout (e.g., redirect to home page)
-      window.location.href = '/' // Redirect to the home page or wherever you want
-    } else {
-      // Handle errors
-      console.error('Logout failed')
-    }
-  }
-  let hideTimeouts = {
+  // Notification handling
+  const hideTimeouts: Record<string, NodeJS.Timeout | null> = {
     notification: null,
   }
-  const handleMouseEnter = type => {
-    // Clear any existing timeout to prevent premature hiding
-    clearTimeout(hideTimeouts[type])
-    if (type === 'notification') setNotificationOpen(true)
+
+  const fetchNotification = async () => {
+    try {
+      const response = await fetch('/api/notification')
+      const data = await response.json()
+      if (data.status === 200) {
+        setNotificationData(data.notifications)
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error)
+    }
   }
 
-  const handleMouseLeave = type => {
-    // Set a timeout to hide the dropdown after a short delay
+  const handleMouseEnter = (type: string) => {
+    if (hideTimeouts[type]) {
+      clearTimeout(hideTimeouts[type]!)
+    }
+    if (type === 'notification') {
+      setNotificationOpen(true)
+      fetchNotification()
+    }
+  }
+
+  const handleMouseLeave = (type: string) => {
     hideTimeouts[type] = setTimeout(() => {
       if (type === 'notification') setNotificationOpen(false)
-    }, 300) // Adjust the delay as needed
+    }, 300)
   }
-  const getNotificationIcon = type => {
-    const iconMap = {
+
+  const getNotificationIcon = (type: string) => {
+    const iconMap: Record<string, React.JSX.Element> = {
       CoursePurchase: <BookOpen className="w-5 h-5" />,
       BookMentorShip: <Users className="w-5 h-5" />,
       Referral: <Gift className="w-5 h-5" />,
@@ -156,8 +176,8 @@ export default function Sidebar({ user }) {
     return iconMap[type] || iconMap['Other']
   }
 
-  const getNotificationColor = type => {
-    const colorMap = {
+  const getNotificationColor = (type: string) => {
+    const colorMap: Record<string, string> = {
       CoursePurchase: 'bg-blue-100 text-blue-600',
       BookMentorShip: 'bg-purple-100 text-purple-600',
       Referral: 'bg-green-100 text-green-600',
@@ -169,10 +189,9 @@ export default function Sidebar({ user }) {
   }
 
   // Mark single notification as read
-  const markAsRead = async notificationId => {
+  const markAsRead = async (notificationId: string) => {
     try {
       setLoading(true)
-
       const formData = new FormData()
       formData.append('notification_id', notificationId)
       formData.append('status', 'true')
@@ -183,9 +202,7 @@ export default function Sidebar({ user }) {
       })
 
       const result = await response.json()
-
       if (result.status === 200) {
-        // Refetch notifications to get updated data
         await fetchNotification()
       } else {
         throw new Error(result.message)
@@ -201,7 +218,6 @@ export default function Sidebar({ user }) {
   const markAllAsRead = async () => {
     try {
       setMarkingAllRead(true)
-
       const formData = new FormData()
       formData.append('markAllRead', 'true')
 
@@ -211,9 +227,7 @@ export default function Sidebar({ user }) {
       })
 
       const result = await response.json()
-
       if (result.status === 200) {
-        // Refetch notifications to get updated data
         await fetchNotification()
       } else {
         throw new Error(result.message)
@@ -225,30 +239,44 @@ export default function Sidebar({ user }) {
     }
   }
 
-  const unreadCount = notificationData?.filter(n => !n.isRead).length || 0
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+      })
 
-  const handleNotificationClick = async notification => {
-    // Mark as read if not already read
+      if (response.ok) {
+        window.location.href = '/'
+      } else {
+        console.error('Logout failed')
+      }
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+  }
+
+  const handleNotificationClick = async (notification: Notification) => {
     if (!notification.isRead) {
       await markAsRead(notification._id)
     }
 
-    // Navigate to action link if available
     if (notification.actionLink) {
       window.location.href = notification.actionLink
     }
   }
 
+  const unreadCount = notificationData?.filter(n => !n.isRead).length || 0
+
   return (
-    <div className="hidden  mb-5 border-r bg-muted/40 md:block">
-      <div className="flex flex-col h-full fixed md:w-[200px] lg:w-[280px]  justify-between">
+    <div className="hidden mb-5 border-r bg-muted/40 md:block">
+      <div className="flex flex-col h-full fixed md:w-[200px] lg:w-[280px] justify-between">
         <div className="flex h-14 py-3 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link
-            href="/"
+            to="/"
             className="flex items-center mt-2 mb-2 gap-2 font-semibold"
           >
-            <Image
-              src="/assets/icon/logo.png" // Corrected path
+            <img
+              src="/assets/icon/logo.png"
               alt="smart academy"
               width={100}
               height={50}
@@ -281,12 +309,13 @@ export default function Sidebar({ user }) {
                   {unreadCount}
                 </span>
               )}
+
               {notificationOpen && (
                 <div
                   id="notificationDropdown"
                   className="absolute left-0 mt-2 w-[440px] max-h-[600px] bg-white rounded-xl shadow-xl border border-gray-100 z-[1000] overflow-hidden"
                 >
-                  {/* Header */}
+                  {/* Notification dropdown content */}
                   <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -304,7 +333,7 @@ export default function Sidebar({ user }) {
                         )}
                       </div>
                       <div className="flex items-center gap-3">
-                        <Link href="/notification">
+                        <Link to="/notification">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -353,7 +382,7 @@ export default function Sidebar({ user }) {
                               {/* Notification Icon/Image */}
                               <div className="flex-shrink-0">
                                 {notification.imageUrl ? (
-                                  <Image
+                                  <img
                                     src={
                                       notification.imageUrl ||
                                       '/placeholder.svg'
@@ -450,7 +479,7 @@ export default function Sidebar({ user }) {
                   {/* Footer */}
                   {notificationData && notificationData.length > 0 && (
                     <div className="px-6 py-3 border-t border-gray-100 bg-gray-50">
-                      <Link href="/notification">
+                      <Link to="/notification">
                         <Button
                           variant="outline"
                           className="w-full text-gray-700 hover:bg-gray-100"
@@ -465,14 +494,17 @@ export default function Sidebar({ user }) {
             </div>
           </Button>
         </div>
+
+        {/* Navigation Menu */}
         <div
           className="flex h-fit max-h-screen overflow-y-scroll flex-col gap-2 mt-3 mx-1"
           style={{ scrollbarWidth: 'none' }}
         >
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+              {/* Dashboard link */}
               <Link
-                href="/dashboard"
+                to="/dashboard"
                 onClick={() => setActiveLink('/dashboard')}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                   activeLink === '/dashboard'
@@ -484,10 +516,11 @@ export default function Sidebar({ user }) {
                 Dashboard
               </Link>
 
+              {/* Course menu */}
               <div>
                 <button
                   onClick={toggleCourseSubmenu}
-                  className={`flex  w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                     activeLink === '/dashboard/course'
                       ? 'bg-muted text-primary'
                       : 'text-muted-foreground hover:text-primary'
@@ -497,7 +530,7 @@ export default function Sidebar({ user }) {
                   Course
                   <ChevronDown
                     className={`h-4 w-4 ml-auto transition-transform ${
-                      categorySubmenuOpen ? 'rotate-180' : ''
+                      courseSubmenuOpen ? 'rotate-180' : ''
                     }`}
                   />
                 </button>
@@ -505,7 +538,7 @@ export default function Sidebar({ user }) {
                 {courseSubmenuOpen && (
                   <div className="ml-8 flex flex-col gap-1">
                     <Link
-                      href="/dashboard/course/add-new"
+                      to="/dashboard/course/add-new"
                       onClick={() => setActiveLink('/dashboard/course/add-new')}
                       className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                         activeLink === '/dashboard/course/add-new'
@@ -516,7 +549,7 @@ export default function Sidebar({ user }) {
                       Add Course
                     </Link>
                     <Link
-                      href="/dashboard/course/"
+                      to="/dashboard/course/"
                       onClick={() => setActiveLink('/dashboard/course/')}
                       className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                         activeLink === '/dashboard/course/'
@@ -528,7 +561,7 @@ export default function Sidebar({ user }) {
                     </Link>
                     {user.role === 'admin' && (
                       <Link
-                        href="/dashboard/course-type"
+                        to="/dashboard/course-type"
                         onClick={() => setActiveLink('/dashboard/course-type')}
                         className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                           activeLink === '/dashboard/course-type'
@@ -543,10 +576,11 @@ export default function Sidebar({ user }) {
                 )}
               </div>
 
+              {/* Mentorship menu */}
               <div>
                 <button
                   onClick={toggleMentorshipSubmenu}
-                  className={`flex  w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                     activeLink === '/dashboard/mentorship'
                       ? 'bg-muted text-primary'
                       : 'text-muted-foreground hover:text-primary'
@@ -556,7 +590,7 @@ export default function Sidebar({ user }) {
                   Mentorship
                   <ChevronDown
                     className={`h-4 w-4 ml-auto transition-transform ${
-                      categorySubmenuOpen ? 'rotate-180' : ''
+                      mentorshipSubmenuOpen ? 'rotate-180' : ''
                     }`}
                   />
                 </button>
@@ -564,7 +598,7 @@ export default function Sidebar({ user }) {
                 {mentorshipSubmenuOpen && (
                   <div className="ml-8 flex flex-col gap-1">
                     <Link
-                      href="/dashboard/mentorship/add-plan"
+                      to="/dashboard/mentorship/add-plan"
                       onClick={() =>
                         setActiveLink('dashboard/mentorship/add-plan')
                       }
@@ -577,7 +611,7 @@ export default function Sidebar({ user }) {
                       Add Plan
                     </Link>
                     <Link
-                      href="/dashboard/mentorship/all-plan"
+                      to="/dashboard/mentorship/all-plan"
                       onClick={() =>
                         setActiveLink('/dashboard/mentorship/all-plan')
                       }
@@ -590,7 +624,7 @@ export default function Sidebar({ user }) {
                       Manage Plan
                     </Link>
                     <Link
-                      href="/dashboard/mentorship/booked-mentorship"
+                      to="/dashboard/mentorship/booked-mentorship"
                       onClick={() =>
                         setActiveLink('/dashboard/mentorship/booked-mentorship')
                       }
@@ -605,69 +639,64 @@ export default function Sidebar({ user }) {
                   </div>
                 )}
               </div>
+
+              {/* Admin-only menus */}
               {user.role === 'admin' && (
-                <div>
-                  <button
-                    onClick={toggleCategorySubmenu}
-                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                      activeLink === '/dashboard/category'
+                <>
+                  {/* Categories */}
+                  <div>
+                    <button
+                      onClick={toggleCategorySubmenu}
+                      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                        activeLink === '/dashboard/category'
+                          ? 'bg-muted text-primary'
+                          : 'text-muted-foreground hover:text-primary'
+                      }`}
+                    >
+                      <Package className="h-4 w-4" />
+                      Categories
+                      <ChevronDown
+                        className={`h-4 w-4 ml-auto transition-transform ${
+                          categorySubmenuOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                    {categorySubmenuOpen && (
+                      <div className="ml-8 flex flex-col gap-1">
+                        <Link
+                          to="/dashboard/category"
+                          onClick={() =>
+                            setActiveLink('/dashboard/category/manage')
+                          }
+                          className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                            activeLink === '/dashboard/category/manage'
+                              ? 'bg-muted text-primary'
+                              : 'text-muted-foreground hover:text-primary'
+                          }`}
+                        >
+                          Manage Categories
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* User management */}
+                  <Link
+                    to="/dashboard/user"
+                    onClick={() => setActiveLink('/dashboard/user')}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      activeLink === '/dashboard/user'
                         ? 'bg-muted text-primary'
                         : 'text-muted-foreground hover:text-primary'
                     }`}
                   >
-                    <Package className="h-4 w-4" />
-                    Categories
-                    <ChevronDown
-                      className={`h-4 w-4 ml-auto transition-transform ${
-                        categorySubmenuOpen ? 'rotate-180' : ''
-                      }`}
-                    />
-                  </button>
-                  {categorySubmenuOpen && (
-                    <div className="ml-8 flex flex-col gap-1">
-                      {/* <Link
-                              href="/dashboard/category/add"
-                              onClick={() => setActiveLink("/dashboard/category/add")}
-                              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                                activeLink === "/dashboard/category/add"
-                                  ? "bg-muted text-primary"
-                                  : "text-muted-foreground hover:text-primary"
-                              }`}
-                            >
-                              Add Category
-                            </Link> */}
-                      <Link
-                        href="/dashboard/category"
-                        onClick={() =>
-                          setActiveLink('/dashboard/category/manage')
-                        }
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                          activeLink === '/dashboard/category/manage'
-                            ? 'bg-muted text-primary'
-                            : 'text-muted-foreground hover:text-primary'
-                        }`}
-                      >
-                        Manage Categories
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              )}
-              {user.role === 'admin' && (
-                <Link
-                  href="/dashboard/user"
-                  onClick={() => setActiveLink('/dashboard/user')}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                    activeLink === '/dashboard/user'
-                      ? 'bg-muted text-primary'
-                      : 'text-muted-foreground hover:text-primary'
-                  }`}
-                >
-                  <Users className="h-4 w-4" />
-                  User
-                </Link>
+                    <Users className="h-4 w-4" />
+                    User
+                  </Link>
+                </>
               )}
 
+              {/* Sales Reports */}
               <div>
                 <button
                   onClick={toggleSalesReportSubmenu}
@@ -688,7 +717,7 @@ export default function Sidebar({ user }) {
                 {salesReportSubmenuOpen && (
                   <div className="ml-8 flex flex-col gap-1">
                     <Link
-                      href={courseSalesLinks}
+                      to={courseSalesLinks}
                       onClick={() => setActiveLink(courseSalesLinks)}
                       className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                         activeLink === courseSalesLinks
@@ -699,7 +728,7 @@ export default function Sidebar({ user }) {
                       Course Sales
                     </Link>
                     <Link
-                      href={mentorshipSalesLinks}
+                      to={mentorshipSalesLinks}
                       onClick={() => setActiveLink(mentorshipSalesLinks)}
                       className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                         activeLink === mentorshipSalesLinks
@@ -713,6 +742,7 @@ export default function Sidebar({ user }) {
                 )}
               </div>
 
+              {/* Financial submenu */}
               <div>
                 <button
                   onClick={toggleFinancialSubmenu}
@@ -733,7 +763,7 @@ export default function Sidebar({ user }) {
                 {financialSubmenuOpen && (
                   <div className="ml-8 flex flex-col gap-1">
                     <Link
-                      href="/dashboard/payment"
+                      to="/dashboard/payment"
                       onClick={() => setActiveLink('/dashboard/payment')}
                       className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                         activeLink === '/dashboard/payment'
@@ -744,7 +774,7 @@ export default function Sidebar({ user }) {
                       Payment
                     </Link>
                     <Link
-                      href={paymentAccountLinks}
+                      to={paymentAccountLinks}
                       onClick={() => setActiveLink(paymentAccountLinks)}
                       className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                         activeLink === paymentAccountLinks
@@ -755,123 +785,119 @@ export default function Sidebar({ user }) {
                       Manage Account
                     </Link>
                     {user.role === 'admin' && (
-                      <Link
-                        href={paymentMehodLinks}
-                        onClick={() => setActiveLink(paymentMehodLinks)}
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                          activeLink === paymentMehodLinks
-                            ? 'bg-muted text-primary'
-                            : 'text-muted-foreground hover:text-primary'
-                        }`}
-                      >
-                        Payment Method
-                      </Link>
-                    )}
-
-                    {user.role === 'admin' && (
-                      <Link
-                        href="/dashboard/payment-request"
-                        onClick={() =>
-                          setActiveLink('/dashboard/payment-request')
-                        }
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                          activeLink === '/dashboard/payment-request'
-                            ? 'bg-muted text-primary'
-                            : 'text-muted-foreground hover:text-primary'
-                        }`}
-                      >
-                        Payment Request
-                      </Link>
-                    )}
-                    {user.role === 'admin' && (
-                      <Link
-                        href={withdrawGatewayLinks}
-                        onClick={() => setActiveLink(withdrawGatewayLinks)}
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                          activeLink === withdrawGatewayLinks
-                            ? 'bg-muted text-primary'
-                            : 'text-muted-foreground hover:text-primary'
-                        }`}
-                      >
-                        Withdraw Gateway
-                      </Link>
+                      <>
+                        <Link
+                          to={paymentMehodLinks}
+                          onClick={() => setActiveLink(paymentMehodLinks)}
+                          className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                            activeLink === paymentMehodLinks
+                              ? 'bg-muted text-primary'
+                              : 'text-muted-foreground hover:text-primary'
+                          }`}
+                        >
+                          Payment Method
+                        </Link>
+                        <Link
+                          to="/dashboard/payment-request"
+                          onClick={() =>
+                            setActiveLink('/dashboard/payment-request')
+                          }
+                          className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                            activeLink === '/dashboard/payment-request'
+                              ? 'bg-muted text-primary'
+                              : 'text-muted-foreground hover:text-primary'
+                          }`}
+                        >
+                          Payment Request
+                        </Link>
+                        <Link
+                          to={withdrawGatewayLinks}
+                          onClick={() => setActiveLink(withdrawGatewayLinks)}
+                          className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                            activeLink === withdrawGatewayLinks
+                              ? 'bg-muted text-primary'
+                              : 'text-muted-foreground hover:text-primary'
+                          }`}
+                        >
+                          Withdraw Gateway
+                        </Link>
+                      </>
                     )}
                   </div>
                 )}
               </div>
+
+              {/* Admin-only menus continued */}
               {user.role === 'admin' && (
-                <Link
-                  href="/dashboard/banners"
-                  onClick={() => setActiveLink('/dashboard/banners')}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                    activeLink === '/dashboard/banners'
-                      ? 'bg-muted text-primary'
-                      : 'text-muted-foreground hover:text-primary'
-                  }`}
-                >
-                  <SlidersHorizontal className="h-4 w-4" />
-                  Banners
-                </Link>
-              )}
-              {user.role === 'admin' && (
-                <Link
-                  href="/dashboard/post-feed"
-                  onClick={() => setActiveLink('/dashboard/post-feed')}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                    activeLink === '/dashboard/post-feed'
-                      ? 'bg-muted text-primary'
-                      : 'text-muted-foreground hover:text-primary'
-                  }`}
-                >
-                  <GlobeAltIcon className="h-4 w-4" />
-                  Feed Post
-                </Link>
-              )}
-              {user.role === 'admin' && (
-                <Link
-                  href="/dashboard/contact-message"
-                  onClick={() => setActiveLink('/dashboard/contact-message')}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                    activeLink === '/dashboard/contact-message'
-                      ? 'bg-muted text-primary'
-                      : 'text-muted-foreground hover:text-primary'
-                  }`}
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  Contact Message
-                </Link>
-              )}
-              {user.role === 'admin' && (
-                <Link
-                  href="/dashboard/admission-message"
-                  onClick={() => setActiveLink('/dashboard/admission-message')}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                    activeLink === '/dashboard/admission-message'
-                      ? 'bg-muted text-primary'
-                      : 'text-muted-foreground hover:text-primary'
-                  }`}
-                >
-                  <LucideMessageSquareCode className="h-4 w-4" />
-                  Admission Box
-                </Link>
-              )}
-              {user.role === 'admin' && (
-                <Link
-                  href="/dashboard/notification"
-                  onClick={() => setActiveLink('/dashboard/notification')}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                    activeLink === '/dashboard/notification'
-                      ? 'bg-muted text-primary'
-                      : 'text-muted-foreground hover:text-primary'
-                  }`}
-                >
-                  <Bell className="h-4 w-4" />
-                  Notification
-                </Link>
+                <>
+                  <Link
+                    to="/dashboard/banners"
+                    onClick={() => setActiveLink('/dashboard/banners')}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      activeLink === '/dashboard/banners'
+                        ? 'bg-muted text-primary'
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
+                  >
+                    <SlidersHorizontal className="h-4 w-4" />
+                    Banners
+                  </Link>
+                  <Link
+                    to="/dashboard/post-feed"
+                    onClick={() => setActiveLink('/dashboard/post-feed')}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      activeLink === '/dashboard/post-feed'
+                        ? 'bg-muted text-primary'
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
+                  >
+                    <GlobeAltIcon className="h-4 w-4" />
+                    Feed Post
+                  </Link>
+                  <Link
+                    to="/dashboard/contact-message"
+                    onClick={() => setActiveLink('/dashboard/contact-message')}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      activeLink === '/dashboard/contact-message'
+                        ? 'bg-muted text-primary'
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    Contact Message
+                  </Link>
+                  <Link
+                    to="/dashboard/admission-message"
+                    onClick={() =>
+                      setActiveLink('/dashboard/admission-message')
+                    }
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      activeLink === '/dashboard/admission-message'
+                        ? 'bg-muted text-primary'
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
+                  >
+                    <LucideMessageSquareCode className="h-4 w-4" />
+                    Admission Box
+                  </Link>
+                  <Link
+                    to="/dashboard/notification"
+                    onClick={() => setActiveLink('/dashboard/notification')}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      activeLink === '/dashboard/notification'
+                        ? 'bg-muted text-primary'
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
+                  >
+                    <Bell className="h-4 w-4" />
+                    Notification
+                  </Link>
+                </>
               )}
 
+              {/* Meeting link */}
               <Link
-                href="/meeting"
+                to="/meeting"
                 onClick={() => setActiveLink('/meeting')}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                   activeLink === '/meeting'
@@ -883,38 +909,39 @@ export default function Sidebar({ user }) {
                 Online Class
               </Link>
 
+              {/* More admin-only menus */}
               {user.role === 'admin' && (
-                <Link
-                  href="/dashboard/ads-promo"
-                  onClick={() => setActiveLink('/dashboard/ads-promo')}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                    activeLink === '/dashboard/ads-promo'
-                      ? 'bg-muted text-primary'
-                      : 'text-muted-foreground hover:text-primary'
-                  }`}
-                >
-                  <Megaphone className="h-4 w-4" />
-                  Ads-Promo
-                </Link>
+                <>
+                  <Link
+                    to="/dashboard/ads-promo"
+                    onClick={() => setActiveLink('/dashboard/ads-promo')}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      activeLink === '/dashboard/ads-promo'
+                        ? 'bg-muted text-primary'
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
+                  >
+                    <Megaphone className="h-4 w-4" />
+                    Ads-Promo
+                  </Link>
+                  <Link
+                    to="/dashboard/settings"
+                    onClick={() => setActiveLink('/dashboard/settings')}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
+                      activeLink === '/dashboard/settings'
+                        ? 'bg-muted text-primary'
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
+                  >
+                    <Settings className="h-4 w-4" />
+                    Setting
+                  </Link>
+                </>
               )}
 
-              {user.role === 'admin' && (
-                <Link
-                  href="/dashboard/settings"
-                  onClick={() => setActiveLink('/dashboard/settings')}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
-                    activeLink === '/dashboard/settings'
-                      ? 'bg-muted text-primary'
-                      : 'text-muted-foreground hover:text-primary'
-                  }`}
-                >
-                  <Settings className="h-4 w-4" />
-                  Setting
-                </Link>
-              )}
-
+              {/* Transaction link */}
               <Link
-                href="/dashboard/transection"
+                to="/dashboard/transection"
                 onClick={() => setActiveLink('/dashboard/transection')}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${
                   activeLink === '/dashboard/transection'
@@ -928,13 +955,17 @@ export default function Sidebar({ user }) {
             </nav>
           </div>
         </div>
+
+        {/* User Profile Footer */}
         <div className="mt-auto p-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="w-full justify-start">
                 <Avatar className="mr-2 h-8 w-8">
-                  <AvatarImage src={user.image} alt="User's name" />
-                  <AvatarFallback>UN</AvatarFallback>
+                  <AvatarImage src={user.image} alt={user.name} />
+                  <AvatarFallback>
+                    {user.name?.substring(0, 2) || 'UN'}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col items-start">
                   <span className="text-sm font-medium">{user.name}</span>
@@ -958,7 +989,7 @@ export default function Sidebar({ user }) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <Link href="/dashboard/admin-profile">
+                <Link to="/dashboard/admin-profile">
                   <DropdownMenuItem>
                     <BadgeCheck className="mr-2 h-4 w-4" />
                     <span>Account</span>
@@ -977,3 +1008,5 @@ export default function Sidebar({ user }) {
     </div>
   )
 }
+
+export default Sidebar
