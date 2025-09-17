@@ -29,7 +29,7 @@ export default function Home() {
         <div className="card card-compact bg-base-100 w-96 shadow-xl">
           <figure>
             <img
-              src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+              src="https://shoethebear.co.uk/cdn/shop/products/Linea_shoe_leather-Shoes-STB2045-110_BLACK_1080x.jpg?v=1671097536"
               alt="Shoes"
             />
           </figure>
