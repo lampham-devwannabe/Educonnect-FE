@@ -1,16 +1,19 @@
-import Image from 'next/image'
+import React from 'react'
 import { Button } from './ui/button'
 import { ArrowRight } from 'lucide-react'
-import joinImg from '../../public/assets/custom-image/join-img.png'
-import starImg from '../../public/assets/custom-image/starImg.png'
-import Link from 'next/link'
 
 const JoinUs = () => {
   return (
-    <div className=" bg-gradient-to-r from-cyan-600 to-blue-900 w-full">
+    <div className="bg-gradient-to-r from-cyan-600 to-blue-900 w-full">
       <div className="container flex flex-col lg:flex-row items-center mt-16 mb-16">
-        <Image className="w-fit rounded-md" alt="" src={joinImg}></Image>
+        {/* Join Image */}
+        <img
+          className="w-fit rounded-md"
+          src="/assets/custom-image/join-img.png"
+          alt="Join Us"
+        />
 
+        {/* Content */}
         <div className="relative lg:pl-16 lg:pr-16 lg:mt-0 mt-10">
           <h5 className="text-xs lg:text-sm bg-purple-100 px-5 py-1 inline-block text-[--primary] uppercase rounded-full mb-2">
             Let’s Join With Us
@@ -23,20 +26,24 @@ const JoinUs = () => {
             community through discussion forums and group projects, and
             providing continuous support to address challenges and improve.
           </p>
+
+          {/* Button */}
           <div className="flex flex-col h-8 lg:h-fit lg:flex-row gap-5 lg:mt-10 mt-5">
-            <Link href="/contact">
-              <Button className="w-fit bg-[--primary] p-0 rounded-full hover:bg-[--primary]  hover:text-white  text-white ">
-                <span className="py-0 lg:py-2 pl-5">Start Teaching Today </span>
-                <ArrowRight className=" w-8 h-8 lg:w-full lg:h-full text-sm p-1.5 lg:p-2.5 bg-[#644BFF] rounded-full ml-3" />
+            <a href="/contact">
+              <Button className="w-fit bg-[--primary] p-0 rounded-full hover:bg-[--primary] hover:text-white text-white">
+                <span className="py-0 lg:py-2 pl-5">Start Teaching Today</span>
+                <ArrowRight className="w-8 h-8 lg:w-full lg:h-full text-sm p-1.5 lg:p-2.5 bg-[#644BFF] rounded-full ml-3" />
               </Button>
-            </Link>
+            </a>
           </div>
+
+          {/* Star Icon */}
           <div className="absolute -bottom-10 right-0">
-            <Image
+            <img
               className="w-10 lg:w-20 h-10 lg:h-20"
-              alt=""
-              src={starImg}
-            ></Image>
+              src="/assets/custom-image/starImg.png"
+              alt="Star Icon"
+            />
           </div>
         </div>
       </div>

@@ -1,5 +1,15 @@
-// components/EmailTemplate.js
-export const EmailTemplate = ({ otpCode }) => (
+// components/EmailTemplate.tsx
+import React from 'react'
+
+interface EmailTemplateProps {
+  otpCode: string
+  appName: string
+}
+
+export const EmailTemplate: React.FC<EmailTemplateProps> = ({
+  otpCode,
+  appName,
+}) => (
   <div
     style={{
       fontFamily: 'Arial, sans-serif',
@@ -24,7 +34,7 @@ export const EmailTemplate = ({ otpCode }) => (
     </p>
     <footer style={{ marginTop: '20px', fontSize: '14px', color: '#777' }}>
       <p>Best regards,</p>
-      <p>{process.env.APPNAME}</p>
+      <p>{appName}</p>
     </footer>
   </div>
 )

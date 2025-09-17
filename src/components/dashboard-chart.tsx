@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Bar,
   BarChart,
@@ -21,27 +19,54 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from './ui/card'
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
-} from '@/components/ui/chart'
-import { Separator } from '@/components/ui/separator'
+} from './ui/chart'
 import {
   useCoursPlanChartHooks,
   useTopCategoryHooks,
   useLastWeekCheckoutHooks,
-} from '@/hooks/useDashboardSummaryHooks'
+} from '../hooks/useDashboardSummaryHooks'
+
+// ===== Kiểu dữ liệu =====
+type LastWeekCheckout = {
+  todayTotalAmount: number
+  last7Days: { date: string; amount: number }[]
+}
+
+type CoursePlanChartItem = {
+  month: string
+  courses: number
+  plans: number
+}
+
+type TopCategoryItem = {
+  category: string
+  courses: number
+}
+
+type ChartConfig = Record<string, { label: string; color: string }>
 
 export function Charts() {
-  const { coursePlanChartData } = useCoursPlanChartHooks()
-  const { topCategoryData, chartConfig } = useTopCategoryHooks()
-  const { lastWeekCheckoutData } = useLastWeekCheckoutHooks()
+  const { coursePlanChartData } = useCoursPlanChartHooks() as {
+    coursePlanChartData: CoursePlanChartItem[] | null
+  }
 
-  const chartConfigBar = {
+  const { topCategoryData, chartConfig } = useTopCategoryHooks() as {
+    topCategoryData: TopCategoryItem[] | null
+    chartConfig: ChartConfig | null
+  }
+
+  const { lastWeekCheckoutData } = useLastWeekCheckoutHooks() as {
+    lastWeekCheckoutData: LastWeekCheckout | null
+  }
+
+  const chartConfigBar: ChartConfig = {
     courses: {
       label: 'Course',
       color: 'hsl(var(--chart-1))',
@@ -60,7 +85,7 @@ export function Charts() {
           <CardHeader className="space-y-0 pb-2">
             <CardDescription>Today</CardDescription>
             <CardTitle className="text-4xl tabular-nums">
-              ${lastWeekCheckoutData?.todayTotalAmount}
+              ${lastWeekCheckoutData?.todayTotalAmount ?? 0}
               <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
                 course sales
               </span>
@@ -81,7 +106,7 @@ export function Charts() {
                   left: -4,
                   right: -4,
                 }}
-                data={lastWeekCheckoutData?.last7Days}
+                data={lastWeekCheckoutData?.last7Days ?? []}
               >
                 <Bar
                   dataKey="amount"
@@ -95,7 +120,7 @@ export function Charts() {
                   tickLine={false}
                   axisLine={false}
                   tickMargin={4}
-                  tickFormatter={value =>
+                  tickFormatter={(value: string) =>
                     new Date(value).toLocaleDateString('en-US', {
                       weekday: 'short',
                     })
@@ -106,7 +131,7 @@ export function Charts() {
                   content={
                     <ChartTooltipContent
                       hideIndicator
-                      labelFormatter={value =>
+                      labelFormatter={(value: string) =>
                         new Date(value).toLocaleDateString('en-US', {
                           day: 'numeric',
                           month: 'long',
@@ -157,14 +182,14 @@ export function Charts() {
           </CardHeader>
           <CardContent>
             <ChartContainer config={chartConfigBar}>
-              <BarChart accessibilityLayer data={coursePlanChartData}>
+              <BarChart accessibilityLayer data={coursePlanChartData ?? []}>
                 <CartesianGrid vertical={false} />
                 <XAxis
                   dataKey="month"
                   tickLine={false}
                   tickMargin={10}
                   axisLine={false}
-                  tickFormatter={value => value.slice(0, 3)}
+                  tickFormatter={(value: string) => value.slice(0, 3)}
                 />
                 <ChartTooltip content={<ChartTooltipContent hideLabel />} />
                 <ChartLegend content={<ChartLegendContent />} />
@@ -200,7 +225,7 @@ export function Charts() {
             <CardTitle>Top Categories</CardTitle>
             <CardDescription>January - June 2024</CardDescription>
           </CardHeader>
-          {topCategoryData && (
+          {topCategoryData && chartConfig && (
             <CardContent className="flex-1 pb-0">
               <ChartContainer
                 config={chartConfig}
@@ -222,11 +247,12 @@ export function Charts() {
                       className="fill-background"
                       stroke="none"
                       fontSize={10}
-                      formatter={value => {
+                      formatter={(value: React.ReactNode) => {
+                        const val = String(value) // ép ReactNode sang string
                         const key = Object.keys(chartConfig).find(
-                          configKey => chartConfig[configKey].label === value
+                          configKey => chartConfig[configKey].label === val
                         )
-                        return key ? chartConfig[key]?.label : value
+                        return key ? chartConfig[key]?.label : val
                       }}
                     />
                   </Pie>

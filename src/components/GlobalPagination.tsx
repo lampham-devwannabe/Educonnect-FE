@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   Pagination,
   PaginationContent,
@@ -10,7 +9,7 @@ import {
 } from './ui/pagination'
 import { CardFooter } from './ui/card'
 
-interface GlobalPaginationProps {
+type GlobalPaginationProps = {
   currentPage: number
   totalPages: number
   pageSize?: number
@@ -26,9 +25,47 @@ const GlobalPagination: React.FC<GlobalPaginationProps> = ({
   totalItems,
   currentPageDataLength,
   onPageChange,
-}) => {
+}: GlobalPaginationProps) => {
+  // 👇 Tính range số trang động
+  const getPageNumbers = (): (number | 'ellipsis')[] => {
+    const maxVisible = 5
+    const pages: (number | 'ellipsis')[] = []
+
+    if (totalPages <= maxVisible) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1)
+    }
+
+    if (currentPage <= 3) {
+      return [1, 2, 3, 4, 'ellipsis', totalPages]
+    }
+
+    if (currentPage >= totalPages - 2) {
+      return [
+        1,
+        'ellipsis',
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages,
+      ]
+    }
+
+    return [
+      1,
+      'ellipsis',
+      currentPage - 1,
+      currentPage,
+      currentPage + 1,
+      'ellipsis',
+      totalPages,
+    ]
+  }
+
+  const pageNumbers = getPageNumbers()
+
   return (
     <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-2">
+      {/* Hiển thị số dòng */}
       <div className="text-xs text-muted-foreground">
         Showing{' '}
         <strong>
@@ -38,8 +75,11 @@ const GlobalPagination: React.FC<GlobalPaginationProps> = ({
         <strong>{(currentPage - 1) * pageSize + currentPageDataLength}</strong>{' '}
         of <strong>{totalItems}</strong> data
       </div>
+
+      {/* Pagination */}
       <Pagination>
         <PaginationContent>
+          {/* Previous */}
           <PaginationItem>
             <PaginationPrevious
               href="#"
@@ -53,44 +93,30 @@ const GlobalPagination: React.FC<GlobalPaginationProps> = ({
             />
           </PaginationItem>
 
-          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-            const pageNumber = i + 1
-            return (
-              <PaginationItem key={pageNumber}>
+          {/* Dynamic Pages */}
+          {pageNumbers.map((page, i) =>
+            page === 'ellipsis' ? (
+              <PaginationItem key={`ellipsis-${i}`}>
+                <PaginationEllipsis />
+              </PaginationItem>
+            ) : (
+              <PaginationItem key={page}>
                 <PaginationLink
                   href="#"
                   onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault()
-                    onPageChange(pageNumber)
+                    onPageChange(page)
                   }}
-                  isActive={currentPage === pageNumber}
+                  isActive={currentPage === page}
+                  aria-current={currentPage === page ? 'page' : undefined}
                 >
-                  {pageNumber}
+                  {page}
                 </PaginationLink>
               </PaginationItem>
             )
-          })}
-
-          {totalPages > 5 && (
-            <>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink
-                  href="#"
-                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                    e.preventDefault()
-                    onPageChange(totalPages)
-                  }}
-                  isActive={currentPage === totalPages}
-                >
-                  {totalPages}
-                </PaginationLink>
-              </PaginationItem>
-            </>
           )}
 
+          {/* Next */}
           <PaginationItem>
             <PaginationNext
               href="#"
