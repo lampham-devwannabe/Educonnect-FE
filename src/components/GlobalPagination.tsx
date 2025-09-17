@@ -18,14 +18,14 @@ type GlobalPaginationProps = {
   onPageChange: (page: number) => void
 }
 
-export default function GlobalPagination({
+const GlobalPagination: React.FC<GlobalPaginationProps> = ({
   currentPage,
   totalPages,
   pageSize = 10,
   totalItems,
   currentPageDataLength,
   onPageChange,
-}: GlobalPaginationProps) {
+}: GlobalPaginationProps) => {
   // 👇 Tính range số trang động
   const getPageNumbers = (): (number | 'ellipsis')[] => {
     const maxVisible = 5
@@ -83,7 +83,7 @@ export default function GlobalPagination({
           <PaginationItem>
             <PaginationPrevious
               href="#"
-              onClick={e => {
+              onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                 e.preventDefault()
                 if (currentPage > 1) onPageChange(currentPage - 1)
               }}
@@ -103,7 +103,7 @@ export default function GlobalPagination({
               <PaginationItem key={page}>
                 <PaginationLink
                   href="#"
-                  onClick={e => {
+                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault()
                     onPageChange(page)
                   }}
@@ -120,7 +120,7 @@ export default function GlobalPagination({
           <PaginationItem>
             <PaginationNext
               href="#"
-              onClick={e => {
+              onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                 e.preventDefault()
                 if (currentPage < totalPages) onPageChange(currentPage + 1)
               }}
@@ -136,3 +136,5 @@ export default function GlobalPagination({
     </CardFooter>
   )
 }
+
+export default GlobalPagination

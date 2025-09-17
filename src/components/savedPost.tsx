@@ -1,26 +1,60 @@
-'use client'
-import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import {
-  Bookmark,
-  MessageSquare,
-  MoreHorizontal,
-  Share2,
-  ThumbsUp,
-} from 'lucide-react'
+import { MessageSquare, MoreHorizontal, Share2, ThumbsUp } from 'lucide-react'
 import { CardContent } from './ui/card'
-import { useUserDetailsHooks } from '@/hooks/useUserHooks'
-const SavedPost = () => {
-  const [savedPost, setSavedPost] = useState([])
+
+// Define TypeScript interfaces
+interface User {
+  _id: string
+  name: string
+  image?: string
+}
+
+interface Post {
+  _id: string
+  content: string
+  image?: string[]
+  user?: User
+  likes?: number
+  comments?: string[]
+  shares?: number
+  liked?: boolean
+}
+
+// Custom hook for user details
+const useUserDetailsHooks = () => {
+  const [userDetails, setUserDetails] = useState<User | null>(null)
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await fetch('/api/user/profile')
+        const data = await response.json()
+
+        if (response.ok) {
+          setUserDetails(data.user)
+        }
+      } catch (error) {
+        console.error('Error fetching user details:', error)
+      }
+    }
+
+    fetchUserDetails()
+  }, [])
+
+  return { userDetails }
+}
+
+const SavedPost: React.FC = () => {
+  const [savedPost, setSavedPost] = useState<Post[]>([])
   const { userDetails } = useUserDetailsHooks()
 
-  const [dropdownId, setDropdownId] = useState(null)
-  const [isBookmarked, setIsBookedmarked] = useState(false)
+  const [dropdownId, setDropdownId] = useState<string | null>(null)
 
-  const handleBookmark = async postId => {
+  const handleBookmark = async (postId: string) => {
+    if (!userDetails) return
+
     const formdata = new FormData()
     formdata.append('userId', userDetails._id)
-
     formdata.append('postId', postId)
 
     try {
@@ -31,7 +65,7 @@ const SavedPost = () => {
       const data = await response.json()
 
       if (data.status === 200 || data.status === 201) {
-        // setIsBookedmarked(!isBookmarked)
+        // setIsBookedmarked(!isBookmarked);
         setSavedPost(prevPosts =>
           prevPosts.filter(post => post && post._id !== postId)
         )
@@ -42,6 +76,8 @@ const SavedPost = () => {
   }
 
   const fetchSavedPost = async () => {
+    if (!userDetails) return
+
     const formData = new FormData()
     formData.append('userId', userDetails._id)
 
@@ -73,14 +109,14 @@ const SavedPost = () => {
               if (!post || !post.content) return null
               return (
                 <article
-                  key={post?._id || Math.random()}
+                  key={post?._id || Math.random().toString()}
                   className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden"
                 >
                   {/* Header */}
                   <div className="px-4 pt-3 pb-1">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Image
+                        <img
                           src={post?.user?.image || '/default-avatar.png'}
                           alt="Avatar"
                           width={40}
@@ -98,7 +134,7 @@ const SavedPost = () => {
                         <button
                           onClick={() =>
                             setDropdownId(
-                              dropdownId === post._id ? 'null' : post._id
+                              dropdownId === post._id ? null : post._id
                             )
                           }
                           className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
@@ -126,14 +162,12 @@ const SavedPost = () => {
                     <p className="text-gray-800 text-base">{post.content}</p>
                   </div>
 
-                  {/* Image - Facebook style constrained width */}
+                  {/* Image */}
                   {post.image?.[0] && (
                     <div className="border-y border-gray-200">
-                      <Image
+                      <img
                         src={post.image[0]}
                         alt="Post"
-                        width={680}
-                        height={510}
                         className="w-full h-auto max-h-[510px] object-contain bg-gray-50"
                       />
                     </div>
@@ -148,7 +182,7 @@ const SavedPost = () => {
                     </div>
                   </div>
 
-                  {/* Actions - Facebook style buttons */}
+                  {/* Actions */}
                   <div className="px-2 py-1 grid grid-cols-3 text-gray-500 text-sm font-medium">
                     <button
                       className={`flex items-center justify-center gap-1 p-2 rounded hover:bg-gray-100 ${post?.liked ? 'text-blue-600' : ''}`}

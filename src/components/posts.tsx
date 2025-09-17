@@ -1,63 +1,91 @@
-'use client'
-import React, { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-
-import { Label } from '@/components/ui/label'
-
+import React, { useState, useEffect } from 'react'
 import {
   X,
   Search,
   ImagePlus,
   Loader2,
-  Heart,
-  MessageCircle,
   Share2,
-  CrossIcon,
   MoreHorizontal,
   ThumbsUp,
-  FileText,
   MessageSquare,
-  Bookmark,
 } from 'lucide-react'
-import { Progress } from '@/components/ui/progress'
-import { usePostHooks } from '@/hooks/usePostHooks'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination'
 import toast from 'react-hot-toast'
-import { uploadImagePromised } from '@/utils/upload-image'
-import Image from 'next/image'
-import { useUserDetailsHooks } from '@/hooks/useUserHooks'
-import Link from 'next/link'
-import { PostsRightSidebar } from './postsRightSidebar'
-import Comment_ from 'postcss/lib/comment'
-import Comment from './comment'
 import Swal from 'sweetalert2'
-import GlobalPagination from '@/components/GlobalPagination'
-import GlobalSkeletonLoader from '@/components/GlobalSkeletonLoader'
 
-const AllPosts = () => {
-  const [showComments, setShowComments] = useState(null)
+// Import UI components
+import { Button } from './ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from './ui/card'
+import { Input } from './ui/input'
+import { Textarea } from './ui/textarea'
+import { Label } from './ui/label'
+import { Progress } from './ui/progress'
+import GlobalPagination from './GlobalPagination'
+import GlobalSkeletonLoader from './GlobalSkeletonLoader'
+import Comment from './comment'
+import { PostsRightSidebar } from './postsRightSidebar'
 
-  const [dropdownId, setDropdownId] = useState(null)
-  const { userDetails } = useUserDetailsHooks()
-  const [selectedImage, setSelectedImage] = useState(null)
+// TypeScript interfaces
+interface User {
+  _id: string
+  name: string
+  image?: string
+}
 
-  const [newPost, setNewPost] = useState({
-    title: '',
-    content: '',
-    image: null,
-    thumbnail: '',
-  })
-  const {
+interface Post {
+  _id: string
+  title: string
+  content: string
+  image?: string[]
+  user: User
+  createdAt: string
+  totalLikes: number
+  totalComments: number
+  userLiked?: boolean
+  bookmarked?: boolean
+  liked?: boolean
+  status?: string
+}
+
+interface NewPostState {
+  title: string
+  content: string
+  image: File | null
+  thumbnail: string | null
+}
+
+// Custom hook for post functionality
+const usePostHooks = () => {
+  const [posts, setPosts] = useState<Post[]>([])
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(1)
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [filter, setFilter] = useState<string>('all')
+  const [loading, setLoading] = useState<boolean>(true)
+
+  const fetchPosts = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/post-feed?page=${currentPage}`)
+      const data = await response.json()
+
+      if (response.ok) {
+        setPosts(data.posts)
+        setTotalPages(data.totalPages || 1)
+      } else {
+        console.error('Failed to fetch posts:', data.message)
+      }
+    } catch (error) {
+      console.error('Error fetching posts:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchPosts()
+  }, [currentPage])
+
+  return {
     posts,
     setPosts,
     fetchPosts,
@@ -69,24 +97,119 @@ const AllPosts = () => {
     filter,
     setFilter,
     loading,
+  }
+}
+
+// Custom hook for user details
+const useUserDetailsHooks = () => {
+  const [userDetails, setUserDetails] = useState<User | null>(null)
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await fetch('/api/user/profile')
+        const data = await response.json()
+
+        if (response.ok) {
+          setUserDetails(data.user)
+        }
+      } catch (error) {
+        console.error('Error fetching user details:', error)
+      }
+    }
+
+    fetchUserDetails()
+  }, [])
+
+  return { userDetails }
+}
+
+// Image upload utility function
+const uploadImagePromised = (
+  file: File,
+  setUploading: React.Dispatch<React.SetStateAction<boolean>>,
+  setUploadProgress: React.Dispatch<React.SetStateAction<number>>
+): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    setUploading(true)
+    setUploadProgress(0)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const xhr = new XMLHttpRequest()
+
+    xhr.upload.addEventListener('progress', event => {
+      if (event.lengthComputable) {
+        const progress = Math.round((event.loaded / event.total) * 100)
+        setUploadProgress(progress)
+      }
+    })
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText)
+        setUploading(false)
+        resolve(response.url)
+      } else {
+        setUploading(false)
+        reject(new Error('Upload failed'))
+      }
+    })
+
+    xhr.addEventListener('error', () => {
+      setUploading(false)
+      reject(new Error('Upload failed'))
+    })
+
+    xhr.open('POST', '/api/upload', true)
+    xhr.send(formData)
+  })
+}
+
+const AllPosts: React.FC = () => {
+  const [showComments, setShowComments] = useState<string | null>(null)
+  const [dropdownId, setDropdownId] = useState<string | null>(null)
+  const { userDetails } = useUserDetailsHooks()
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+
+  const [newPost, setNewPost] = useState<NewPostState>({
+    title: '',
+    content: '',
+    image: null,
+    thumbnail: null,
+  })
+
+  const {
+    posts,
+    setPosts,
+    fetchPosts,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    searchTerm,
+    setSearchTerm,
+    filter,
+    loading,
   } = usePostHooks()
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0) // Track upload progress
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [uploading, setUploading] = useState<boolean>(false)
+  const [uploadProgress, setUploadProgress] = useState<number>(0)
+  const [isVisible, setIsVisible] = useState<boolean>(false)
 
-  const toggleComments = postId => {
+  const toggleComments = (postId: string) => {
     setShowComments(prev => (prev === postId ? null : postId))
   }
 
-  const handleBookmark = async postId => {
+  const handleBookmark = async (postId: string) => {
     if (!userDetails) {
-      return <div>Loading...</div>
+      toast.error('Please login to bookmark posts')
+      return
     }
 
     const formdata = new FormData()
     formdata.append('userId', userDetails._id)
-
     formdata.append('postId', postId)
 
     try {
@@ -97,26 +220,25 @@ const AllPosts = () => {
       const data = await response.json()
 
       if (data.status === 200 || data.status === 201) {
-        if (data.status === 200 || data.status === 201) {
-          setPosts(prevPosts =>
-            prevPosts.map(post =>
-              post._id === postId
-                ? { ...post, bookmarked: !post.bookmarked }
-                : post
-            )
+        setPosts(prevPosts =>
+          prevPosts.map(post =>
+            post._id === postId
+              ? { ...post, bookmarked: !post.bookmarked }
+              : post
           )
-        }
+        )
       }
     } catch (error) {
       console.error(error)
+      toast.error('Failed to bookmark post')
     }
   }
 
-  const handleCreatePost = async e => {
+  const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newPost.title.trim()) return
     if (!newPost.content.trim()) return
-    if (isSubmitting) return // Prevent multiple submissions
+    if (isSubmitting) return
 
     setIsSubmitting(true)
 
@@ -137,14 +259,12 @@ const AllPosts = () => {
       }
     }
 
-    // Prepare formData for the POST request
     const formData = new FormData()
     formData.append('title', newPost.title)
     formData.append('content', newPost.content)
-    console.log(uploadedImageUrl)
 
     if (uploadedImageUrl) {
-      formData.append('image', JSON.stringify([uploadedImageUrl])) // Adjust based on backend expectations
+      formData.append('image', JSON.stringify([uploadedImageUrl]))
     }
 
     try {
@@ -176,11 +296,13 @@ const AllPosts = () => {
     return matchesSearch && matchesFilter
   })
 
-  const onLike = async postId => {
-    try {
-      const post = posts.find(post => post._id === postId)
-      const isLiked = post?.liked || false
+  const onLike = async (postId: string) => {
+    if (!userDetails) {
+      toast.error('Please login to like posts')
+      return
+    }
 
+    try {
       const response = await fetch(`/api/post-feed/like`, {
         method: 'POST',
         headers: {
@@ -203,13 +325,6 @@ const AllPosts = () => {
               : post
           )
         )
-
-        // setPosts(posts.map(post =>
-        //   post._id === postId
-        //     ? { ...post, likes: post.likes + 1, liked: true }
-        //     : post
-
-        // ));
       } else {
         const errorData = await response.json()
         console.error('Failed to like the post:', errorData.message)
@@ -219,7 +334,7 @@ const AllPosts = () => {
     }
   }
 
-  const onShare = postId => {
+  const onShare = (postId: string) => {
     const url = `${window.location.origin}/popular-post/page?id=${postId}`
     navigator.clipboard
       .writeText(url)
@@ -242,7 +357,6 @@ const AllPosts = () => {
       })
   }
 
-  const [isVisible, setIsVisible] = useState(false)
   const toggleDiv = () => {
     setIsVisible(prev => !prev)
   }
@@ -250,7 +364,7 @@ const AllPosts = () => {
   return (
     <div className="container mx-auto px-0 pb-8 pt-0">
       <div className="px-6">
-        <div className="text-end  flex justify-between items-center">
+        <div className="text-end flex justify-between items-center">
           <h2 className="text-2xl font-semibold">Community Posts</h2>
         </div>
       </div>
@@ -328,11 +442,9 @@ const AllPosts = () => {
                             {newPost.image ? (
                               <div className="relative w-full h-full">
                                 {newPost.image.type.startsWith('image/') ? (
-                                  <Image
+                                  <img
                                     src={URL.createObjectURL(newPost.image)}
                                     alt="Preview"
-                                    width={100}
-                                    height={100}
                                     className="w-full h-full object-cover rounded-md"
                                   />
                                 ) : (
@@ -366,18 +478,21 @@ const AllPosts = () => {
                           <Input
                             id="image"
                             type="file"
-                            onChange={e =>
-                              setNewPost({
-                                ...newPost,
-                                image: e.target.files[0],
-                              })
-                            }
+                            onChange={e => {
+                              const files = e.target.files
+                              if (files && files.length > 0) {
+                                setNewPost({
+                                  ...newPost,
+                                  image: files[0],
+                                })
+                              }
+                            }}
                             accept="image/*,video/*"
                             className="hidden"
                           />
                         </div>
                       </div>
-                      {uploading && <Progress value={uploadProgress} />}{' '}
+                      {uploading && <Progress value={uploadProgress} />}
                     </div>
                   </form>
                 </CardContent>
@@ -409,7 +524,6 @@ const AllPosts = () => {
                 <CardContent className="p-0">
                   <div className="grid gap-4">
                     {loading ? (
-                      // Show loading skeletons
                       <GlobalSkeletonLoader
                         count={5}
                         width="100%"
@@ -418,7 +532,7 @@ const AllPosts = () => {
                         textWidths={['80%', '60%']}
                       />
                     ) : filteredPosts.length === 0 ? (
-                      <div className="text-center py-10">No users found</div>
+                      <div className="text-center py-10">No posts found</div>
                     ) : (
                       filteredPosts.map(post => (
                         <article
@@ -429,7 +543,7 @@ const AllPosts = () => {
                           <div className="px-4 pt-3 pb-1">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <Image
+                                <img
                                   src={
                                     post.user?.image || '/default-avatar.png'
                                   }
@@ -485,11 +599,6 @@ const AllPosts = () => {
                                   </div>
                                 )}
                               </div>
-
-                              {/* <button onClick={() => handleBookmark(post._id)} className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100">
-                              <MoreHorizontal className="w-5 h-5" />
-
-                            </button> */}
                             </div>
                           </div>
 
@@ -500,17 +609,15 @@ const AllPosts = () => {
                             </p>
                           </div>
 
-                          {/* Image - Facebook style constrained width */}
-                          {post.image?.[0] && (
+                          {/* Image */}
+                          {post.image && post.image[0] && (
                             <div
                               className="border-y border-gray-200 cursor-pointer"
-                              onClick={() => setSelectedImage(post.image[0])}
+                              onClick={() => setSelectedImage(post.image![0])}
                             >
-                              <Image
+                              <img
                                 src={post.image[0]}
                                 alt="Post"
-                                width={680}
-                                height={510}
                                 className="w-full h-auto max-h-[510px] object-contain bg-gray-50"
                               />
                             </div>
@@ -524,7 +631,7 @@ const AllPosts = () => {
                             </div>
                           </div>
 
-                          {/* Actions - Facebook style buttons */}
+                          {/* Actions */}
                           <div className="px-2 py-1 grid grid-cols-3 text-gray-500 text-sm font-medium">
                             <button
                               onClick={() => onLike(post._id)}
@@ -533,13 +640,6 @@ const AllPosts = () => {
                               <ThumbsUp className="w-4 h-4" />
                               Like
                             </button>
-                            {/* <button
-                            onClick={() => onLike(post._id)}
-                            className={`flex items-center justify-center gap-1 p-2 rounded hover:bg-gray-100 ${post?.liked ? 'text-blue-600' : ''}`}
-                          >
-                            <ThumbsUp className="w-4 h-4" />
-                            Like
-                          </button> */}
                             <button
                               onClick={() => toggleComments(post._id)}
                               className="flex items-center justify-center gap-1 p-2 rounded hover:bg-gray-100"
@@ -556,7 +656,7 @@ const AllPosts = () => {
                               Share
                             </button>
                           </div>
-                          {showComments === post._id && (
+                          {showComments === post._id && userDetails && (
                             <Comment
                               postId={post._id}
                               currentUserId={userDetails._id}
@@ -570,20 +670,21 @@ const AllPosts = () => {
               </div>
 
               {/* Right sidebar for ads */}
-              <PostsRightSidebar></PostsRightSidebar>
+              <PostsRightSidebar />
             </div>
           </CardContent>
-          {filteredPosts && (
+          {filteredPosts.length > 0 && (
             <GlobalPagination
               currentPage={currentPage}
               totalPages={totalPages}
-              totalItems={totalPages * 10} // or real total count from backend
+              totalItems={totalPages * 10}
               currentPageDataLength={filteredPosts.length}
-              onPageChange={page => setCurrentPage(page)}
+              onPageChange={(page: number) => setCurrentPage(page)}
             />
           )}
         </Card>
       </div>
+
       {/* Zoom Modal */}
       {selectedImage && (
         <div
@@ -591,8 +692,8 @@ const AllPosts = () => {
           onClick={() => setSelectedImage(null)}
         >
           <div
-            className="relative max-w-4xl max-h-[90vh] w-auto h-auto mt-12" // 👈 added margin-top
-            onClick={e => e.stopPropagation()} // Prevent close when clicking image
+            className="relative max-w-4xl max-h-[90vh] w-auto h-auto mt-12"
+            onClick={e => e.stopPropagation()}
           >
             <button
               className="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-80"
