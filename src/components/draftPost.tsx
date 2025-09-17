@@ -1,21 +1,20 @@
-'use client'
-import Image from 'next/image'
 import React from 'react'
 import { Ellipsis } from 'lucide-react'
 
-const DraftPost = () => {
+const DraftPost: React.FC = () => {
   return (
     <div>
       <h4 className="font-bold text-2xl pb-5">Draft Posts</h4>
       <div className="space-y-5">
+        {/* Post item */}
         <div className="relative lg:flex lg:flex-row lg:justify-between lg:gap-10 items-center border p-2 rounded">
-          <Image
-            className=" lg:mt-0 rounded w-full lg:w-40 lg:h-30"
+          <img
+            className="lg:mt-0 rounded w-full lg:w-40 lg:h-30"
             src="/assets/custom-image/course1.png"
             width={200}
             height={200}
-            alt="image"
-          ></Image>
+            alt="Draft Post"
+          />
           <div className="p-2">
             <h5 className="font-semibold lg:text-xl text-lg pb-1">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit.
@@ -31,14 +30,16 @@ const DraftPost = () => {
             <Ellipsis className="w-4 h-4 lg:w-6 lg:h-6" />
           </div>
         </div>
+
+        {/* Post item */}
         <div className="relative lg:flex lg:flex-row lg:justify-between lg:gap-10 items-center border p-2 rounded">
-          <Image
-            className=" lg:mt-0 rounded w-full lg:w-40 lg:h-30"
+          <img
+            className="lg:mt-0 rounded w-full lg:w-40 lg:h-30"
             src="/assets/custom-image/course2.png"
             width={200}
             height={200}
-            alt="image"
-          ></Image>
+            alt="Draft Post"
+          />
           <div className="p-2">
             <h5 className="font-semibold lg:text-xl text-lg pb-1">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit.
@@ -54,14 +55,16 @@ const DraftPost = () => {
             <Ellipsis className="w-4 h-4 lg:w-6 lg:h-6" />
           </div>
         </div>
+
+        {/* Post item */}
         <div className="relative lg:flex lg:flex-row lg:justify-between lg:gap-10 items-center border p-2 rounded">
-          <Image
-            className=" lg:mt-0 rounded w-full lg:w-40 lg:h-30"
+          <img
+            className="lg:mt-0 rounded w-full lg:w-40 lg:h-30"
             src="/assets/custom-image/course1.png"
             width={200}
             height={200}
-            alt="image"
-          ></Image>
+            alt="Draft Post"
+          />
           <div className="p-2">
             <h5 className="font-semibold lg:text-xl text-lg pb-1">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit.

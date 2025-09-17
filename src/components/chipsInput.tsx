@@ -1,7 +1,16 @@
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { Label } from '@/components/ui/label'
+import { Label } from './ui/label'
 
-const ChipInput = ({
+interface ChipInputProps {
+  label: string
+  chips: string[]
+  setChips: React.Dispatch<React.SetStateAction<string[]>>
+  inputValue: string
+  setInputValue: React.Dispatch<React.SetStateAction<string>>
+  maxChips: number
+}
+
+const ChipInput: React.FC<ChipInputProps> = ({
   label,
   chips,
   setChips,
@@ -9,7 +18,7 @@ const ChipInput = ({
   setInputValue,
   maxChips,
 }) => {
-  const handleKeyDown = e => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
       e.key === 'Enter' &&
       inputValue.trim() !== '' &&
@@ -21,7 +30,7 @@ const ChipInput = ({
     }
   }
 
-  const handleDelete = chipToDelete => {
+  const handleDelete = (chipToDelete: string) => {
     setChips(chips.filter(chip => chip !== chipToDelete))
   }
 
@@ -36,6 +45,7 @@ const ChipInput = ({
           >
             <span>{chip}</span>
             <button
+              type="button"
               className="ml-2 bg-dark hover:bg-blue-800 text-white rounded-full p-1"
               onClick={() => handleDelete(chip)}
             >
@@ -45,11 +55,10 @@ const ChipInput = ({
         ))}
         {chips.length < maxChips && (
           <input
-            className="flex-grow  col-span-3 w-full first-line:text-sm px-2 py-1 border-none focus:ring-0 outline-none"
+            className="flex-grow col-span-3 w-full text-sm px-2 py-1 border-none focus:ring-0 outline-none"
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            fontSize="sm"
             placeholder="Type and press Enter"
           />
         )}
