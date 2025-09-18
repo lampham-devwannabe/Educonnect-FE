@@ -581,7 +581,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 )}
               </div>
             ) : (
-              <div className="flex gap-1 rounded-full bg-[--primary] py-3 px-6 text-gray-100 text-sm">
+              <div className="flex gap-1 rounded-full bg-[--primary] py-3 px-6 text-bold text-sm">
                 <Link to="/login">
                   <h5 className="">Login</h5>
                 </Link>
@@ -681,8 +681,6 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
           </ul>
         </div>
       )}
-      // Add these sections to the component where the placeholders were
-      mentioned // For the Cart dropdown UI:
       {cartOpen && (
         <div
           id="dropdownMenu"
@@ -789,7 +787,6 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
           )}
         </div>
       )}
-      // For the Notification dropdown UI:
       {notificationOpen && (
         <div
           id="notificationDropdown"

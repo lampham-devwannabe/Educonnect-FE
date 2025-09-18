@@ -2,10 +2,10 @@ import React from 'react'
 import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
-import skillImg1 from '../../public/assets/custom-image/skillImg.png'
-import lineImg from '../../public/assets/custom-image/line-bg.png'
-import chooseImg from '../../public/assets/custom-image/choose-img.png'
-import textCircle from '../../public/assets/custom-image/textCircle.png'
+import skillImg1 from '@assets/custom-image/skillImg.png'
+import lineImg from '@assets/custom-image/line-bg.png'
+import chooseImg from '@assets/custom-image/choose-img.png'
+import textCircle from '@assets/custom-image/textCircle.png'
 
 const ChooseUs: React.FC = () => {
   return (

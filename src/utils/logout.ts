@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
 
 /**
  * Clears all cookies in the browser
@@ -6,12 +6,12 @@ import Cookies from 'js-cookie';
  */
 export function clearCookies(): void {
   // Get all cookies
-  const allCookies = Object.keys(Cookies.get());
+  const allCookies = Object.keys(Cookies.get())
 
   // Delete each cookie
   allCookies.forEach(cookieName => {
-    Cookies.remove(cookieName);
-  });
+    Cookies.remove(cookieName)
+  })
 }
 
 /**
@@ -27,13 +27,13 @@ export function clearAuthCookies(): void {
     'name',
     'email',
     'role',
-    'image'
-  ];
+    'image',
+  ]
 
   // Delete each auth cookie
   authCookies.forEach(cookieName => {
-    Cookies.remove(cookieName);
-  });
+    Cookies.remove(cookieName)
+  })
 }
 
 /**
@@ -41,6 +41,6 @@ export function clearAuthCookies(): void {
  * @param redirectUrl - URL to redirect to after logout
  */
 export function logout(redirectUrl: string = '/'): void {
-  clearAuthCookies();
-  window.location.href = redirectUrl;
+  clearAuthCookies()
+  window.location.href = redirectUrl
 }

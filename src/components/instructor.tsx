@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react'
 import { Badge } from './ui/badge'
 import Slider from 'react-slick'
 import { Link } from 'react-router-dom' // thay cho next/link
-import starImg from '../assets/custom-image/starImg.png'
+import starImg from '@assets/custom-image/starImg.png'
 
 interface Mentor {
   _id: string

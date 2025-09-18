@@ -34,7 +34,7 @@ const NavbarComponent: React.FC = () => {
   }, [])
 
   return (
-    <div className="container sticky top-0 z-[999]">
+    <div className="sticky top-0 z-[999]">
       <Navbar user={userInfo} />
     </div>
   )
