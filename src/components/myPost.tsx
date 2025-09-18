@@ -1,35 +1,20 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Table, TableBody } from '@/components/ui/table'
-
-import { Label } from '@/components/ui/label'
+import React, { useState, useEffect } from 'react'
+import { Button } from './ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from './ui/card'
+import { Input } from './ui/input'
+import { Textarea } from './ui/textarea'
+import { Label } from './ui/label'
 import {
   X,
   Search,
   ImagePlus,
   Loader2,
-  Heart,
-  MessageCircle,
   Share2,
-  CrossIcon,
   MoreHorizontal,
   ThumbsUp,
-  FileText,
   MessageSquare,
 } from 'lucide-react'
-import { Progress } from '@/components/ui/progress'
-import { usePostHooks } from '@/hooks/usePostHooks'
+import { Progress } from './ui/progress'
 import {
   Pagination,
   PaginationContent,
@@ -37,77 +22,55 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination'
+} from './ui/pagination'
 import toast from 'react-hot-toast'
-import { uploadImagePromised } from '@/utils/upload-image'
-import Image from 'next/image'
-import { useSinglePostHooks } from '@/hooks/useSinglePostHook'
-
-import { useUserDetailsHooks } from '@/hooks/useUserHooks'
+import { uploadImagePromised } from '../utils/upload-image'
+import { useSinglePostHooks } from '../hooks/useSinglePostHook'
+import { useUserDetailsHooks } from '../hooks/useUserHooks'
 import { PostsRightSidebar } from './postsRightSidebar'
 import Comment from './comment'
 import Swal from 'sweetalert2'
-
-interface User {
-  _id: string
-  name: string
-  image?: string
-}
-
-interface Post {
-  _id: string
-  title: string
-  content: string
-  image?: string[]
-  user: User
-  createdAt: string
-  status?: string
-  liked?: boolean
-  likes: number
-  totalLikes?: number
-  totalComments?: number
-  totalShares?: number
-}
-
-interface NewPost {
-  title: string
-  content: string
-  image: File | null
-  thumbnail: string | null
-}
+import type { Post, NewPost } from '@/models/post'
 
 const MyPost: React.FC = () => {
   const [showComments, setShowComments] = useState<string | null>(null)
-
   const { userDetails } = useUserDetailsHooks()
-
   const [dropdownPostId, setDropdownPostId] = useState<string | null>(null)
 
   const [newPost, setNewPost] = useState<NewPost>({
     title: '',
     content: '',
     image: null,
-    thumbnail: '',
+    thumbnail: null,
   })
 
   const {
     posts,
     setPosts,
-    fetchPosts,
     currentPage,
     setCurrentPage,
     totalPages,
     searchTerm,
     setSearchTerm,
     filter,
-    setFilter,
+    fetchSinglePosts, // This function is correctly named from the hook
   } = useSinglePostHooks(userDetails?._id)
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [uploading, setUploading] = useState<boolean>(false)
   const [uploadProgress, setUploadProgress] = useState<number>(0)
 
-  console.log('setPosts:', setPosts)
+  // Fixing the fetchPosts reference to use fetchSinglePosts instead
+  const fetchPosts = fetchSinglePosts
+
+  useEffect(() => {
+    // Clean up image URLs when component unmounts to prevent memory leaks
+    return () => {
+      if (newPost.thumbnail) {
+        URL.revokeObjectURL(newPost.thumbnail)
+      }
+    }
+  }, [newPost.thumbnail])
 
   const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -137,7 +100,6 @@ const MyPost: React.FC = () => {
     const formData = new FormData()
     formData.append('title', newPost.title)
     formData.append('content', newPost.content)
-    console.log(uploadedImageUrl)
 
     if (uploadedImageUrl) {
       formData.append('image', JSON.stringify([uploadedImageUrl]))
@@ -152,7 +114,7 @@ const MyPost: React.FC = () => {
       if (response.ok) {
         toast.success('Post created successfully')
         setNewPost({ title: '', content: '', image: null, thumbnail: null })
-        fetchPosts()
+        fetchSinglePosts() // Using the correct function name
       } else {
         toast.error(`Failed to create post: ${data.message}`)
       }
@@ -173,7 +135,7 @@ const MyPost: React.FC = () => {
       .then(response => response.json())
       .then(data => {
         if (data.status === 200) {
-          setPosts((previousPosts: Post[]) =>
+          setPosts(previousPosts =>
             previousPosts.filter(post => post._id !== postId)
           )
           toast.success('Post Deleted Successfully')
@@ -189,7 +151,7 @@ const MyPost: React.FC = () => {
   const handleBanUser = (post: Post): void => {
     const formData = new FormData()
     formData.append('postid', post._id)
-    formData.append('userid', post.user._id)
+    formData.append('userid', post.user.id)
     fetch('/api/post-feed/ban-post', {
       method: 'POST',
       body: formData,
@@ -197,7 +159,7 @@ const MyPost: React.FC = () => {
       .then(response => response.json())
       .then(data => {
         if (data.status === 200) {
-          fetchPosts()
+          fetchPosts() // Using the fixed reference
         } else {
           console.error('Error banning user:', data.message)
         }
@@ -225,7 +187,7 @@ const MyPost: React.FC = () => {
       .then(data => {
         if (data.status === 200) {
           toast.success('User warned successfully')
-          fetchPosts()
+          fetchPosts() // Using the fixed reference
         } else {
           console.error('Error warning user:', data.message)
         }
@@ -235,7 +197,7 @@ const MyPost: React.FC = () => {
       })
   }
 
-  const filteredPosts = posts.filter((post: Post) => {
+  const filteredPosts = posts.filter(post => {
     const matchesSearch =
       post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.user.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -245,7 +207,13 @@ const MyPost: React.FC = () => {
 
   const onLike = async (postId: string): Promise<void> => {
     try {
-      const post = posts.find((post: Post) => post._id === postId)
+      // Check if userDetails is available before proceeding
+      if (!userDetails || !userDetails._id) {
+        toast.error('Please log in to like posts')
+        return
+      }
+
+      const post = posts.find(post => post._id === postId)
       const isLiked = post?.liked || false
 
       const response = await fetch(`/api/post-feed/like`, {
@@ -261,7 +229,7 @@ const MyPost: React.FC = () => {
 
       if (response.ok) {
         setPosts(
-          posts.map((post: Post) =>
+          posts.map(post =>
             post._id === postId
               ? { ...post, likes: post.likes + 1, liked: true }
               : post
@@ -311,14 +279,30 @@ const MyPost: React.FC = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0] || null
-    setNewPost({ ...newPost, image: file })
+    if (file) {
+      // Clean up previous thumbnail URL if it exists
+      if (newPost.thumbnail) {
+        URL.revokeObjectURL(newPost.thumbnail)
+      }
+
+      setNewPost({
+        ...newPost,
+        image: file,
+        thumbnail: URL.createObjectURL(file),
+      })
+    }
   }
+
+  // Handle empty posts array
+  const showPagination = filteredPosts.length > 0 && totalPages > 0
+  const startItem = filteredPosts.length > 0 ? (currentPage - 1) * 5 + 1 : 0
+  const endItem = Math.min((currentPage - 1) * 5 + 5, filteredPosts.length)
 
   return (
     <div className="container mx-auto px-0 pb-8 pt-0">
       <div className="px-6">
-        <div className="text-end  flex justify-between items-center">
-          <h2 className="text-2xl font-bold ">My Posts</h2>
+        <div className="text-end flex justify-between items-center">
+          <h2 className="text-2xl font-bold">My Posts</h2>
         </div>
       </div>
       <div>
@@ -399,16 +383,14 @@ const MyPost: React.FC = () => {
                             {newPost.image ? (
                               <div className="relative w-full h-full">
                                 {newPost.image.type.startsWith('image/') ? (
-                                  <Image
-                                    src={URL.createObjectURL(newPost.image)}
+                                  <img
+                                    src={newPost.thumbnail || ''}
                                     alt="Preview"
-                                    width={100}
-                                    height={100}
                                     className="w-full h-full object-cover rounded-md"
                                   />
                                 ) : (
                                   <video
-                                    src={URL.createObjectURL(newPost.image)}
+                                    src={newPost.thumbnail || ''}
                                     className="w-full h-full object-cover rounded-md"
                                     controls
                                   />
@@ -418,9 +400,17 @@ const MyPost: React.FC = () => {
                                   variant="destructive"
                                   size="icon"
                                   className="absolute top-1 right-1"
-                                  onClick={() =>
-                                    setNewPost({ ...newPost, image: null })
-                                  }
+                                  onClick={() => {
+                                    // Clean up the URL before removing it
+                                    if (newPost.thumbnail) {
+                                      URL.revokeObjectURL(newPost.thumbnail)
+                                    }
+                                    setNewPost({
+                                      ...newPost,
+                                      image: null,
+                                      thumbnail: null,
+                                    })
+                                  }}
                                 >
                                   <X className="h-4 w-4" />
                                 </Button>
@@ -454,7 +444,12 @@ const MyPost: React.FC = () => {
                     disabled={
                       isSubmitting || (!newPost.content && !newPost.image)
                     }
-                    onClick={handleCreatePost}
+                    onClick={e => {
+                      e.preventDefault()
+                      handleCreatePost(
+                        e as unknown as React.FormEvent<HTMLFormElement>
+                      )
+                    }}
                   >
                     {isSubmitting ? (
                       <>
@@ -474,125 +469,129 @@ const MyPost: React.FC = () => {
               <div className="flex-1 max-w-[680px] mx-auto">
                 <CardContent className="p-0">
                   <div className="grid gap-4">
-                    {filteredPosts.map((post: Post) => (
-                      <article
-                        key={post._id}
-                        className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden"
-                      >
-                        <div className="px-4 pt-3 pb-1">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src={post.user?.image || '/default-avatar.png'}
-                                alt="Avatar"
-                                width={40}
-                                height={40}
-                                className="rounded-full object-cover border border-gray-200"
-                              />
-                              <div>
-                                <h3 className="text-sm font-semibold text-gray-900">
-                                  {post.user?.name || 'Unknown'}
-                                </h3>
-                                <p className="text-xs text-gray-500">
-                                  {new Date(post.createdAt).toLocaleString(
-                                    'en-US',
-                                    {
-                                      month: 'short',
-                                      day: 'numeric',
-                                      hour: '2-digit',
-                                      minute: '2-digit',
-                                    }
-                                  )}
-                                </p>
+                    {filteredPosts.length > 0 ? (
+                      filteredPosts.map(post => (
+                        <article
+                          key={post._id}
+                          className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden"
+                        >
+                          <div className="px-4 pt-3 pb-1">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <img
+                                  src={
+                                    post.user?.image || '/default-avatar.png'
+                                  }
+                                  alt="Avatar"
+                                  className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                                />
+                                <div>
+                                  <h3 className="text-sm font-semibold text-gray-900">
+                                    {post.user?.name || 'Unknown'}
+                                  </h3>
+                                  <p className="text-xs text-gray-500">
+                                    {new Date(post.createdAt).toLocaleString(
+                                      'en-US',
+                                      {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                      }
+                                    )}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="relative inline-block text-left">
+                                <button
+                                  className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
+                                  onClick={() =>
+                                    setDropdownPostId(
+                                      dropdownPostId === post._id
+                                        ? null
+                                        : post._id
+                                    )
+                                  }
+                                >
+                                  <MoreHorizontal className="w-5 h-5" />
+                                </button>
+                                {dropdownPostId === post._id && (
+                                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
+                                    <button
+                                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                                      onClick={() => {
+                                        handleDeletePost(post._id)
+                                        setDropdownPostId(null)
+                                      }}
+                                    >
+                                      Delete Post
+                                    </button>
+                                  </div>
+                                )}
                               </div>
                             </div>
-                            <div className="relative inline-block text-left">
-                              <button
-                                className="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100"
-                                onClick={() =>
-                                  setDropdownPostId(
-                                    dropdownPostId === post._id
-                                      ? null
-                                      : post._id
-                                  )
-                                }
-                              >
-                                <MoreHorizontal className="w-5 h-5" />
-                              </button>
-                              {dropdownPostId === post._id && (
-                                <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
-                                  <button
-                                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                    onClick={() => {
-                                      handleDeletePost(post._id)
-                                      setDropdownPostId(null)
-                                    }}
-                                  >
-                                    Delete Post
-                                  </button>
-                                </div>
-                              )}
+                          </div>
+
+                          <div className="px-4 py-2">
+                            <p className="text-gray-800 text-base">
+                              {post.content}
+                            </p>
+                          </div>
+
+                          {post.image?.[0] && (
+                            <div className="border-y border-gray-200">
+                              <img
+                                src={post.image[0]}
+                                alt="Post"
+                                className="w-full h-auto max-h-[510px] object-contain bg-gray-50"
+                              />
+                            </div>
+                          )}
+
+                          <div className="px-4 py-2 border-b border-gray-200 text-sm text-gray-500">
+                            <div className="flex items-center gap-4">
+                              <span>{post?.totalLikes || 0} likes</span>
+                              <span>{post.totalComments || 0} comments</span>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="px-4 py-2">
-                          <p className="text-gray-800 text-base">
-                            {post.content}
-                          </p>
-                        </div>
+                          <div className="px-2 py-1 grid grid-cols-3 text-gray-500 text-sm font-medium">
+                            <button
+                              onClick={() => onLike(post._id)}
+                              className={`flex items-center justify-center gap-1 p-2 rounded hover:bg-gray-100 ${post?.liked ? 'text-blue-600' : ''}`}
+                            >
+                              <ThumbsUp className="w-4 h-4" />
+                              Like
+                            </button>
+                            <button
+                              onClick={() => toggleComments(post._id)}
+                              className="flex items-center justify-center gap-1 p-2 rounded hover:bg-gray-100"
+                            >
+                              <MessageSquare className="w-4 h-4" />
+                              Comment
+                            </button>
 
-                        {post.image?.[0] && (
-                          <div className="border-y border-gray-200">
-                            <Image
-                              src={post.image[0]}
-                              alt="Post"
-                              width={680}
-                              height={510}
-                              className="w-full h-auto max-h-[510px] object-contain bg-gray-50"
+                            <button
+                              onClick={() => onShare(post._id)}
+                              className="flex items-center justify-center gap-1 p-2 rounded hover:bg-gray-100"
+                            >
+                              <Share2 className="w-4 h-4" />
+                              Share
+                            </button>
+                          </div>
+                          {showComments === post._id && userDetails?._id && (
+                            <Comment
+                              postId={post._id}
+                              currentUserId={userDetails._id}
                             />
-                          </div>
-                        )}
-
-                        <div className="px-4 py-2 border-b border-gray-200 text-sm text-gray-500">
-                          <div className="flex items-center gap-4">
-                            <span>{post?.totalLikes || 0} likes</span>
-                            <span>{post.totalComments || 0} comments</span>
-                          </div>
-                        </div>
-
-                        <div className="px-2 py-1 grid grid-cols-3 text-gray-500 text-sm font-medium">
-                          <button
-                            onClick={() => onLike(post._id)}
-                            className={`flex items-center justify-center gap-1 p-2 rounded hover:bg-gray-100 ${post?.liked ? 'text-blue-600' : ''}`}
-                          >
-                            <ThumbsUp className="w-4 h-4" />
-                            Like
-                          </button>
-                          <button
-                            onClick={() => toggleComments(post._id)}
-                            className="flex items-center justify-center gap-1 p-2 rounded hover:bg-gray-100"
-                          >
-                            <MessageSquare className="w-4 h-4" />
-                            Comment
-                          </button>
-
-                          <button
-                            onClick={() => onShare(post._id)}
-                            className="flex items-center justify-center gap-1 p-2 rounded hover:bg-gray-100"
-                          >
-                            <Share2 className="w-4 h-4" />
-                            Share
-                          </button>
-                        </div>
-                        {showComments === post._id && (
-                          <Comment
-                            postId={post._id}
-                            currentUserId={userDetails._id}
-                          />
-                        )}
-                      </article>
-                    ))}
+                          )}
+                        </article>
+                      ))
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className="text-gray-500">No posts found.</p>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </div>
@@ -601,44 +600,54 @@ const MyPost: React.FC = () => {
             </div>
           </CardContent>
 
-          <CardFooter>
-            <div className="text-xs text-muted-foreground">
-              Showing <strong>{(currentPage - 1) * 5 + 1}</strong> to{' '}
-              <strong>{(currentPage - 1) * 5 + 5}</strong> Post
-            </div>
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={() =>
-                      setCurrentPage((prev: number) => Math.max(prev - 1, 1))
-                    }
-                  />
-                </PaginationItem>
-                {[...Array(totalPages).keys()].map((page: number) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
+          <CardFooter className="flex justify-between">
+            {filteredPosts.length > 0 && (
+              <div className="text-xs text-muted-foreground">
+                Showing <strong>{startItem}</strong> to{' '}
+                <strong>{endItem}</strong> {endItem === 1 ? 'Post' : 'Posts'}
+              </div>
+            )}
+
+            {showPagination && (
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
                       href="#"
-                      className="w-5 lg:w-12"
-                      onClick={() => setCurrentPage(page + 1)}
-                    >
-                      {page + 1}
-                    </PaginationLink>
+                      onClick={e => {
+                        e.preventDefault()
+                        setCurrentPage((prev: number) => Math.max(prev - 1, 1))
+                      }}
+                    />
                   </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={() =>
-                      setCurrentPage((prev: number) =>
-                        Math.min(prev + 1, totalPages)
-                      )
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+                  {[...Array(totalPages).keys()].map((page: number) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        href="#"
+                        className={`w-5 lg:w-12 ${currentPage === page + 1 ? 'bg-blue-50' : ''}`}
+                        onClick={e => {
+                          e.preventDefault()
+                          setCurrentPage(page + 1)
+                        }}
+                      >
+                        {page + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={e => {
+                        e.preventDefault()
+                        setCurrentPage((prev: number) =>
+                          Math.min(prev + 1, totalPages)
+                        )
+                      }}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
           </CardFooter>
         </Card>
       </div>

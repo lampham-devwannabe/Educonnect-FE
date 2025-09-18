@@ -4,32 +4,11 @@ import { Star, ArrowRight, Users, LucideGavel, BookText } from 'lucide-react'
 import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
 import textCircleImg from '@assets/blog-image/blog1.png'
-
-// Define TypeScript interfaces
-interface Instructor {
-  _id: string
-  name: string
-  image: string
-}
-
-interface Course {
-  _id: string
-  title: string
-  price: number
-  discount?: number
-  thumbnail?: string
-  courseBadge: string
-  level: string
-  totalSeat: number
-  instructor?: Instructor
-}
+import type { Course } from '@/models/course'
+import type { User } from '@/models/user'
 
 interface PopularCourseProps {
-  user?: {
-    id?: string
-    name?: string
-    email?: string
-  }
+  user?: User
 }
 
 // Simple Card components

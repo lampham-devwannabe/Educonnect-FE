@@ -3,28 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { Card, CardContent, CardFooter, CardHeader } from './ui/card'
 import { Skeleton } from './ui/skeleton'
 import { Clock, Star } from 'lucide-react'
-
-// Kiểu dữ liệu
-interface Instructor {
-  name: string
-  image: string
-  profession: string
-}
-
-interface Category {
-  categoryName: string
-}
-
-interface Course {
-  _id: string
-  title: string
-  thumbnail: string
-  instructor: Instructor
-  category?: Category
-  duration: string
-  price: number
-  discount?: number
-}
+import type { Course } from '@/models/course'
 
 const EnhancedCourse: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([])
@@ -61,8 +40,11 @@ const EnhancedCourse: React.FC = () => {
     ...Array.from(
       new Set(
         courses
-          .map(c => c.category?.categoryName)
-          .filter((name): name is string => Boolean(name)) // ép TS hiểu chỉ còn string
+          .flatMap(
+            course =>
+              course.categories?.map(category => category.categoryName) || []
+          )
+          .filter(Boolean)
       )
     ),
   ]
@@ -70,7 +52,12 @@ const EnhancedCourse: React.FC = () => {
   const filteredCourses =
     activeCategory === 'All'
       ? courses
-      : courses.filter(c => c.category?.categoryName === activeCategory)
+      : courses.filter(course =>
+          // Check if any category in the course matches the active category
+          course.categories?.some(
+            category => category.categoryName === activeCategory
+          )
+        )
 
   const RatingStars: React.FC<{ rating: number }> = ({ rating }) => (
     <div className="flex items-center mt-2">
@@ -111,6 +98,23 @@ const EnhancedCourse: React.FC = () => {
         </div>
       </div>
 
+      {/* Category filter buttons */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        {categories.map(category => (
+          <button
+            key={category}
+            onClick={() => setActiveCategory(category)}
+            className={`px-4 py-2 rounded-md ${
+              activeCategory === category
+                ? 'bg-cyan-400 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {courses.length === 0
@@ -145,6 +149,19 @@ const EnhancedCourse: React.FC = () => {
                   <h3 className="text-lg font-bold text-primary truncate">
                     {course.title}
                   </h3>
+
+                  {/* Display categories */}
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {course.categories?.map((category, idx) => (
+                      <span
+                        key={idx}
+                        className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600"
+                      >
+                        {category.categoryName}
+                      </span>
+                    ))}
+                  </div>
+
                   <div className="flex gap-3 mt-4">
                     <img
                       src={course.instructor?.image}

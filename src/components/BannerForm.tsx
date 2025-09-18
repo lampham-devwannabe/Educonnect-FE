@@ -1,24 +1,42 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Switch } from '@/components/ui/switch'
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
+import { Textarea } from './ui/textarea'
+import { Switch } from './ui/switch'
 import toast from 'react-hot-toast'
-import { uploadImage } from '@/utils/upload-image'
-import { Progress } from '@/components/ui/progress'
-import { from } from 'form-data'
-import NextImage from 'next/image'
+import { uploadImagePromised } from '../utils/upload-image'
+import { Progress } from './ui/progress'
 
-export function AddEditBannerForm({ bannerData = null, onSuccess }) {
-  const router = useRouter()
-  const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
+// Define type for banner data
+interface BannerData {
+  _id?: string
+  title: string
+  description: string
+  image: string
+  thumbnail?: string
+  link: string
+  type: string
+  typeValue: string
+  isActive: boolean
+  position: string | number
+}
 
-  const [formData, setFormData] = useState({
+interface AddEditBannerFormProps {
+  bannerData?: BannerData | null
+  onSuccess?: () => void
+}
+
+export function AddEditBannerForm({
+  bannerData = null,
+  onSuccess,
+}: AddEditBannerFormProps) {
+  const navigate = useNavigate() // React Router's navigation hook
+  const [uploading, setUploading] = useState<boolean>(false)
+  const [uploadProgress, setUploadProgress] = useState<number>(0)
+
+  const [formData, setFormData] = useState<BannerData>({
     title: '',
     description: '',
     image: '',
@@ -35,19 +53,25 @@ export function AddEditBannerForm({ bannerData = null, onSuccess }) {
     }
   }, [bannerData])
 
-  const handleChange = e => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSwitchChange = checked => {
+  const handleSwitchChange = (checked: boolean) => {
     setFormData(prev => ({ ...prev, isActive: checked }))
   }
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    formData.image = formData.thumbnail
+    // Set image from thumbnail if available
+    if (formData.thumbnail) {
+      formData.image = formData.thumbnail
+    }
+
     const method = bannerData ? 'PUT' : 'POST'
     const endpoint = bannerData
       ? `/api/banners/${bannerData._id}`
@@ -64,20 +88,13 @@ export function AddEditBannerForm({ bannerData = null, onSuccess }) {
 
       const text = await res.text()
       const data = text ? JSON.parse(text) : {}
-      // if (res.ok) {
-      //   toast.success(data.message || "Banner saved successfully.");
-      //   onSuccess?.();
-      //   router.push("/dashboard/banners");
-      // } else {
-      //   toast.error(data.message || "Something went wrong.");
-      // }
 
       if (data.status === 201 || data.status === 200) {
-        toast.success(data.message)
-        onSuccess?.()
-        router.push('/dashboard/banners')
+        toast.success(data.message || 'Banner saved successfully.')
+        if (onSuccess) onSuccess()
+        navigate('/dashboard/banners')
       } else {
-        toast.error(data.message)
+        toast.error(data.message || 'Something went wrong.')
       }
     } catch (error) {
       console.error('Error submitting banner:', error)
@@ -85,42 +102,34 @@ export function AddEditBannerForm({ bannerData = null, onSuccess }) {
     }
   }
 
-  const handleFileChange = e => {
-    const file = e.target.files[0]
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
 
-    if (file) {
-      // Check file size (below 100 KB)
-      if (file.size > 800 * 1024) {
-        alert('File size must be less than 500 KB.')
-        return
-      }
+    if (!file) return
 
-      const img = new Image()
-      const reader = new FileReader()
+    // Check file size (below 800 KB)
+    if (file.size > 800 * 1024) {
+      alert('File size must be less than 800 KB.')
+      return
+    }
 
-      reader.onload = event => {
-        img.src = event.target.result
-        img.onload = () => {
-          uploadImage(
-            file,
-            setUploading,
-            setUploadProgress,
-            setFormData,
-            formData
-          )
-        }
-        // img.onload = () => {
-        //   if (img.width !== 1600 || img.height !== 500) {
-        //     alert("Image dimensions must be 1600 x 500 pixels.");
-        //   } else {
-        //     // If validation passes, proceed to upload
-        //     uploadImage(file, setUploading, setUploadProgress, setFormData, formData);
+    try {
+      // Use uploadImagePromised instead of uploadImage to get the URL directly
+      const imageUrl = await uploadImagePromised(
+        file,
+        setUploading,
+        setUploadProgress
+      )
 
-        //   }
-        // };
-      }
-
-      reader.readAsDataURL(file)
+      // Update form data with the new image URL
+      setFormData(prevData => ({
+        ...prevData,
+        image: imageUrl,
+        thumbnail: imageUrl,
+      }))
+    } catch (error) {
+      console.error('Error uploading image:', error)
+      toast.error('Failed to upload image. Please try again.')
     }
   }
 
@@ -147,13 +156,14 @@ export function AddEditBannerForm({ bannerData = null, onSuccess }) {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="imageUrl">Image URL</Label>
+          <Label htmlFor="image">Image</Label>
           <Input
             id="image"
             name="image"
             type="file"
             onChange={handleFileChange}
-            required
+            accept="image/*"
+            required={!bannerData}
           />
 
           {uploading && <Progress value={uploadProgress} className="mt-2" />}
@@ -210,16 +220,16 @@ export function AddEditBannerForm({ bannerData = null, onSuccess }) {
       <div>
         <h3 className="text-lg font-semibold mb-4">Preview</h3>
         <div className="border rounded-lg overflow-hidden shadow-lg relative bg-gray-100">
-          {formData.imageUrl ? (
-            <NextImage
-              src={formData.imageUrl}
+          {formData.image ? (
+            <img
+              src={formData.image}
               alt={formData.title || 'Banner Preview'}
-              height={160}
-              width={800}
               className="w-full h-40 object-cover"
             />
           ) : (
-            <div className="w-full h-40 bg-gray-300 flex items-center justify-center"></div>
+            <div className="w-full h-40 bg-gray-300 flex items-center justify-center">
+              <span className="text-gray-500">Image Preview</span>
+            </div>
           )}
           <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center p-4">
             <h4 className="text-xl font-bold text-white text-center">

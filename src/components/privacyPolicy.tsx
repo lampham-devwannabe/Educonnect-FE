@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-
-// Define TypeScript interfaces
-interface Promo {
-  _id: string
-  title: string
-  description: string
-  image: string
-  buttonText: string
-  buttonLink: string
-  isActive: boolean
-}
+import type { Promo } from '@/models/promo'
 
 export const PostsRightSidebar: React.FC = () => {
   const [promos, setPromos] = useState<Promo[]>([])

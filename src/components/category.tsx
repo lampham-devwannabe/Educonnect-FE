@@ -3,13 +3,8 @@ import { Link } from 'react-router-dom'
 import { Skeleton } from './ui/skeleton'
 import { ChevronRight } from 'lucide-react'
 import { Button } from './ui/button'
-import http from '../services/http' // axios instance bạn có
-
-interface Category {
-  id: string
-  categoryName: string
-  courseCount?: number
-}
+import http from '../services/http'
+import type { Category } from '@/models/category'
 
 const Category = () => {
   const [categoryData, setCategoryData] = useState<Category[]>([])

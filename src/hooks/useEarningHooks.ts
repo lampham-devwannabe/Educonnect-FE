@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for the earnings data
 interface Earning {
   // Add properties based on your actual earnings data structure
-  [key: string]: never // This allows for any properties until you define them specifically
+  [key: string]: any // This allows for any properties until you define them specifically
 }
 
 export const useEarningHooks = (): {

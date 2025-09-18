@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for post data
 interface Post {
   // Add specific properties based on your actual post structure
-  [key: string]: never
+  [key: string]: any
 }
 
 interface UsePostHooksReturn {

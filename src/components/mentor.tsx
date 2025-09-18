@@ -1,10 +1,7 @@
-'use client'
-
 import React, { useState, useEffect } from 'react'
 import { CircleArrowRight, Star } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Link } from 'react-router-dom'
+import { Skeleton } from './ui/skeleton'
 import { Card, CardContent, CardHeader } from './ui/card'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
@@ -114,7 +111,7 @@ const TopMentors: React.FC = () => {
             </span>
           </h2>
           <Link
-            href="/mentorlist"
+            to="/mentorlist" // Changed href to to for React Router
             className="text-indigo-600 hover:text-indigo-800 transition-colors duration-300 flex items-center text-sm sm:text-base"
           >
             See All
@@ -136,15 +133,16 @@ const TopMentors: React.FC = () => {
               : mentors.map((mentor: Mentor) => (
                   <div key={mentor._id}>
                     <Card className="w-full rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl">
-                      <Link href="">
+                      <Link to="">
+                        {' '}
+                        {/* Changed href to to */}
                         <CardHeader className="items-center">
                           <div className="">
-                            <Image
+                            {/* Replace Next.js Image with standard img */}
+                            <img
                               src={mentor.image}
-                              alt=""
+                              alt={`${mentor.name}`}
                               className="w-28 h-28 object-cover rounded-full"
-                              width={300}
-                              height={450}
                             />
                           </div>
                         </CardHeader>

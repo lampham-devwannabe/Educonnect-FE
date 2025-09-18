@@ -12,26 +12,14 @@ import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
 import Slider from 'react-slick'
 import { Link } from 'react-router-dom'
-// import { LazyLoadImage } from "react-lazy-load-image-component"
 import http from '../services/http'
-
-interface Course {
-  _id: string
-  title: string
-  thumbnail: string
-  discount?: number
-  price: number
-  instructor?: {
-    name: string
-    image: string
-  }
-}
+import type { Course } from '@/models/course'
 
 interface BestRatedCourseProps {
   user?: any
 }
 
-const BestRatedCourse: React.FC<BestRatedCourseProps> = ({ user }) => {
+const BestRatedCourse: React.FC<BestRatedCourseProps> = () => {
   const sliderRef = useRef<Slider | null>(null)
 
   const settings = {

@@ -1,12 +1,7 @@
 import React, { useState } from 'react'
 import { formatDateTime } from '../utils/dateformate'
 import { useNotificationHooks } from '../hooks/useNotificationHooks'
-
-interface User {
-  token?: string
-  image?: string
-  role?: string
-}
+import type { User } from '@/models/user'
 
 interface NavbarBottomProps {
   user: User

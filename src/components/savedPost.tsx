@@ -1,24 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { MessageSquare, MoreHorizontal, Share2, ThumbsUp } from 'lucide-react'
 import { CardContent } from './ui/card'
-
-// Define TypeScript interfaces
-interface User {
-  _id: string
-  name: string
-  image?: string
-}
-
-interface Post {
-  _id: string
-  content: string
-  image?: string[]
-  user?: User
-  likes?: number
-  comments?: string[]
-  shares?: number
-  liked?: boolean
-}
+import type { User } from '@/models/user'
+import type { Post } from '@/models/post'
 
 // Custom hook for user details
 const useUserDetailsHooks = () => {
@@ -54,7 +38,7 @@ const SavedPost: React.FC = () => {
     if (!userDetails) return
 
     const formdata = new FormData()
-    formdata.append('userId', userDetails._id)
+    formdata.append('userId', userDetails.id)
     formdata.append('postId', postId)
 
     try {
@@ -79,7 +63,7 @@ const SavedPost: React.FC = () => {
     if (!userDetails) return
 
     const formData = new FormData()
-    formData.append('userId', userDetails._id)
+    formData.append('userId', userDetails.id)
 
     try {
       const response = await fetch('/api/post-feed/bookmark/list', {
@@ -94,7 +78,7 @@ const SavedPost: React.FC = () => {
   }
 
   useEffect(() => {
-    if (userDetails && userDetails._id) {
+    if (userDetails && userDetails.id) {
       fetchSavedPost()
     }
   }, [userDetails])
@@ -176,8 +160,8 @@ const SavedPost: React.FC = () => {
                   {/* Stats */}
                   <div className="px-4 py-2 border-b border-gray-200 text-sm text-gray-500">
                     <div className="flex items-center gap-4">
-                      <span>{post?.likes || 0} likes</span>
-                      <span>{post.comments?.length || 0} comments</span>
+                      <span>{post?.totalLikes || 0} likes</span>
+                      <span>{post.totalComments || 0} comments</span>
                       <span>{post?.shares || 0} shares</span>
                     </div>
                   </div>

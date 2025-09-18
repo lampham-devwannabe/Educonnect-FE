@@ -14,14 +14,7 @@ import {
   Loader2,
   CheckCheck,
 } from 'lucide-react'
-
-// Types
-interface User {
-  token?: string
-  image?: string
-  name?: string
-  role?: string
-}
+import type { User } from '@/models/user'
 
 interface CartItem {
   _id: string
@@ -581,7 +574,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 )}
               </div>
             ) : (
-              <div className="flex gap-1 rounded-full bg-[--primary] py-3 px-6 text-bold text-sm">
+              <div className="flex gap-1 rounded-full bg-primary py-3 px-6 text-gray-100 text-sm">
                 <Link to="/login">
                   <h5 className="">Login</h5>
                 </Link>

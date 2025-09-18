@@ -247,6 +247,10 @@
   color: transparent;
 }
 
+.bg-primary {
+  background-color: var(--primary);
+}
+
 .desc {
   margin-top: 1.25rem;
   font-size: 1.125rem;

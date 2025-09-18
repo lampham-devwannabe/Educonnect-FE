@@ -6,12 +6,7 @@ import { Textarea } from './ui/textarea'
 import { Separator } from './ui/separator'
 import { ChevronDown, ChevronUp, Send, MessageSquare } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
-
-interface User {
-  _id: string
-  name: string
-  image?: string
-}
+import type { User } from '@/models/user'
 
 interface Reply {
   _id: string

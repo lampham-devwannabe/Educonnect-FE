@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for withdraw request data
 interface WithdrawRequest {
   // Add specific properties based on your actual withdraw request structure
-  [key: string]: never
+  [key: string]: any
 }
 
 interface UseWithdrawRequestHooksProps {

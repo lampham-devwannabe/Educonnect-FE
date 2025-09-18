@@ -1,32 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import NavbarBottom from './navbarBottom'
-
-interface UserInfo {
-  token?: string
-  user_id?: string
-  name?: string
-  image?: string
-  role?: string
-}
+import type { User } from '@/models/user'
 
 const NavbarBottomComponent: React.FC = () => {
-  const [userInfo, setUserInfo] = useState<UserInfo>({})
+  const [userInfo, setUserInfo] = useState<User>()
 
   useEffect(() => {
-    // In React, we use localStorage instead of cookies from Next.js
     const getUserInfo = () => {
-      const token = localStorage.getItem('access-token') || undefined
-      const user_id = localStorage.getItem('user_id') || undefined
-      const name = localStorage.getItem('name') || undefined
-      const image = localStorage.getItem('image') || undefined
-      const role = localStorage.getItem('role') || undefined
+      const token = localStorage.getItem('access-token') ?? ''
+      const _id = localStorage.getItem('user_id') ?? ''
+      const name = localStorage.getItem('name') ?? ''
+      const image = localStorage.getItem('image') ?? ''
+      const role = localStorage.getItem('role') ?? ''
+      const email = localStorage.getItem('email') ?? ''
 
       setUserInfo({
-        token,
-        user_id,
+        id: _id,
         name,
         image,
+        token,
         role,
+        email,
       })
     }
 
@@ -35,7 +29,7 @@ const NavbarBottomComponent: React.FC = () => {
 
   return (
     <div className="container">
-      <NavbarBottom user={userInfo} />
+      {userInfo && <NavbarBottom user={userInfo} />}
     </div>
   )
 }

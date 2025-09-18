@@ -14,32 +14,11 @@ import {
 import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
 import textCircleImg from '@assets/custom-image/circle-icon.png'
-
-// TypeScript interfaces
-interface Instructor {
-  _id: string
-  name: string
-  image: string
-}
-
-interface Course {
-  _id: string
-  title: string
-  price: number
-  discount?: number
-  thumbnail?: string
-  courseBadge: string
-  level: string
-  totalSeat: number
-  instructor?: Instructor
-}
+import type { Course } from '@/models/course'
+import type { User } from '@/models/user'
 
 interface PopularSliderCourseProps {
-  user?: {
-    id?: string
-    name?: string
-    role?: string
-  }
+  user?: User
 }
 
 // Card components

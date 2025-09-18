@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for withdraw gateway data
 interface WithdrawGateway {
   // Add specific properties based on your actual withdraw gateway structure
-  [key: string]: never
+  [key: string]: any
 }
 
 interface UseWithdrawGetwayHooksReturn {

@@ -5,13 +5,7 @@ import quatImg1 from '@assets/custom-image/quat.png'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import Slider from 'react-slick'
-
-interface Testimonial {
-  id: number
-  quote: string
-  name: string
-  position: string
-}
+import type { Testimonial } from '@/models/testimonial'
 
 const Testimonial: React.FC = () => {
   const settings = {
