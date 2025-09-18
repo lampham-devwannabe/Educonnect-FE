@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for the mentor plan data
 interface MentorPlan {
   // Add properties based on your actual mentor plan data structure
-  [key: string]: never
+  [key: string]: any
 }
 
 export const useMentorPlanHooks = (): {

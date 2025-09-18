@@ -3,16 +3,8 @@ import { Link } from 'react-router-dom'
 import { BookOpen } from 'lucide-react'
 import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
+import type { Category } from '@/models/category'
 
-// TypeScript interfaces
-interface Category {
-  _id: string
-  categoryName: string
-  image?: string
-  courseCount: number
-}
-
-// Skeleton component (simplified)
 const Skeleton: React.FC<{ className?: string }> = ({ className }) => {
   return <div className={`animate-pulse bg-gray-200 ${className}`}></div>
 }
@@ -72,8 +64,8 @@ const NewCategory: React.FC = () => {
             : categoryData.map((category, index) => {
                 return (
                   <Link
-                    key={category._id}
-                    to={`/courselist?category=${category._id}`}
+                    key={category.id}
+                    to={`/courselist?category=${category.id}`}
                     className={`${
                       bgGradients[index % bgGradients.length]
                     } rounded-xl overflow-hidden transition-all hover:shadow-lg group`}

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for withdraw request stats
 interface WithdrawRequestStat {
   // Add specific properties based on your actual stats structure
-  [key: string]: never
+  [key: string]: any
 }
 
 interface UseWithdrawRequestStatsHooksReturn {

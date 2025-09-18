@@ -2,24 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader } from './ui/card'
 import { Star, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
-
-// Define TypeScript interfaces
-interface Instructor {
-  _id: string
-  name: string
-  image?: string
-  profession?: string
-}
-
-interface Course {
-  _id: string
-  title: string
-  price: number
-  discount?: number
-  thumbnail: string
-  duration: string
-  instructor: Instructor
-}
+import type { Course } from '@/models/course'
 
 interface RatingStarsProps {
   rating: number

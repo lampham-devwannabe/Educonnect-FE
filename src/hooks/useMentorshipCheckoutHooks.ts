@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for the checkout data
 interface CheckoutItem {
   // Add properties based on your actual checkout data structure
-  [key: string]: never
+  [key: string]: any
 }
 
 export const usePlanCheckoutHooks = (

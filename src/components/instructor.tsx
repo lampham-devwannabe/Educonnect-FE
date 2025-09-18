@@ -5,17 +5,10 @@ import { Badge } from './ui/badge'
 import Slider from 'react-slick'
 import { Link } from 'react-router-dom' // thay cho next/link
 import starImg from '@assets/custom-image/starImg.png'
-
-interface Mentor {
-  _id: string
-  name: string
-  profession: string
-  image?: string
-  expartise?: string[]
-}
+import type { Instructor } from '@/models/user'
 
 const Instructor: React.FC = () => {
-  const [userData, setUserData] = useState<Mentor[]>([])
+  const [userData, setUserData] = useState<Instructor[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
@@ -120,7 +113,7 @@ const Instructor: React.FC = () => {
               {userData.map((mentor, index) => (
                 <Link
                   key={index}
-                  to={`/mentor?id=${mentor._id}`}
+                  to={`/mentor?id=${mentor.id}`}
                   className="block group"
                 >
                   <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02]">
@@ -140,14 +133,14 @@ const Instructor: React.FC = () => {
                           {mentor.profession}
                         </p>
                         <div className="mt-2 flex flex-wrap gap-2">
-                          {mentor.expartise?.[0] && (
+                          {mentor.expertise?.[0] && (
                             <Badge className="bg-white/20 text-white font-thin hover:bg-white/30 px-3 py-1 text-xs rounded-full">
-                              {mentor.expartise[0]}
+                              {mentor.expertise[0]}
                             </Badge>
                           )}
-                          {mentor.expartise && mentor.expartise.length > 1 && (
+                          {mentor.expertise && mentor.expertise.length > 1 && (
                             <Badge className="bg-white/20 text-white font-thin hover:bg-white/30 px-3 py-1 text-xs rounded-full">
-                              +{mentor.expartise.length - 1}
+                              +{mentor.expertise.length - 1}
                             </Badge>
                           )}
                         </div>

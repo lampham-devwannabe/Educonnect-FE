@@ -33,7 +33,6 @@ import {
   useLastWeekCheckoutHooks,
 } from '../hooks/useDashboardSummaryHooks'
 
-// ===== Kiểu dữ liệu =====
 type LastWeekCheckout = {
   todayTotalAmount: number
   last7Days: { date: string; amount: number }[]

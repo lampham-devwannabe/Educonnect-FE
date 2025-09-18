@@ -43,23 +43,8 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 import { Badge } from './ui/badge'
-
-interface User {
-  name: string
-  role: string
-  image?: string
-}
-
-interface Notification {
-  _id: string
-  title: string
-  message: string
-  type: string
-  isRead: boolean
-  createdAt: string
-  actionLink?: string
-  imageUrl?: string
-}
+import type { User } from '@/models/user'
+import type { Notification } from '@/models/notification'
 
 interface SidebarProps {
   user: User

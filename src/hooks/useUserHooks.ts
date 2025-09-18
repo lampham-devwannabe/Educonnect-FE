@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react'
-
-// Define interface for user data
-interface User {
-  // Add specific properties based on your actual user structure
-  [key: string]: never
-}
+import type { User } from '@/models/user'
 
 interface UseUserHooksReturn {
   userData: User[]
@@ -60,7 +55,7 @@ export const useUserHooks = (
 // Define interface for user details
 interface UserDetails {
   // Add specific properties based on your actual user details structure
-  [key: string]: never
+  [key: string]: any
 }
 
 interface UseUserDetailsHooksReturn {

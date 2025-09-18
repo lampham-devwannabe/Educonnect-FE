@@ -23,35 +23,8 @@ import GlobalPagination from './GlobalPagination'
 import GlobalSkeletonLoader from './GlobalSkeletonLoader'
 import Comment from './comment'
 import { PostsRightSidebar } from './postsRightSidebar'
-
-// TypeScript interfaces
-interface User {
-  _id: string
-  name: string
-  image?: string
-}
-
-interface Post {
-  _id: string
-  title: string
-  content: string
-  image?: string[]
-  user: User
-  createdAt: string
-  totalLikes: number
-  totalComments: number
-  userLiked?: boolean
-  bookmarked?: boolean
-  liked?: boolean
-  status?: string
-}
-
-interface NewPostState {
-  title: string
-  content: string
-  image: File | null
-  thumbnail: string | null
-}
+import type { User } from '@/models/user'
+import type { Post, NewPost } from '@/models/post'
 
 // Custom hook for post functionality
 const usePostHooks = () => {
@@ -173,7 +146,7 @@ const AllPosts: React.FC = () => {
   const { userDetails } = useUserDetailsHooks()
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
-  const [newPost, setNewPost] = useState<NewPostState>({
+  const [newPost, setNewPost] = useState<NewPost>({
     title: '',
     content: '',
     image: null,
@@ -209,7 +182,7 @@ const AllPosts: React.FC = () => {
     }
 
     const formdata = new FormData()
-    formdata.append('userId', userDetails._id)
+    formdata.append('userId', userDetails.id)
     formdata.append('postId', postId)
 
     try {
@@ -310,7 +283,7 @@ const AllPosts: React.FC = () => {
         },
         body: JSON.stringify({
           postid: postId,
-          userid: userDetails._id,
+          userid: userDetails.id,
         }),
       })
 
@@ -659,7 +632,7 @@ const AllPosts: React.FC = () => {
                           {showComments === post._id && userDetails && (
                             <Comment
                               postId={post._id}
-                              currentUserId={userDetails._id}
+                              currentUserId={userDetails.id}
                             />
                           )}
                         </article>

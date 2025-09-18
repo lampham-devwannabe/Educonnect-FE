@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for the enrollment plan data
 interface EnrollPlan {
   // Add properties based on your actual enrollment plan data structure
-  [key: string]: never
+  [key: string]: any
 }
 
 export const useEnrollPlanHooks = (): {

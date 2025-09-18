@@ -13,23 +13,7 @@ import InfoTitle from './infoTitle'
 import Slider from 'react-slick'
 import type { Settings } from 'react-slick'
 import { Link } from 'react-router-dom'
-
-interface Instructor {
-  name: string
-  image: string
-}
-
-interface Course {
-  _id: string
-  title: string
-  thumbnail: string
-  discount?: number
-  price: number
-  courseBadge?: string
-  level?: string
-  totalSeat?: number
-  instructor?: Instructor
-}
+import type { Course } from '@/models/course'
 
 const RatingStars: React.FC<{ rating: number }> = ({ rating }) => {
   return (

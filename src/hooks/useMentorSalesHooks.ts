@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for the mentor sales data
 interface MentorSalesData {
   // Add properties based on your actual mentor sales data structure
-  [key: string]: never
+  [key: string]: any
 }
 
 export const useMentorSalesHooks = (): {

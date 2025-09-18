@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for payout account data
 interface PayoutAccount {
   // Add specific properties based on your actual payout account structure
-  [key: string]: never
+  [key: string]: any
 }
 
 export const usePayoutAccountHooks = (): {

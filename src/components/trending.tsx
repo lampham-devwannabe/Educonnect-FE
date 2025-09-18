@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-
-// Define TypeScript interface for category data
-interface Category {
-  _id: string
-  categoryName: string
-  description?: string
-  image: string
-}
+import type { Category } from '@/models/category'
 
 const Trending: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([])
@@ -48,7 +41,7 @@ const Trending: React.FC = () => {
         </div>
         <div className="rounded-lg sm:py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 sm:gap-6">
           {categories.map(category => (
-            <div key={category._id}>
+            <div key={category.id}>
               <motion.div
                 className="flex flex-col cursor-pointer bg-white items-center text-center p-6 rounded-2xl transition-all duration-300"
                 whileHover={{

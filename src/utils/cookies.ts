@@ -1,24 +1,16 @@
 import Cookies from 'js-cookie'
-
-interface User {
-  token: string | undefined
-  user_id: string | undefined
-  name: string
-  image: string
-  email: string
-  role: string
-}
+import type { User } from '@/models/user'
 
 /**
  * Gets user information from browser cookies
  */
 export function getUserFromCookies(): User {
   return {
-    token: Cookies.get('access-token'),
-    user_id: Cookies.get('user_id'),
+    id: Cookies.get('user_id') ?? '',
     name: Cookies.get('name') || 'Guest',
-    image: Cookies.get('image') || '/default-avatar.png',
     email: Cookies.get('email') || 'Not Provided',
+    token: Cookies.get('access-token'),
+    image: Cookies.get('image') || '/default-avatar.png',
     role: Cookies.get('role') || 'User',
   }
 }

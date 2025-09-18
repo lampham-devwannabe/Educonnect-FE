@@ -1,29 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from './navbar'
-
-interface UserInfo {
-  token?: string
-  user_id?: string
-  name?: string
-  image?: string
-  role?: string
-}
+import type { User } from '@/models/user'
 
 // Utility function to get user from local storage
-const getUserFromLocalStorage = (): UserInfo => {
-  if (typeof window === 'undefined') return {}
+const getUserFromLocalStorage = (): User => {
+  if (typeof window === 'undefined')
+    return {
+      token: '',
+      id: '',
+      name: '',
+      image: '',
+      role: '',
+      email: '',
+    }
 
   return {
-    token: localStorage.getItem('access-token') || undefined,
-    user_id: localStorage.getItem('user_id') || undefined,
-    name: localStorage.getItem('name') || undefined,
-    image: localStorage.getItem('image') || undefined,
-    role: localStorage.getItem('role') || undefined,
+    token: localStorage.getItem('access-token') ?? '',
+    id: localStorage.getItem('user_id') ?? '',
+    name: localStorage.getItem('name') ?? '',
+    image: localStorage.getItem('image') ?? '',
+    role: localStorage.getItem('role') ?? '',
+    email: localStorage.getItem('email') ?? '',
   }
 }
 
 const NavbarComponent: React.FC = () => {
-  const [userInfo, setUserInfo] = useState<UserInfo>({})
+  const [userInfo, setUserInfo] = useState<User>()
 
   useEffect(() => {
     const userData = getUserFromLocalStorage()
@@ -35,7 +37,7 @@ const NavbarComponent: React.FC = () => {
 
   return (
     <div className="sticky top-0 z-[999]">
-      <Navbar user={userInfo} />
+      {userInfo && <Navbar user={userInfo} />}
     </div>
   )
 }

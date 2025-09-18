@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify } from 'jose'
+import type { User } from '@/models/user'
 
 // Make sure to provide a fallback for the secret in case environment variable is not available
 const getSecret = (): Uint8Array => {
@@ -6,12 +7,6 @@ const getSecret = (): Uint8Array => {
     process.env.REACT_APP_JWT_SECRET ||
     'fallback-secret-key-for-development-only'
   return new TextEncoder().encode(secretKey)
-}
-
-interface User {
-  id: string
-  email: string
-  role: string
 }
 
 interface TokenPayload {

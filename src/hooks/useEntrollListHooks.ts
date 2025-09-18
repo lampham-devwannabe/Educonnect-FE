@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 // Define interface for the enrollment data
 interface EnrollItem {
   // Add properties based on your actual enrollment data structure
-  [key: string]: never // This allows for any properties until you define them specifically
+  [key: string]: any // This allows for any properties until you define them specifically
 }
 
 export const useEnrollListHooks = (): {

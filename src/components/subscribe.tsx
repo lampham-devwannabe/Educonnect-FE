@@ -2,25 +2,13 @@ import React from 'react'
 import { Card, CardContent, CardHeader } from './ui/card'
 import { DotIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import type { SubscriptionPlan } from '@/models/subscriptionPlan'
 
-// Import images
-// Note: In React, import images directly from your assets folder
 import subscribeImg1 from '@assets/custom-image/bronze1.png'
 import subscribeImg2 from '@assets/custom-image/gold2.png'
 import subscribeImg3 from '@assets/custom-image/silver3.png'
 
-// Define subscription plan interface
-interface SubscriptionPlan {
-  id: number
-  title: string
-  image: string
-  price: number
-  target: string
-  features: string[]
-}
-
 const Subscribe: React.FC = () => {
-  // Create subscription plans data
   const subscriptionPlans: SubscriptionPlan[] = [
     {
       id: 1,

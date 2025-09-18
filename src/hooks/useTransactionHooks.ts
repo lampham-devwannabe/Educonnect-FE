@@ -4,7 +4,7 @@ import type { Dispatch, SetStateAction } from 'react'
 // Define interface for transaction data
 interface Transaction {
   // Add specific properties based on your actual transaction structure
-  [key: string]: never
+  [key: string]: any
 }
 
 interface TransactionSummary {
