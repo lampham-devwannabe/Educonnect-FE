@@ -335,9 +335,9 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
           </button>
           <a href="/" className="lg:ml-0 md:ml-0 ml-4">
             <img
-              src="/assets/icon/logo.png"
+              src="/src/assets/icon/logo.png"
               alt="logo"
-              className="rounned-full lg:w-[100px] w-[100px] lg:h-[50px] h-[30px]"
+              className="rounded-full lg:w-[100px] w-[100px] lg:h-[50px] h-[30px]"
             />
           </a>
         </div>
