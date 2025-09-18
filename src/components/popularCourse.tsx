@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Star, ArrowRight, Users, LucideGavel, BookText } from 'lucide-react'
 import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
-import textCircleImg from '../assets/images/textCircle.png'
+import textCircleImg from '@assets/blog-image/blog1.png'
 
 // Define TypeScript interfaces
 interface Instructor {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, CardContent, CardHeader } from './ui/card'
 import { Link } from 'react-router-dom'
-import quatImg1 from '../assets/custom-image/quat.png'
+import quatImg1 from '@assets/custom-image/quat.png'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import Slider from 'react-slick'

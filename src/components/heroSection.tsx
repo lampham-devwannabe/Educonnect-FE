@@ -9,13 +9,13 @@ import {
 import { useNavigate } from 'react-router-dom'
 
 // Import ảnh bình thường trong React
-import heroImg1 from '../assets/hero-image/hero-img.png'
-import instructorImg1 from '../assets/instructor-image/instructor1.png'
-import instructorImg2 from '../assets/instructor-image/Eftyoffice.jpg'
-import instructorImg3 from '../assets/instructor-image/instructor3.png'
-import instructorImg4 from '../assets/instructor-image/instructor4.png'
-import bgImg1 from '../assets/bg-image/bg-img1.png'
-import arrowImg from '../assets/bg-image/arrow.png'
+import heroImg1 from '@assets/hero-image/hero-img.png'
+import instructorImg1 from '@assets/instructor-image/instructor1.png'
+import instructorImg2 from '@assets/instructor-image/Eftyoffice.jpg'
+import instructorImg3 from '@assets/instructor-image/instructor3.png'
+import instructorImg4 from '@assets/instructor-image/instructor4.png'
+import bgImg1 from '@assets/bg-image/bg-img1.png'
+import arrowImg from '@assets/bg-image/arrow.png'
 
 const HeroSection: React.FC = () => {
   const fadeInUp = {

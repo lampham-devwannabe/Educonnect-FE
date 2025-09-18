@@ -2,8 +2,8 @@ import React from 'react'
 import { CalendarDays, Clock, Star } from 'lucide-react'
 
 // nếu bạn để ảnh trong /public/assets thì với React Vite/CRA bạn gọi như sau:
-import featureImg1 from '../../assets/feature-image/feature1.png'
-import efty1 from '../../assets/custom-image/Eftyoffice.jpg'
+import featureImg1 from '../@assets/feature-image/feature1.png'
+import efty1 from '../@assets/custom-image/Eftyoffice.jpg'
 
 interface RatingStarsProps {
   rating: number

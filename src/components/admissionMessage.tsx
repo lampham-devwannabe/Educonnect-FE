@@ -5,8 +5,8 @@ import type { ChangeEvent, FormEvent } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
-import earthImg from '../assets/custom-image/earthImg.png'
-import starImg from '../assets/custom-image/starImg.png'
+import earthImg from '@assets/custom-image/earth-bg.png'
+import starImg from '@assets/custom-image/starImg.png'
 import toast from 'react-hot-toast'
 
 interface FormData {

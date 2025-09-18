@@ -1,4 +1,3 @@
-'use client'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
   Star,
@@ -8,8 +7,8 @@ import {
   MessagesSquare,
 } from 'lucide-react'
 
-import Image from 'next/image'
-import Link from 'next/link'
+// Replace Next.js imports with React Router
+import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
@@ -124,7 +123,7 @@ const MostPopularPost: React.FC<MostPopularPostProps> = () => {
             <InfoTitle heading={'Most Popular Post.'}></InfoTitle>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/popular-post">
+            <Link to="/popular-post">
               <button className="text-white bg-[--primary] lg:text-lg text-sm  hover:text-white duration-100 lg:px-5 lg:py-2 px-2 py-1 rounded-full">
                 All Blog Post
               </button>
@@ -149,16 +148,15 @@ const MostPopularPost: React.FC<MostPopularPostProps> = () => {
                 key={postItem._id}
               >
                 <Link
-                  href={`/popular-post/page?id=${postItem._id}`}
+                  to={`/popular-post/page?id=${postItem._id}`}
                   className="flex flex-col justify-between h-full"
                 >
                   <CardHeader className="p-0 relative w-[100%] h-[200px]">
-                    <Image
+                    {/* Replace Next.js Image with standard img */}
+                    <img
                       src={postItem.image[0] || '/assets/placeholder.jpg'}
                       alt="post image"
-                      className=" w-full h-full object-cover rounded-lg"
-                      width={300}
-                      height={450}
+                      className="w-full h-full object-cover rounded-lg"
                     />
                   </CardHeader>
                   <CardContent className="mt-3 pb-2 px-0">

@@ -10,13 +10,13 @@ import {
   UsersIcon,
 } from 'lucide-react'
 import Image from 'next/image'
-import heroImg1 from '../../public/assets/hero-image/hero-img.png'
-import instructorImg1 from '../../public/assets/instructor-image/instructor1.png'
-import instructorImg2 from '../../public/assets/instructor-image/Eftyoffice.jpg'
-import instructorImg3 from '../../public/assets/instructor-image/instructor3.png'
-import instructorImg4 from '../../public/assets/instructor-image/instructor4.png'
-import bgImg1 from '../../public/assets/bg-image/bg-img1.png'
-import arrowImg from '../../public/assets/bg-image/arrow.png'
+import heroImg1 from '@assets/hero-image/hero-img.png'
+import instructorImg1 from '@assets/instructor-image/instructor1.png'
+import instructorImg2 from '@assets/instructor-image/Eftyoffice.jpg'
+import instructorImg3 from '@assets/instructor-image/instructor3.png'
+import instructorImg4 from '@assets/instructor-image/instructor4.png'
+import bgImg1 from '@assets/bg-image/bg-img1.png'
+import arrowImg from '@assets/bg-image/arrow.png'
 
 const HeroSection = () => {
   const fadeInUp = {

@@ -1,23 +1,25 @@
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT, jwtVerify } from 'jose'
 
 // Make sure to provide a fallback for the secret in case environment variable is not available
 const getSecret = (): Uint8Array => {
-  const secretKey = process.env.REACT_APP_JWT_SECRET || 'fallback-secret-key-for-development-only';
-  return new TextEncoder().encode(secretKey);
-};
+  const secretKey =
+    process.env.REACT_APP_JWT_SECRET ||
+    'fallback-secret-key-for-development-only'
+  return new TextEncoder().encode(secretKey)
+}
 
 interface User {
-  id: string;
-  email: string;
-  role: string;
+  id: string
+  email: string
+  role: string
 }
 
 interface TokenPayload {
-  id: string;
-  email: string;
-  role: string;
-  iat?: number; // Issued at
-  exp?: number; // Expiration time
+  id: string
+  email: string
+  role: string
+  iat?: number // Issued at
+  exp?: number // Expiration time
 }
 
 /**
@@ -26,9 +28,12 @@ interface TokenPayload {
  * @param expiresIn Token expiration time in seconds (default: 1 day)
  * @returns The generated JWT token
  */
-export const generateToken = async (user: User, expiresIn: number = 86400): Promise<string> => {
+export const generateToken = async (
+  user: User,
+  expiresIn: number = 86400
+): Promise<string> => {
   try {
-    const secret = getSecret();
+    const secret = getSecret()
 
     const jwt = await new SignJWT({
       id: user.id,
@@ -38,30 +43,32 @@ export const generateToken = async (user: User, expiresIn: number = 86400): Prom
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime(Math.floor(Date.now() / 1000) + expiresIn)
-      .sign(secret);
+      .sign(secret)
 
-    return jwt;
+    return jwt
   } catch (error) {
-    console.error('Error generating token:', error);
-    throw new Error('Token generation failed');
+    console.error('Error generating token:', error)
+    throw new Error('Token generation failed')
   }
-};
+}
 
 /**
  * Verifies a JWT token and returns the payload
  * @param token The JWT token to verify
  * @returns The token payload if valid, null otherwise
  */
-export const verifyToken = async (token: string): Promise<TokenPayload | null> => {
+export const verifyToken = async (
+  token: string
+): Promise<TokenPayload | null> => {
   try {
-    const secret = getSecret();
-    const { payload } = await jwtVerify(token, secret);
-    return payload as unknown as TokenPayload;
+    const secret = getSecret()
+    const { payload } = await jwtVerify(token, secret)
+    return payload as unknown as TokenPayload
   } catch (error) {
-    console.error('Error verifying token:', error);
-    return null;
+    console.error('Error verifying token:', error)
+    return null
   }
-};
+}
 
 /**
  * Decodes a JWT token without verification (useful for reading expired tokens)
@@ -71,17 +78,17 @@ export const verifyToken = async (token: string): Promise<TokenPayload | null> =
 export const decodeToken = (token: string): TokenPayload | null => {
   try {
     // Split the token into parts
-    const parts = token.split('.');
-    if (parts.length !== 3) return null;
+    const parts = token.split('.')
+    if (parts.length !== 3) return null
 
     // Decode the payload (middle part)
-    const payload = JSON.parse(atob(parts[1]));
-    return payload as TokenPayload;
+    const payload = JSON.parse(atob(parts[1]))
+    return payload as TokenPayload
   } catch (error) {
-    console.error('Error decoding token:', error);
-    return null;
+    console.error('Error decoding token:', error)
+    return null
   }
-};
+}
 
 /**
  * Checks if a token is expired
@@ -89,9 +96,9 @@ export const decodeToken = (token: string): TokenPayload | null => {
  * @returns True if the token is expired, false otherwise
  */
 export const isTokenExpired = (token: string): boolean => {
-  const payload = decodeToken(token);
-  if (!payload || !payload.exp) return true;
+  const payload = decodeToken(token)
+  if (!payload || !payload.exp) return true
 
-  const currentTime = Math.floor(Date.now() / 1000);
-  return payload.exp < currentTime;
-};
+  const currentTime = Math.floor(Date.now() / 1000)
+  return payload.exp < currentTime
+}

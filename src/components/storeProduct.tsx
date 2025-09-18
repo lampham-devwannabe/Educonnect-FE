@@ -3,11 +3,11 @@ import { Card, CardContent, CardHeader } from './ui/card'
 import { ShoppingCartIcon, Star } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-import storeImg1 from '../assets/storeImage/store1.png'
-import storeImg2 from '../assets/storeImage/store2.png'
-import storeImg3 from '../assets/storeImage/store3.png'
-import storeImg4 from '../assets/storeImage/store4.png'
-import efty1 from '../assets/custom-image/Eftyoffice.jpg'
+import storeImg1 from '@assets/storeImage/store1.png'
+import storeImg2 from '@assets/storeImage/store2.png'
+import storeImg3 from '@assets/storeImage/store3.png'
+import storeImg4 from '@assets/storeImage/store4.png'
+import efty1 from '@assets/custom-image/Eftyoffice.jpg'
 
 interface RatingStarsProps {
   rating: number

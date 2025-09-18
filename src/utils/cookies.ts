@@ -1,12 +1,12 @@
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
 
 interface User {
-  token: string | undefined;
-  user_id: string | undefined;
-  name: string;
-  image: string;
-  email: string;
-  role: string;
+  token: string | undefined
+  user_id: string | undefined
+  name: string
+  image: string
+  email: string
+  role: string
 }
 
 /**
@@ -20,7 +20,7 @@ export function getUserFromCookies(): User {
     image: Cookies.get('image') || '/default-avatar.png',
     email: Cookies.get('email') || 'Not Provided',
     role: Cookies.get('role') || 'User',
-  };
+  }
 }
 
 /**
@@ -31,11 +31,11 @@ export function setCookies(name: string, email: string, image: string): void {
     sameSite: 'strict' as const,
     secure: true,
     expires: 7, // 7 days expiration
-  };
+  }
 
-  Cookies.set('name', name, options);
-  Cookies.set('email', email, options);
-  Cookies.set('image', image, options);
+  Cookies.set('name', name, options)
+  Cookies.set('email', email, options)
+  Cookies.set('image', image, options)
 }
 
 /**
@@ -46,14 +46,14 @@ export function setCookie(
   value: string,
   options?: Cookies.CookieAttributes
 ): void {
-  Cookies.set(name, value, options);
+  Cookies.set(name, value, options)
 }
 
 /**
  * Removes a cookie by name
  */
 export function removeCookie(name: string): void {
-  Cookies.remove(name);
+  Cookies.remove(name)
 }
 
 /**
@@ -66,10 +66,10 @@ export function clearUserCookies(): void {
     'name',
     'image',
     'email',
-    'role'
-  ];
+    'role',
+  ]
 
   cookiesToClear.forEach(cookieName => {
-    Cookies.remove(cookieName);
-  });
+    Cookies.remove(cookieName)
+  })
 }

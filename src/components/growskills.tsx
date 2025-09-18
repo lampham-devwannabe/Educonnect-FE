@@ -5,9 +5,9 @@ import { ArrowRight } from 'lucide-react'
 
 // Thay vì import bằng Next.js Image, ta dùng import trực tiếp (CRA/Vite hỗ trợ)
 // hoặc bạn có thể để path tương đối như public/...
-import skillImg1 from '../../public/assets/custom-image/skillImg.png'
-import starImg from '../../public/assets/custom-image/starImg.png'
-import textCircle from '../../public/assets/custom-image/textCircle.png'
+import skillImg1 from '@assets/custom-image/skillImg.png'
+import starImg from '@assets/custom-image/starImg.png'
+import textCircle from '@assets/custom-image/textCircle.png'
 
 const GrowSkills: React.FC = () => {
   const features = [

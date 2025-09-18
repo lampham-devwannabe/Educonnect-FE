@@ -2,9 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Card, CardContent, CardHeader } from './ui/card'
 import { Star } from 'lucide-react'
-import blogImg1 from '../assets/blog-image/blog1.png'
-import blogImg2 from '../assets/blog-image/blog2.png'
-import blogImg3 from '../assets/blog-image/blog3.png'
+import blogImg1 from '@assets/blog-image/blog1.png'
+import blogImg2 from '@assets/blog-image/blog2.png'
+import blogImg3 from '@assets/blog-image/blog3.png'
 
 type RatingStarsProps = {
   rating: number

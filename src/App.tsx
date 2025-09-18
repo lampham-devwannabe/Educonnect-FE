@@ -1,10 +1,14 @@
-import Home from './pages/home'
+import { Routes, Route } from 'react-router-dom'
+import Layout from '@/components/Layout'
+import HomePage from './pages/homePage'
 
-function App() {
+const App: React.FC = () => {
   return (
-    <>
-      <Home />
-    </>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </Layout>
   )
 }
 
