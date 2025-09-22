@@ -24,7 +24,7 @@ const GrowSkills: React.FC = () => {
   return (
     <div className="container flex flex-col lg:flex-row items-center mt-5 lg:mt-20 mb-16 lg:mb-20">
       {/* Left Image */}
-      <img className="w-full" src={skillImg1} alt="Skill Illustration" />
+      <img className="w-full" alt="" width={500} height={400} src={skillImg1} />
 
       {/* Right Content */}
       <div className="relative lg:pl-16 lg:mt-0 mt-5">
@@ -64,11 +64,11 @@ const GrowSkills: React.FC = () => {
         {/* Button */}
         <div className="flex flex-col w-fit h-0 lg:h-fit lg:flex-row gap-5 lg:mt-10 mt-5">
           <a href="/about">
-            <Button className="bg-[--primary] flex items-center rounded-full text-white hover:bg-[--primary]/90">
+            <Button className="bg-[--primary] p-0 rounded-full hover:bg-[--primary]  hover:text-white  text-white ">
               <span className="py-1 lg:py-2 pl-3 lg:pl-5 text-sm lg:text-md">
                 Load More
               </span>
-              <ArrowRight className="lg:w-full w-7 h-7 p-1.5 lg:p-2.5 bg-[#644BFF] rounded-full ml-3" />
+              <ArrowRight className="lg:w-full w-7  h-7 lg:h-full text-sm p-1.5 lg:p-2.5 bg-[#644BFF] rounded-full ml-3" />
             </Button>
           </a>
         </div>

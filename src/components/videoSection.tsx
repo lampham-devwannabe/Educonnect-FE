@@ -27,13 +27,13 @@ const VideoSection: React.FC = () => {
 
               <div className="flex flex-col w-fit lg:flex-row gap-5 lg:mt-10 mt-5">
                 <Link to="/about">
-                  <Button className="h-8 lg:h-full bg-[--primary] p-0 rounded-full hover:bg-[--primary] hover:text-white text-white">
+                  <Button className=" h-8 lg:h-full bg-[--primary] p-0 rounded-full hover:bg-[--primary]  hover:text-white  text-white ">
                     <span className="lg:py-2 pl-5">Join With Us </span>
-                    <ArrowRight className="w-fit lg:w-full h-7 lg:h-full text-sm p-1.5 lg:p-2.5 bg-[#644BFF] rounded-full ml-3" />
+                    <ArrowRight className=" w-fit lg:w-full h-7 lg:h-full text-sm p-1.5 lg:p-2.5 bg-[#644BFF] rounded-full ml-3" />
                   </Button>
                 </Link>
                 <Link to="/courselist">
-                  <Button className="h-8 lg:h-full bg-[--secondary] p-0 rounded-full hover:bg-[--secondary] hover:text-white text-white">
+                  <Button className="h-8 lg:h-full bg-[--secondary] p-0 rounded-full hover:bg-[--secondary]  hover:text-white  text-white ">
                     <span className="py-2 pl-5">Our Courses </span>
                     <ArrowRight className="w-fit lg:w-full h-7 lg:h-full text-sm p-1.5 lg:p-2.5 bg-[--secondary-foreground] rounded-full ml-3" />
                   </Button>
@@ -45,8 +45,8 @@ const VideoSection: React.FC = () => {
                 onClick={() => setShowVideo(true)}
                 className="focus:outline-none"
               >
-                <div className="relative p-2 lg:p-4 bg-gray-300 bg-opacity-20 rounded-full group">
-                  <div className="bg-white p-2 lg:p-4 rounded-full group-hover:bg-[--secondary]">
+                <div className=" relative p-2 lg:p-4 bg-gray-300 bg-opacity-20  rounded-full group">
+                  <div className=" bg-white p-2 lg:p-4  rounded-full group-hover:bg-[--secondary]">
                     <Play className="w-5 h-5 fill-[--secondary] text-[--secondary] group-hover:text-white"></Play>
                     <div className="absolute bg-gray-300 bg-opacity-20 w-8 h-8 lg:w-10 lg:h-10 rounded-full -bottom-3 right-0"></div>
                     <div className="absolute border-[1px] border-gray-300 border-opacity-20 w-6 h-6 lg:w-10 lg:h-10 rounded-full -bottom-7 lg:-bottom-10 right-0"></div>

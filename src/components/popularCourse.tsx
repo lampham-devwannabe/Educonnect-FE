@@ -3,34 +3,13 @@ import { Link } from 'react-router-dom'
 import { Star, ArrowRight, Users, LucideGavel, BookText } from 'lucide-react'
 import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
-import textCircleImg from '@assets/blog-image/blog1.png'
+import textCircleImg from '@assets/custom-image/textCircle.png'
 import type { Course } from '@/models/course'
 import type { User } from '@/models/user'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
 interface PopularCourseProps {
   user?: User
-}
-
-// Simple Card components
-const Card: React.FC<{
-  className?: string
-  children: React.ReactNode
-}> = ({ className, children }) => {
-  return <div className={className}>{children}</div>
-}
-
-const CardHeader: React.FC<{
-  className?: string
-  children: React.ReactNode
-}> = ({ className, children }) => {
-  return <div className={className}>{children}</div>
-}
-
-const CardContent: React.FC<{
-  className?: string
-  children: React.ReactNode
-}> = ({ className, children }) => {
-  return <div className={className}>{children}</div>
 }
 
 const RatingStars: React.FC<{ rating: number }> = ({ rating }) => {
@@ -98,7 +77,7 @@ const PopularCourse: React.FC<PopularCourseProps> = () => {
           </div>
           <div className="lg:flex flex-col lg:flex-row gap-5 lg:mt-10 mt-5">
             <Link to="/courselist">
-              <button className="text-white bg-[--primary] lg:text-lg text-sm hover:text-white duration-100 lg:px-5 lg:py-2 px-2 py-1 rounded-full">
+              <button className="text-white bg-[--primary] lg:text-lg text-sm  hover:text-white duration-100 lg:px-5 lg:py-2 px-2 py-1 rounded-full">
                 Explore courses
               </button>
             </Link>
@@ -115,6 +94,8 @@ const PopularCourse: React.FC<PopularCourseProps> = () => {
                   <img
                     src={course?.thumbnail || '/placeholder.png'}
                     alt={course?.title || 'Course Thumbnail'}
+                    width={450}
+                    height={300}
                     className="w-full h-full object-cover rounded-lg"
                   />
                   <h5 className="py-2 px-3 text-gray-300 text-xs bg-[#17254E] absolute bottom-3 left-3 rounded-md">

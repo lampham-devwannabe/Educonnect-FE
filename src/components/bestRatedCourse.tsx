@@ -14,7 +14,7 @@ import Slider from 'react-slick'
 import { Link } from 'react-router-dom'
 import http from '../services/http'
 import type { Course } from '@/models/course'
-
+import textCircle from '../assets/custom-image/textCircle.png'
 interface BestRatedCourseProps {
   user?: any
 }
@@ -68,7 +68,7 @@ const BestRatedCourse: React.FC<BestRatedCourseProps> = () => {
   }, [])
 
   const RatingStars: React.FC<{ rating: number }> = ({ rating }) => (
-    <div className="flex items-center mt-2">
+    <div className="flex items-center justify-left mt-2">
       {[1, 2, 3, 4, 5].map(star => (
         <Star
           key={star}
@@ -87,16 +87,23 @@ const BestRatedCourse: React.FC<BestRatedCourseProps> = () => {
     <div className="bg-purple-50 w-full pb-5 lg:pb-20">
       <div className="container mx-auto px-8 py-8">
         {/* Header */}
-        <div className="lg:flex justify-between items-center text-left lg:pt-10 pb-10">
+        <div className="lg:flex justify-between items-center text-left  lg:pt-10 pt-0 pb-10">
           <div className="relative lg:w-1/2 lg:pr-20">
             <h5 className="text-sm whitespace-nowrap bg-white px-5 py-1 inline-block text-[--primary] uppercase rounded-full mb-2">
               Best Rated Courses
             </h5>
+            <div className="absolute top-6 left-44">
+              <img
+                className="hidden lg:block w-52 h-16"
+                alt=""
+                src={textCircle}
+              ></img>
+            </div>
             <InfoTitle heading="Creating A Community Of Life Long Learners." />
           </div>
           <div className="flex items-center gap-3">
             <Link to="/courselist">
-              <button className="text-white bg-[--primary] lg:text-lg text-sm hover:text-white duration-100 lg:px-5 lg:py-2 px-2 py-1 rounded-full">
+              <button className="text-white bg-[--primary] lg:text-lg text-sm  hover:text-white duration-100 lg:px-5 lg:py-2 px-2 py-1 rounded-full">
                 Explore courses
               </button>
             </Link>
@@ -122,20 +129,22 @@ const BestRatedCourse: React.FC<BestRatedCourseProps> = () => {
                 className="w-full bg-blue-50/25 border-dashed border-[#c5b5ff] rounded-xl overflow-hidden p-5 transition-all duration-300 hover:shadow-xl"
               >
                 <Link to={`/course/details/${course._id}`}>
-                  <CardHeader className="p-0 relative w-full h-[200px]">
+                  <CardHeader className="p-0 relative w-[100%] h-[200px]">
                     <img
                       src={course.thumbnail}
                       alt={course.title}
+                      width={300}
+                      height={450}
                       className="w-full h-full object-cover rounded-lg"
                     />
-                    <h5 className="py-2 px-3 text-gray-300 text-xs bg-[#17254E] absolute bottom-3 left-3 rounded-md">
+                    <h5 className=" py-2 px-3 text-gray-300 text-xs bg-[#17254E] absolute bottom-3 left-3 rounded-md">
                       Digital Marketing
                     </h5>
                   </CardHeader>
                   <CardContent className="mt-3 pb-2 px-0">
                     <div className="flex justify-between items-center">
                       <RatingStars rating={5.3} />
-                      <h5 className="w-fit text-md py-1 mt-3 text-[--primary] font-semibold">
+                      <h5 className="w-fit text-md py-1 mt-3 text-[--primary] font-semibold  ">
                         {course.discount ? (
                           <span>
                             <del className="font-normal text-md mr-2">
@@ -153,10 +162,12 @@ const BestRatedCourse: React.FC<BestRatedCourseProps> = () => {
                       {course.title}
                     </h3>
 
-                    <div className="flex lg:flex-row flex-col justify-between lg:items-center gap-1 px-2 py-1 bg-white rounded-sm shadow-sm mt-2">
+                    <div className="flex lg:flex-row flex-col justify-between lg:items-center gap-1 px-2 py-1 bg-white rounded-sm shadow-sm max-w-md mt-2">
                       <div className="flex items-center gap-1">
                         <BookText className="w-4 h-4" />
-                        <span className="text-xs text-gray-600">Lesson 10</span>
+                        <span className="font-normal text-xs text-gray-600">
+                          Lesson 10
+                        </span>
                       </div>
                       <div className="flex items-center gap-1 text-gray-600">
                         <Clock className="w-4 h-4" />
@@ -172,13 +183,15 @@ const BestRatedCourse: React.FC<BestRatedCourseProps> = () => {
                       <div className="flex gap-3">
                         <img
                           src={course.instructor?.image}
-                          alt={course.instructor?.name}
+                          alt="Author Image"
+                          width={50}
+                          height={50}
                           className="w-8 h-8 rounded-full"
                         />
                         <h3>{course.instructor?.name}</h3>
                       </div>
-                      <Button className="mt-2 text-sm font-normal h-8 bg-[--primary] px-3 py-0 rounded-full text-white hover:bg-[--primary]">
-                        Enroll <ArrowRight className="w-5 h-4" />
+                      <Button className="mt-2 text-sm font-normal h-8 bg-[--primary] px-3 py-0 rounded-full hover:bg-[--primary]  hover:text-white  text-white ">
+                        Enroll <ArrowRight className="text-xs w-5 h-4" />
                       </Button>
                     </div>
                   </CardContent>

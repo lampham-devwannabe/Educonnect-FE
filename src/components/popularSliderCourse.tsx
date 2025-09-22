@@ -13,35 +13,14 @@ import {
 } from 'lucide-react'
 import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
-import textCircleImg from '@assets/custom-image/circle-icon.png'
+import textCircleImg from '@assets/custom-image/textCircle.png'
 import type { Course } from '@/models/course'
 import type { User } from '@/models/user'
 
 interface PopularSliderCourseProps {
   user?: User
 }
-
-// Card components
-const Card: React.FC<{
-  className?: string
-  children: React.ReactNode
-}> = ({ className, children }) => {
-  return <div className={className}>{children}</div>
-}
-
-const CardHeader: React.FC<{
-  className?: string
-  children: React.ReactNode
-}> = ({ className, children }) => {
-  return <div className={className}>{children}</div>
-}
-
-const CardContent: React.FC<{
-  className?: string
-  children: React.ReactNode
-}> = ({ className, children }) => {
-  return <div className={className}>{children}</div>
-}
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
 const RatingStars: React.FC<{ rating: number }> = ({ rating }) => {
   return (
