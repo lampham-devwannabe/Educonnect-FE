@@ -1,5 +1,6 @@
 import React from 'react'
-
+import flowerImg from '../assets/custom-image/flower-icon.png'
+import circleImg from '../assets/custom-image/circle-icon.png'
 const JoinNewsLetter = () => {
   return (
     <div className="bg-[#1B153E] w-full relative">
@@ -7,8 +8,10 @@ const JoinNewsLetter = () => {
       <div className="absolute left-36 bottom-5 translate-y-1/4 text-purple-200">
         <img
           className="w-12 h-12"
-          src="./assets/custom-image/flower-icon.png"
+          src={flowerImg}
           alt="Flower Icon"
+          width={300}
+          height={300}
         />
       </div>
 
@@ -16,8 +19,10 @@ const JoinNewsLetter = () => {
       <div className="absolute right-36 top-2 translate-y-1/4 text-purple-200">
         <img
           className="w-12 h-12"
-          src="/assets/custom-image/circle-icon.png"
+          src={circleImg}
           alt="Circle Icon"
+          width={300}
+          height={300}
         />
       </div>
 

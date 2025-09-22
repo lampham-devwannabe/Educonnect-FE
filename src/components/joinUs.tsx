@@ -1,17 +1,14 @@
 import React from 'react'
 import { Button } from './ui/button'
 import { ArrowRight } from 'lucide-react'
-
+import joinImg from '../assets/custom-image/join-img.png'
+import starImg from '../assets/custom-image/starImg.png'
 const JoinUs = () => {
   return (
-    <div className="bg-gradient-to-r from-cyan-600 to-blue-900 w-full">
+    <div className=" bg-gradient-to-r from-cyan-600 to-blue-900 w-full">
       <div className="container flex flex-col lg:flex-row items-center mt-16 mb-16">
         {/* Join Image */}
-        <img
-          className="w-fit rounded-md"
-          src="/assets/custom-image/join-img.png"
-          alt="Join Us"
-        />
+        <img className="w-fit rounded-md" src={joinImg} alt="Join Us" />
 
         {/* Content */}
         <div className="relative lg:pl-16 lg:pr-16 lg:mt-0 mt-10">
@@ -41,7 +38,7 @@ const JoinUs = () => {
           <div className="absolute -bottom-10 right-0">
             <img
               className="w-10 lg:w-20 h-10 lg:h-20"
-              src="/assets/custom-image/starImg.png"
+              src={starImg}
               alt="Star Icon"
             />
           </div>

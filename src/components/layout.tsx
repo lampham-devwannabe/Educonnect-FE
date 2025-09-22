@@ -12,17 +12,21 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <>
-      <CartProvider>
-        <NavbarTop />
-        <NavbarComponent />
+    <html lang="en">
+      <body>
+        <main className="flex-col">
+          <CartProvider>
+            <NavbarTop />
+            <NavbarComponent />
 
-        <main>{children}</main>
-        <Toaster />
-        <NavbarBottomComponent />
-        <Footer />
-      </CartProvider>
-    </>
+            <main>{children}</main>
+            <Toaster />
+            <NavbarBottomComponent />
+            <Footer />
+          </CartProvider>
+        </main>
+      </body>
+    </html>
   )
 }
 

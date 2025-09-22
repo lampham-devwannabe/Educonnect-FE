@@ -18,7 +18,7 @@ import AdmissionMessage from '@/components/admissionMessage'
 
 const HomePage: React.FC = () => {
   return (
-    <div className="homepage">
+    <section className="w-full  flex-center flex-col">
       <HeroSection />
       <GrowSkills></GrowSkills>
       <BestSellingCourse></BestSellingCourse>
@@ -37,7 +37,7 @@ const HomePage: React.FC = () => {
       <AdmissionMessage></AdmissionMessage>
       <JoinNewsLetter></JoinNewsLetter>
       <MostPopularPost></MostPopularPost>
-    </div>
+    </section>
   )
 }
 

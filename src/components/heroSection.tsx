@@ -42,7 +42,7 @@ const HeroSection: React.FC = () => {
   }
 
   return (
-    <div className="hero-img-bg bg-purple-50 relative overflow-hidden w-full mt-0 z-0">
+    <div className="hero-img-bg bg-purple-50 relative overflow-hidden w-full mt-[0px] z-0">
       <div className="container mx-auto sm:px-8 lg:px-8">
         <motion.div
           className="flex flex-col lg:flex-row items-center justify-between"
@@ -58,20 +58,20 @@ const HeroSection: React.FC = () => {
             <h5 className="uppercase text-xs lg:text-sm text-[--primary]">
               Welcome Smart academy online courses
             </h5>
-            <h1 className="text-2xl lg:text-4xl xl:text-5xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-2xl lg:text-4xl xl:text-5xl font-bold text-gray-900">
               Achieving Your Dreams Through Education
             </h1>
-            <p className="text-base text-gray-600 mb-6 mt-5">
+            <p className="text-base sm:text-lg text-gray-600 mb-6 lg:mt-5 mt-5">
               We are experienced in educational platform and skilled strategies
               for the success of our online learning.
             </p>
 
-            <div className="absolute bottom-0 lg:-top-10 lg:-right-60 -z-10">
+            <div className="p-5 pr-10  absolute rounded-md bottom-0 lg:-top-10 lg:-right-60 -z-10">
               <img className="w-72" src={bgImg1} alt="bg" />
             </div>
 
             {/* Instructor block */}
-            <div className="p-3 lg:p-5 bg-white lg:absolute rounded-md -bottom-12 lg:-right-24">
+            <div className="p-3 lg:p-5 pr-4 lg:pr-10 bg-white lg:absolute rounded-md -bottom-12 lg:-right-24">
               <h5 className="text-xl mb-2">
                 <span className="text-[--primary]">200+</span> Instructor
               </h5>
@@ -94,11 +94,11 @@ const HeroSection: React.FC = () => {
 
             {/* Search */}
             <motion.div
-              className="flex flex-row relative rounded-full bg-white p-1 mt-2 lg:mt-24"
+              className="flex flex-row  flex-end relative rounded-full bg-white p-1 lg:p-1.5 sm:flex-row sm:space-y-0 sm:space-x-4 mt-2 lg:mt-24"
               variants={fadeInUp}
             >
               <input
-                className="w-full py-2 px-3 text-gray-500 rounded-full focus:outline-none"
+                className="w-full py-1 lg:py-2 px-2  text-gray-500 text-md rounded-full bg-white focus-visible:outline-none "
                 type="text"
                 placeholder="Search courses..."
                 value={searchQuery}
@@ -106,12 +106,12 @@ const HeroSection: React.FC = () => {
                 onKeyDown={handleKeyDown}
               />
               <motion.button
-                className="px-4 lg:px-8 py-2 bg-[--primary] text-white rounded-full text-sm"
+                className="px-2 lg:px-8 text-nowrap py-1 lg:py-2 bg-[--primary] text-white rounded-full transition duration-300 text-sm sm:text-base"
                 onClick={handleSearch}
               >
                 Search Now
               </motion.button>
-              <div className="absolute top-5 -right-6 -z-10">
+              <div className="absolute rounded-md top-5 -right-6 -z-10">
                 <img className="w-52 lg:w-72" src={arrowImg} alt="arrow" />
               </div>
             </motion.div>
@@ -123,12 +123,18 @@ const HeroSection: React.FC = () => {
             variants={fadeInUp}
           >
             <img
-              className="w-full mx-auto cursor-pointer"
+              className="w-full cursor-pointer  mx-auto duration-150"
               src={heroImg1}
               alt="Hero"
             />
           </motion.div>
         </motion.div>
+        <motion.div
+          className="mt-16"
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+        ></motion.div>
       </div>
     </div>
   )

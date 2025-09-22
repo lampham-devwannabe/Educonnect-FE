@@ -47,6 +47,7 @@ const Instructor: React.FC = () => {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
+    initialSlide: 0,
     rows: 2,
     responsive: [
       {
@@ -71,9 +72,8 @@ const Instructor: React.FC = () => {
 
   return (
     <div className="bg-gradient-to-br from-indigo-300 to-orange-200 w-full">
-      <div className="container grid grid-cols-1 lg:grid-cols-2 items-center mt-0 lg:mt-16 mb-10 lg:mb-16">
-        {/* Left Text Section */}
-        <div className="relative lg:pr-24 lg:mt-0 mt-10">
+      <div className="container grid grid-cols-1 lg:grid-cols-2  items-center mt-0 lg:mt-16 mb-10 lg:mb-16">
+        <div className="relative  lg:pr-24 lg:mt-0 mt-10">
           <h5 className="text-xs lg:text-sm bg-purple-100 px-5 py-1 inline-block text-[--primary] uppercase rounded-full mb-2">
             OUR INSTRUCTOR
           </h5>
@@ -88,15 +88,15 @@ const Instructor: React.FC = () => {
 
           <div className="flex flex-col w-fit lg:flex-row gap-5 lg:mt-10 mt-5">
             <Link to="/mentorlist">
-              <Button className="h-8 lg:h-full bg-[--primary] rounded-full text-white hover:bg-[--primary]">
-                <span className="lg:py-2 pl-5"> All Instructors </span>
-                <ArrowRight className="w-7 h-7 p-1.5 bg-[#644BFF] rounded-full ml-3" />
+              <Button className=" h-8 lg:h-full bg-[--primary] p-0 rounded-full hover:bg-[--primary]  hover:text-white  text-white ">
+                <span className=" lg:py-2 pl-5"> All Instructors </span>
+                <ArrowRight className=" w-fit lg:w-full h-7 lg:h-full text-sm p-1.5 lg:p-2.5 bg-[#644BFF] rounded-full ml-3" />
               </Button>
             </Link>
             <Link to="/courselist">
-              <Button className="h-8 lg:h-full bg-[--secondary] rounded-full text-white hover:bg-[--secondary]">
+              <Button className="h-8 lg:h-full bg-[--secondary] p-0 rounded-full hover:bg-[--secondary]  hover:text-white  text-white ">
                 <span className="py-2 pl-5">Find Courses </span>
-                <ArrowRight className="w-7 h-7 p-1.5 bg-[--secondary-foreground] rounded-full ml-3" />
+                <ArrowRight className=" w-fit lg:w-full h-7 lg:h-full text-sm p-1.5 lg:p-2.5 bg-[--secondary-foreground] rounded-full ml-3" />
               </Button>
             </Link>
           </div>
@@ -121,28 +121,43 @@ const Instructor: React.FC = () => {
                       <img
                         src={mentor.image || '/placeholder.svg'}
                         alt={`${mentor.name} - ${mentor.profession}`}
+                        width={300}
+                        height={300}
                         className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                       />
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 text-white">
-                      <div className="space-y-1">
-                        <h3 className="font-bold leading-tight">
-                          {mentor.name}
-                        </h3>
-                        <p className="text-sm text-gray-200">
-                          {mentor.profession}
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          {mentor.expertise?.[0] && (
-                            <Badge className="bg-white/20 text-white font-thin hover:bg-white/30 px-3 py-1 text-xs rounded-full">
-                              {mentor.expertise[0]}
-                            </Badge>
-                          )}
-                          {mentor.expertise && mentor.expertise.length > 1 && (
-                            <Badge className="bg-white/20 text-white font-thin hover:bg-white/30 px-3 py-1 text-xs rounded-full">
-                              +{mentor.expertise.length - 1}
-                            </Badge>
-                          )}
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-1">
+                          <h3 className="font-bold leading-tight">
+                            {mentor.name}
+                          </h3>
+                          <p className="text-sm text-gray-200">
+                            {mentor.profession}
+                          </p>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {mentor.expertise?.[0] && (
+                              <Badge
+                                variant="secondary"
+                                className="bg-white/20 text-white font-thin hover:bg-white/30 px-3 py-1 text-xs rounded-full"
+                                title={mentor.expertise[0]}
+                              >
+                                {mentor.expertise[0]}
+                              </Badge>
+                            )}
+                            {mentor.expertise &&
+                              mentor.expertise.length > 1 && (
+                                <Badge
+                                  variant="secondary"
+                                  className="bg-white/20 text-white font-thin hover:bg-white/30 px-3 py-1 text-xs rounded-full"
+                                  title={`${
+                                    mentor.expertise.length - 1
+                                  } more skills`}
+                                >
+                                  +{mentor.expertise.length - 1}
+                                </Badge>
+                              )}
+                          </div>
                         </div>
                       </div>
                     </div>
