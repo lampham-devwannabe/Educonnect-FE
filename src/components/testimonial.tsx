@@ -96,10 +96,16 @@ const Testimonial: React.FC = () => {
                 <div className="relative group">
                   <CardHeader className="items-center absolute -top-12 -left-10 z-50">
                     <div className="p-3">
-                      <img src={quatImg1} alt="Quote" className="w-8 h-8" />
+                      <img
+                        src={quatImg1}
+                        alt="Quote"
+                        className="w-8 h-8"
+                        width={100}
+                        height={100}
+                      />
                     </div>
                   </CardHeader>
-                  <Card className="w-full relative rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl">
+                  <Card className="w-full relative rounded-2xl overflow-hidden  transition-all duration-300 hover:shadow-xl">
                     <Link to="">
                       <CardContent className="pb-4 px-5">
                         <div className="mt-6 pb-3 text-gray-600">
