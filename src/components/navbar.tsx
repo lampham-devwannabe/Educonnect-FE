@@ -305,7 +305,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
   }
 
   return (
-    <header className="z-[999] w-full flex shadow-sm bg-slate-50 bg-opacity-75 font-[sans-serif] lg:h-[90px] h-[60px]">
+    <header className="z-[999] w-full flex shadow-sm bg-slate-50 bg-opacity-75 font-[sans-serif] lg:h-[90px] h-[60px] ${jost.className}">
       <div className="container flex llg:flex lg:flex-wrap items-center justify-between sm:px-10 px-6 py-3 lg:gap-y-4 gap-y-6 gap-x-4 w-full">
         <div className="flex">
           <button
@@ -328,6 +328,8 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
           </button>
           <a href="/" className="lg:ml-0 md:ml-0 ml-4">
             <img
+              width={100}
+              height={50}
               src="/src/assets/icon/logo.png"
               alt="logo"
               className="rounded-full lg:w-[100px] w-[100px] lg:h-[50px] h-[30px]"
