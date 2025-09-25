@@ -576,7 +576,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 )}
               </div>
             ) : (
-              <div className="flex gap-1 rounded-full bg-primary py-3 px-6 text-gray-100 text-sm">
+              <div className="flex gap-1 rounded-full bg-[--primary] py-3 px-6 text-gray-100 text-sm">
                 <Link to="/login">
                   <h5 className="">Login</h5>
                 </Link>
