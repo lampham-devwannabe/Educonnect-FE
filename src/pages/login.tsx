@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import logo from '../assets/icon/logo.png'
 import { createHttp } from '@/services/httpFactory'
+import axios from 'axios'
 function Login() {
   const navigate = useNavigate()
   const APPNAME = import.meta.env.VITE_APPNAME // dùng biến môi trường Vite
@@ -52,7 +53,7 @@ function Login() {
         //   navigate('/')
         // }
         navigate('/')
-        localStorage.setItem('access-token', result.token) // lưu token vào localStorage
+        localStorage.setItem('access-token', result.result.token) // lưu token vào localStorage
       } else {
         toast.error(result.result.message || 'Login failed')
       }
