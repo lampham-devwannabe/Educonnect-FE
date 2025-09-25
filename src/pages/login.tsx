@@ -14,6 +14,8 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import logo from '../assets/icon/logo.png'
+import { createHttp } from '@/services/httpFactory'
+import axios from 'axios'
 function Login() {
   const navigate = useNavigate()
   const APPNAME = import.meta.env.VITE_APPNAME // dùng biến môi trường Vite
@@ -23,39 +25,44 @@ function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const form = event.currentTarget as HTMLFormElement
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value
+    const username = (form.elements.namedItem('email') as HTMLInputElement)
+      .value
     const password = (form.elements.namedItem('password') as HTMLInputElement)
       .value
 
-    // const toastID = toast.loading('Logging in...')
-    // setLoading(true)
+    const toastID = toast.loading('Logging in...')
+    setLoading(true)
 
-    // try {
-    //   // gọi API backend để login
-    //   const res = await fetch('/api/login', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ email, password }),
-    //   })
-    //   const result = await res.json()
+    try {
+      // gọi API backend để login
+      // const res = await fetch('/api/login', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ email, password }),
+      // })
+      // const result = await res.json()
+      const loginApi = createHttp('http://139.59.97.252:8080')
+      const res = await loginApi.post('/auth/token', { username, password })
+      const result = res.data
 
-    //   if (res.ok) {
-    //     toast.success('Login successful!')
-    //     if (result.user.role === 'admin' || result.user.role === 'instructor') {
-    //       navigate('/dashboard')
-    //     } else {
-    //       navigate('/')
-    //     }
-    //   } else {
-    //     toast.error(result.message || 'Login failed')
-    //   }
-    // } catch (err) {
-    //   toast.error('Something went wrong')
-    // } finally {
-    //   toast.dismiss(toastID)
-    //   setLoading(false)
-    // }
-    navigate('/')
+      if (result.code === 1000) {
+        toast.success('Login successful!')
+        // if (result.user.role === 'admin' || result.user.role === 'instructor') {
+        //   navigate('/dashboard')
+        // } else {
+        //   navigate('/')
+        // }
+        navigate('/')
+        localStorage.setItem('access-token', result.result.token) // lưu token vào localStorage
+      } else {
+        toast.error(result.result.message || 'Login failed')
+      }
+    } catch (err) {
+      toast.error('Something went wrong')
+    } finally {
+      toast.dismiss(toastID)
+      setLoading(false)
+    }
   }
 
   const handleQuickLogin = async (email: string, password: string) => {
@@ -183,7 +190,7 @@ function Login() {
                     <Input
                       id="email"
                       name="email"
-                      type="email"
+                      type="text"
                       autoComplete="email"
                       required
                       className="pl-10 bg-white border-slate-200 focus:border-indigo-500 focus:ring-indigo-500"

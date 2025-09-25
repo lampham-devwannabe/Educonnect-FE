@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { use, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   GraduationCap,
@@ -16,8 +16,10 @@ import instructorImg3 from '@assets/instructor-image/instructor3.png'
 import instructorImg4 from '@assets/instructor-image/instructor4.png'
 import bgImg1 from '@assets/bg-image/bg-img1.png'
 import arrowImg from '@assets/bg-image/arrow.png'
+import { useTranslation } from 'react-i18next'
 
 const HeroSection: React.FC = () => {
+  const { t } = useTranslation()
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
     animate: { opacity: 1, y: 0 },
@@ -56,14 +58,13 @@ const HeroSection: React.FC = () => {
             variants={fadeInUp}
           >
             <h5 className="uppercase text-xs lg:text-sm text-[--primary]">
-              Welcome Smart academy online courses
+              {t('welcomeMessage')}
             </h5>
             <h1 className="text-2xl sm:text-2xl lg:text-4xl xl:text-5xl font-bold text-gray-900">
-              Achieving Your Dreams Through Education
+              {t('heroMessage1')}
             </h1>
             <p className="text-base sm:text-lg text-gray-600 mb-6 lg:mt-5 mt-5">
-              We are experienced in educational platform and skilled strategies
-              for the success of our online learning.
+              {t('heroMessage2')}
             </p>
 
             <div className="p-5 pr-10  absolute rounded-md bottom-0 lg:-top-10 lg:-right-60 -z-10">
@@ -73,7 +74,7 @@ const HeroSection: React.FC = () => {
             {/* Instructor block */}
             <div className="p-3 lg:p-5 pr-4 lg:pr-10 bg-white lg:absolute rounded-md -bottom-12 lg:-right-24">
               <h5 className="text-xl mb-2">
-                <span className="text-[--primary]">200+</span> Instructor
+                <span className="text-[--primary]">200+</span> {t('instructor')}
               </h5>
               <div className="flex -space-x-3">
                 {[
@@ -100,7 +101,7 @@ const HeroSection: React.FC = () => {
               <input
                 className="w-full py-1 lg:py-2 px-2  text-gray-500 text-md rounded-full bg-white focus-visible:outline-none "
                 type="text"
-                placeholder="Search courses..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -109,7 +110,7 @@ const HeroSection: React.FC = () => {
                 className="px-2 lg:px-8 text-nowrap py-1 lg:py-2 bg-[--primary] text-white rounded-full transition duration-300 text-sm sm:text-base"
                 onClick={handleSearch}
               >
-                Search Now
+                {t('searchNow')}
               </motion.button>
               <div className="absolute rounded-md top-5 -right-6 -z-10">
                 <img className="w-52 lg:w-72" src={arrowImg} alt="arrow" />

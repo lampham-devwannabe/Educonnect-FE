@@ -15,7 +15,8 @@ import {
   CheckCheck,
 } from 'lucide-react'
 import type { User } from '@/models/user'
-
+import { useTranslation } from 'react-i18next'
+import LanguageSwitcher from '../components/LanguageSwitcher'
 interface CartItem {
   _id: string
   course: {
@@ -116,6 +117,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [searchOpen, setSearchOpen] = useState<boolean>(false)
+  const { t } = useTranslation()
 
   // Timeout handlers for dropdowns
   const hideTimeouts: {
@@ -332,7 +334,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
               height={50}
               src="/src/assets/icon/logo.png"
               alt="logo"
-              className="rounded-full lg:w-[100px] w-[100px] lg:h-[50px] h-[30px]"
+              className="rounned-full  lg:w-[100px] w-[100px] lg:h-[50px] h-[30px]"
             />
           </a>
         </div>
@@ -340,27 +342,27 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
           <ul className="flex gap-5">
             <Link to="/">
               <li className="cursor-pointer text-bold hover:text-[#007bff] text-lg">
-                Home
+                {t('home')}
               </li>
             </Link>
             <Link to="/courselist">
               <li className="cursor-pointer text-bold hover:text-[#007bff] text-lg">
-                Course
+                {t('courses')}
               </li>
             </Link>
             <Link to="/mentorlist">
               <li className="cursor-pointer text-bold hover:text-[#007bff] text-lg">
-                Mentor
+                {t('mentor')}
               </li>
             </Link>
             <Link to="/post-feed">
               <li className="cursor-pointer text-bold hover:text-[#007bff] text-lg">
-                Community
+                {t('community')}
               </li>
             </Link>
             <Link to="/mobileApp">
               <li className="cursor-pointer text-bold hover:text-[#007bff] text-lg">
-                App
+                {t('app')}
               </li>
             </Link>
           </ul>
@@ -377,7 +379,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
             </svg>
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -399,7 +401,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
               <div className="bg-gray-50 flex border-2 max-md:order-1 border-transparent focus-within:border-blue-500 focus-within:bg-white px-4 rounded-full h-9 lg:w-64 md:w-64 max-md:w-48">
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder={t('searchPlaceholder')}
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -576,7 +578,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 )}
               </div>
             ) : (
-              <div className="flex gap-1 rounded-full bg-primary py-3 px-6 text-gray-100 text-sm">
+              <div className="flex gap-1 rounded-full bg-[--primary] py-3 px-6 text-gray-100 text-sm">
                 <Link to="/login">
                   <h5 className="">Login</h5>
                 </Link>
@@ -586,6 +588,8 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 </Link>
               </div>
             )}
+            {/* Language Switcher */}
+            <LanguageSwitcher />
           </div>
         </div>
       </div>
@@ -630,7 +634,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 href="/"
                 className="hover:text-[#007bff] text-[#007bff] block font-semibold text-sm"
               >
-                Home
+                {t('home')}
               </a>
             </li>
             <li className="border-b py-3 px-3">
@@ -638,7 +642,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 href="/categorylist"
                 className="hover:text-[#007bff] text-black block font-semibold text-sm"
               >
-                Categories
+                {t('categories')}
               </a>
             </li>
             <li className="border-b py-3 px-3">
@@ -646,7 +650,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 href="/courselist"
                 className="hover:text-[#007bff] text-black block font-semibold text-sm"
               >
-                Courses
+                {t('courses')}
               </a>
             </li>
             <li className="border-b py-3 px-3">
@@ -654,7 +658,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 href="/mentorlist"
                 className="hover:text-[#007bff] text-black block font-semibold text-sm"
               >
-                Mentor
+                {t('mentor')}
               </a>
             </li>
             <li className="border-b py-3 px-3">
@@ -662,7 +666,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 href="/mobileApp"
                 className="hover:text-[#007bff] text-black block font-semibold text-sm"
               >
-                App
+                {t('app')}
               </a>
             </li>
             <li className="border-b py-3 px-3">
@@ -670,8 +674,16 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 href="/contact"
                 className="hover:text-[#007bff] text-black block font-semibold text-sm"
               >
-                Contact
+                {t('contact')}
               </a>
+            </li>
+            <li className="border-b py-3 px-3">
+              <div className="text-black block font-semibold text-sm">
+                <span className="text-gray-600 text-xs block mb-2">
+                  Language
+                </span>
+                <LanguageSwitcher />
+              </div>
             </li>
           </ul>
         </div>
