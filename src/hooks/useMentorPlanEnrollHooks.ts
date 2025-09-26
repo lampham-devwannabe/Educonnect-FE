@@ -1,17 +1,12 @@
 import { useState, useEffect } from 'react'
-
-// Define interface for the enrollment plan data
-interface EnrollPlan {
-  // Add properties based on your actual enrollment plan data structure
-  [key: string]: any
-}
+import type { Enrollment } from '@/models/user'
 
 export const useEnrollPlanHooks = (): {
-  enrollPlan: EnrollPlan[]
+  enrollPlan: Enrollment[]
   total: number | undefined
   fetchEnrollPlan: () => Promise<void>
 } => {
-  const [enrollPlan, setenrollPlan] = useState<EnrollPlan[]>([])
+  const [enrollPlan, setenrollPlan] = useState<Enrollment[]>([])
   const [total, setTotal] = useState<number | undefined>(undefined)
 
   const fetchEnrollPlan = async (): Promise<void> => {
@@ -37,11 +32,11 @@ export const useEnrollPlanHooks = (): {
 }
 
 export const useBookedPlanHooks = (): {
-  enrollPlan: EnrollPlan[]
+  enrollPlan: Enrollment[]
   total: number | undefined
   fetchEnrollPlan: () => Promise<void>
 } => {
-  const [enrollPlan, setenrollPlan] = useState<EnrollPlan[]>([])
+  const [enrollPlan, setenrollPlan] = useState<Enrollment[]>([])
   const [total, setTotal] = useState<number | undefined>(undefined)
 
   const fetchEnrollPlan = async (): Promise<void> => {
