@@ -15,9 +15,11 @@ import {
 } from 'lucide-react'
 import logo from '../assets/icon/logo.png'
 import { createHttp } from '@/services/httpFactory'
-import axios from 'axios'
+import { useAuth } from '@/providers/AuthProvider'
+
 function Login() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const APPNAME = import.meta.env.VITE_APPNAME
 
   const [loading, setLoading] = useState(false)
@@ -34,16 +36,7 @@ function Login() {
     setLoading(true)
 
     try {
-      // gọi API backend để login
-      // const res = await fetch('/api/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email, password }),
-      // })
-      // const result = await res.json()
-      const loginApi = createHttp('http://139.59.97.252:8080')
-      const res = await loginApi.post('/auth/token', { username, password })
-      const result = res.data
+      const result = await login(username, password)
 
       if (result.code === 1000) {
         toast.success('Login successful!')
@@ -53,7 +46,6 @@ function Login() {
         //   navigate('/')
         // }
         navigate('/')
-        localStorage.setItem('access-token', result.result.token) // lưu token vào localStorage
       } else {
         toast.error(result.result.message || 'Login failed')
       }
