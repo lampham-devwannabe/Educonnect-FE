@@ -1,4 +1,4 @@
-import type { Instructor } from './user'
+import type { User } from './user'
 import type { Category } from './category'
 
 export interface Course {
@@ -10,8 +10,15 @@ export interface Course {
   courseBadge: string
   level: string
   totalSeat: number
-  instructor: Instructor
+  instructor: User
   duration: string
   description: string
   categories: Category[]
+}
+
+export interface EnrolledCourse {
+  id: Course
+  progress: number
+  completed: boolean
+  enrollmentDate: string
 }

@@ -5,10 +5,10 @@ import { Badge } from './ui/badge'
 import Slider from 'react-slick'
 import { Link } from 'react-router-dom' // thay cho next/link
 import starImg from '@assets/custom-image/starImg.png'
-import type { Instructor } from '@/models/user'
+import type { User } from '@/models/user'
 
 const Instructor: React.FC = () => {
-  const [userData, setUserData] = useState<Instructor[]>([])
+  const [userData, setUserData] = useState<User[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 

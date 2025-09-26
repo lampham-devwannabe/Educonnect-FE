@@ -25,7 +25,6 @@ const HomePage: React.FC = () => {
       <VideoSection></VideoSection>
       <PopularCourse></PopularCourse>
       <NewCategory></NewCategory>
-      {/* <Category /> */}
       <BestRatedCourse></BestRatedCourse>
       <ChooseUs></ChooseUs>
       <PopularSliderCourse></PopularSliderCourse>

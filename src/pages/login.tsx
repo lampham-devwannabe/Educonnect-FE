@@ -18,7 +18,7 @@ import { createHttp } from '@/services/httpFactory'
 import axios from 'axios'
 function Login() {
   const navigate = useNavigate()
-  const APPNAME = import.meta.env.VITE_APPNAME // dùng biến môi trường Vite
+  const APPNAME = import.meta.env.VITE_APPNAME
 
   const [loading, setLoading] = useState(false)
 
