@@ -33,6 +33,7 @@ import { useEnrollPlanHooks } from '../hooks/useMentorPlanEnrollHooks'
 import { MentorList } from './mentor-list'
 import type { User } from '../models/user'
 import type { Transaction } from '../models/transaction'
+import { createHttp } from '@/services/httpFactory'
 
 const StudentProfile: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
@@ -52,16 +53,23 @@ const StudentProfile: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const formData = new FormData()
-        const res = await fetch('/api/user/details', {
-          method: 'POST',
-          body: formData,
-        })
-        const data = await res.json()
-        setUser(data.data)
-        console.log(data.data)
+        const profileApi = createHttp('http://139.59.97.252:8080')
+        const res = await profileApi.get('/users/my-info')
+        const data = res.data
+        if (data.code === 1000) {
+          setUser({
+            id: data.result.userId,
+            name: data.result.lastName + ' ' + data.result.firstName,
+            email: data.result.email,
+            image: data.result.image,
+            expertise: data.result.expertise,
+            role: data.result.roleName,
+          })
+        } else {
+          console.error('Cannot fetch user data')
+        }
       } catch (error) {
-        console.error('user fetching error', error)
+        console.error('Something went wrong...')
       }
     }
     fetchUserData()
