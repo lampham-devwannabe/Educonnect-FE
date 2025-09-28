@@ -22,17 +22,16 @@ import {
   Award,
   Languages,
 } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useEnrollListHooks } from '../hooks/useEntrollListHooks'
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
 import { Progress } from '../components/ui/progress'
 import { formatDistanceToNow } from 'date-fns'
 import { Badge } from '../components/ui/badge'
-import BecomeInstructorModal from './become-instructor-modal'
+import BecomeInstructorModal from '../components/become-instructor-modal'
 import { useEnrollPlanHooks } from '../hooks/useMentorPlanEnrollHooks'
 import { MentorList } from './mentor-list'
 import type { User } from '../models/user'
-import type { Transaction } from '../models/transaction'
 import { createHttp } from '@/services/httpFactory'
 
 const StudentProfile: React.FC = () => {
@@ -41,12 +40,8 @@ const StudentProfile: React.FC = () => {
   const closeModal = () => setIsModalOpen(false)
 
   const { enrollListData, fetchEnrollList } = useEnrollListHooks()
-  const [isEditing, setIsEditing] = useState<boolean>(false)
-  const [transactions, setTransactions] = useState<Transaction[]>([])
   const [hoveredCard, setHoveredCard] = useState<string>('')
   const [user, setUser] = useState<User>({} as User)
-  const [currentPage, setCurrentPage] = useState<number>(1)
-  const navigate = useNavigate()
 
   const { enrollPlan } = useEnrollPlanHooks()
 
@@ -57,6 +52,7 @@ const StudentProfile: React.FC = () => {
         const res = await profileApi.get('/users/my-info')
         const data = res.data
         if (data.code === 1000) {
+          console.log('User Data:', data.result)
           setUser({
             id: data.result.userId,
             name: data.result.lastName + ' ' + data.result.firstName,
@@ -74,41 +70,6 @@ const StudentProfile: React.FC = () => {
     }
     fetchUserData()
   }, [])
-
-  const handleEdit = () => {
-    setIsEditing(!isEditing)
-  }
-
-  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const updateUser = {
-      userId: user?.id,
-      name: formData.get('name'),
-      email: formData.get('email'),
-      image: user?.image,
-    }
-
-    try {
-      const res = await fetch('/api/user/update-profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updateUser),
-      })
-      const result = await res.json()
-
-      if (result.success) {
-        setUser(result.data)
-        setIsEditing(false)
-      } else {
-        console.error(result.message || 'Update failed')
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
   const [showForm, setShowForm] = useState<boolean>(false)
   const [newSkills, setNewSkills] = useState<string>('')

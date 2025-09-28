@@ -39,24 +39,6 @@ interface BecomeInstructorModalProps {
   trigger?: React.ReactNode
 }
 
-interface FormData {
-  id?: string
-  token?: string
-  role?: string
-  name: string
-  email: string
-  image: string
-  phone: string
-  gender: string
-  profession: string
-  about: string
-  country: string
-  expertise: string[]
-  languages: string[]
-  certificates: string[]
-  hourlyRate?: number
-}
-
 export default function BecomeInstructorModal({
   userId,
   userData,
@@ -76,7 +58,8 @@ export default function BecomeInstructorModal({
   const [certificates, setCertificates] = useState<string[]>([])
 
   // Form data
-  const [formUserData, setformUserData] = useState<FormData>({
+  const [formUserData, setformUserData] = useState<User>({
+    id: userData?.id || '',
     name: userData?.name || '',
     email: userData?.email || '',
     image: userData?.image || '',
@@ -94,6 +77,7 @@ export default function BecomeInstructorModal({
   useEffect(() => {
     // Set initial form data
     setformUserData({
+      id: userData?.id || '',
       name: userData?.name || '',
       email: userData?.email || '',
       image: userData?.image || '',
@@ -247,7 +231,7 @@ export default function BecomeInstructorModal({
     e.preventDefault()
 
     // Validate required fields
-    const requiredFields: Array<keyof FormData> = [
+    const requiredFields: Array<keyof User> = [
       'name',
       'email',
       'image',
