@@ -25,22 +25,21 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>
 }
 
-// Routes that require authentication
 const protectedRoutes = [
   {
     path: '/profile',
     element: <Profile />,
   },
-
-  // Add other protected routes...
 ]
 
-// Public routes - accessible without authentication
 const publicRoutes = [
   {
     path: '/',
     element: <Home />,
   },
+]
+
+const noLayoutRoutes = [
   {
     path: '/login',
     element: <Login />,
@@ -49,7 +48,6 @@ const publicRoutes = [
     path: '/register',
     element: <Register />,
   },
-  // Add other public routes...
 ]
 
 const AppRoutes = () => {
@@ -75,6 +73,11 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+      ))}
+
+      {/* Protected routes */}
+      {noLayoutRoutes.map(route => (
+        <Route key={route.path} path={route.path} element={route.element} />
       ))}
 
       {/* Catch all unmatched routes */}
