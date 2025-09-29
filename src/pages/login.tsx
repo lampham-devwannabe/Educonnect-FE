@@ -15,7 +15,8 @@ import {
 } from 'lucide-react'
 import logo from '../assets/icon/logo.png'
 import { createHttp } from '@/services/httpFactory'
-import axios from 'axios'
+import { PasswordInput } from '@/components/ui/password-input'
+
 function Login() {
   const navigate = useNavigate()
   const APPNAME = import.meta.env.VITE_APPNAME // dùng biến môi trường Vite
@@ -219,10 +220,9 @@ function Login() {
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                       <KeyRound className="h-5 w-5 text-slate-400" />
                     </div>
-                    <Input
+                    <PasswordInput
                       id="password"
                       name="password"
-                      type="password"
                       autoComplete="current-password"
                       required
                       className="pl-10 bg-white border-slate-200 focus:border-indigo-500 focus:ring-indigo-500"

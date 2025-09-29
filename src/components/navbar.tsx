@@ -17,6 +17,9 @@ import {
 import type { User } from '@/models/user'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from '../components/LanguageSwitcher'
+import { createHttp } from '@/services/httpFactory'
+import { Button } from './ui/button'
+import { Badge } from './ui/badge'
 interface CartItem {
   _id: string
   course: {
@@ -157,14 +160,11 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
 
   const logOut = async (): Promise<void> => {
     try {
-      const res = await fetch('/api/logout/', {
-        method: 'POST',
-      })
-
-      if (res.ok) {
-        // Use window.location for page navigation in React
-        window.location.href = '/login'
-      }
+      const logoutApi = createHttp('http://139.59.97.252:8080')
+      const token = localStorage.getItem('access-token')
+      await logoutApi.post('/auth/logout', { token })
+      localStorage.removeItem('access-token')
+      window.location.href = '/'
     } catch (error) {
       console.error('Logout failed:', error)
     }
@@ -457,6 +457,123 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
               </span>
               {/* Cart dropdown content would go here */}
               {/* For brevity, I've omitted the cart dropdown UI */}
+              {cartOpen && (
+                <div
+                  id="dropdownMenu"
+                  className="absolute right-0 mt-2 w-[420px] max-h-[600px] bg-white rounded-xl shadow-xl border border-gray-100 z-[1000] overflow-hidden"
+                >
+                  {cartData?.data?.items ? (
+                    <div className="flex flex-col h-full">
+                      {/* Header */}
+                      <div className="px-6 py-4 border-b border-gray-100">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Shopping Cart
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {cartData.data.items.length}{' '}
+                          {cartData.data.items.length === 1 ? 'item' : 'items'}
+                        </p>
+                      </div>
+
+                      {/* Cart Items */}
+                      <div className="flex-1 overflow-y-auto max-h-[320px]">
+                        <ul className="divide-y divide-gray-100">
+                          {cartData.data.items.map((item, index) => (
+                            <li
+                              key={index}
+                              className="p-4 hover:bg-gray-50 transition-colors duration-200"
+                            >
+                              <div className="flex items-start gap-4">
+                                <div className="flex-shrink-0">
+                                  <img
+                                    src={
+                                      item.course.thumbnail ||
+                                      '/placeholder.svg'
+                                    }
+                                    className="w-16 h-12 rounded-lg object-cover border border-gray-200"
+                                    alt={item.course.title}
+                                    width={64}
+                                    height={48}
+                                  />
+                                </div>
+
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="text-sm font-medium text-gray-900 line-clamp-2 leading-5">
+                                    {item.course.title}
+                                  </h4>
+                                  <p className="text-lg font-semibold text-blue-600 mt-2">
+                                    ${item.course.price}
+                                  </p>
+                                </div>
+
+                                <button
+                                  onClick={e => {
+                                    e.stopPropagation()
+                                    removeItem(cartData!.data!._id, item._id)
+                                  }}
+                                  className="flex-shrink-0 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                                  aria-label="Remove item"
+                                >
+                                  <BadgeMinus className="w-5 h-5" />
+                                </button>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Footer */}
+                      <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-sm font-medium text-gray-700">
+                            Total:
+                          </span>
+                          <span className="text-xl font-bold text-gray-900">
+                            ${cartData.totalAmount}
+                          </span>
+                        </div>
+
+                        <div className="flex gap-3">
+                          <Link to="/cart" className="flex-1">
+                            <Button
+                              variant="outline"
+                              className="w-full border-gray-300 text-gray-700 hover:bg-gray-100"
+                            >
+                              View Cart
+                            </Button>
+                          </Link>
+
+                          <Button
+                            onClick={routeCheckout}
+                            className="flex-1 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-medium shadow-md"
+                          >
+                            Checkout
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center px-6 py-12">
+                      <div className="w-32 h-32 mb-6 opacity-60">
+                        <img
+                          src="/assets/empty-cart.svg"
+                          alt="Empty cart"
+                          width={128}
+                          height={128}
+                          className="w-full h-full"
+                        />
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        Your cart is empty
+                      </h3>
+                      <p className="text-sm text-gray-500 text-center">
+                        Add some courses to get started with your learning
+                        journey
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div
@@ -482,6 +599,190 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
               )}
               {/* Notification dropdown content would go here */}
               {/* For brevity, I've omitted the notification dropdown UI */}
+
+              {notificationOpen && (
+                <div
+                  id="notificationDropdown"
+                  className="absolute right-0 mt-2 w-[440px] max-h-[600px] bg-white rounded-xl shadow-xl border border-gray-100 z-[1000] overflow-hidden"
+                >
+                  {/* Header */}
+                  <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Bell className="w-5 h-5 text-blue-600" />
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Notifications
+                        </h3>
+                        {unreadCount > 0 && (
+                          <Badge
+                            variant="destructive"
+                            className="text-xs px-2 py-1"
+                          >
+                            {unreadCount}
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Link to="/notification">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                          >
+                            View All
+                          </Button>
+                        </Link>
+                        {unreadCount > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={markAllAsRead}
+                            disabled={markingAllRead}
+                            className="text-gray-600 hover:text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                          >
+                            {markingAllRead ? (
+                              <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                            ) : (
+                              <CheckCheck className="w-4 h-4 mr-1" />
+                            )}
+                            Mark All Read
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Notifications List */}
+                  <div className="flex-1 overflow-y-auto max-h-[400px]">
+                    {notificationData && notificationData.length > 0 ? (
+                      <div className="divide-y divide-gray-100">
+                        {notificationData.map((notification, index) => (
+                          <div
+                            key={notification._id || index}
+                            className={`p-4 hover:bg-gray-50 transition-all duration-200 cursor-pointer relative ${
+                              !notification.isRead
+                                ? 'bg-blue-50/30 border-l-4 border-l-blue-500'
+                                : ''
+                            }`}
+                            onClick={() =>
+                              handleNotificationClick(notification)
+                            }
+                          >
+                            <div className="flex items-start gap-4">
+                              {/* Notification Icon/Image */}
+                              <div className="flex-shrink-0">
+                                {notification.imageUrl ? (
+                                  <img
+                                    src={
+                                      notification.imageUrl ||
+                                      '/placeholder.svg'
+                                    }
+                                    alt="Notification"
+                                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                                    width={48}
+                                    height={48}
+                                  />
+                                ) : (
+                                  <div
+                                    className={`w-12 h-12 rounded-full flex items-center justify-center ${getNotificationColor(
+                                      notification.type
+                                    )}`}
+                                  >
+                                    {getNotificationIcon(notification.type)}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Notification Content */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-start justify-between">
+                                  <h4
+                                    className={`text-sm font-medium line-clamp-2 leading-5 ${
+                                      !notification.isRead
+                                        ? 'text-gray-900'
+                                        : 'text-gray-700'
+                                    }`}
+                                  >
+                                    {notification.title}
+                                  </h4>
+                                  {!notification.isRead && (
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></div>
+                                  )}
+                                </div>
+
+                                <p className="text-sm text-gray-600 mt-1 line-clamp-2 leading-5">
+                                  {notification.message}
+                                </p>
+
+                                <div className="flex items-center justify-between mt-3">
+                                  <Badge
+                                    variant="secondary"
+                                    className="text-xs px-2 py-1"
+                                  >
+                                    {notification.type
+                                      .replace(/([A-Z])/g, ' $1')
+                                      .trim()}
+                                  </Badge>
+                                  <span className="text-xs text-gray-500">
+                                    {formatDateTime(notification.createdAt)}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Mark as Read Button */}
+                              {!notification.isRead && (
+                                <button
+                                  onClick={e => {
+                                    e.stopPropagation()
+                                    markAsRead(notification._id)
+                                  }}
+                                  disabled={loading}
+                                  className="flex-shrink-0 p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors duration-200 disabled:opacity-50"
+                                  aria-label="Mark as read"
+                                >
+                                  {loading ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                  ) : (
+                                    <Check className="w-4 h-4" />
+                                  )}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      /* Empty State */
+                      <div className="flex flex-col items-center justify-center px-6 py-16">
+                        <div className="w-20 h-20 mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                          <Bell className="w-10 h-10 text-gray-400" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">
+                          No notifications yet
+                        </h3>
+                        <p className="text-sm text-gray-500 text-center max-w-sm">
+                          When you have new notifications, they&apos;ll appear
+                          here to keep you updated.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  {notificationData && notificationData.length > 0 && (
+                    <div className="px-6 py-3 border-t border-gray-100 bg-gray-50">
+                      <Link to="/notification">
+                        <Button
+                          variant="outline"
+                          className="w-full text-gray-700 hover:bg-gray-100"
+                        >
+                          View All Notifications
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {user.token ? (
@@ -686,273 +987,6 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
               </div>
             </li>
           </ul>
-        </div>
-      )}
-      {cartOpen && (
-        <div
-          id="dropdownMenu"
-          className="absolute right-0 mt-2 w-[420px] max-h-[600px] bg-white rounded-xl shadow-xl border border-gray-100 z-[1000] overflow-hidden"
-        >
-          {cartData?.data?.items ? (
-            <div className="flex flex-col h-full">
-              {/* Header */}
-              <div className="px-6 py-4 border-b border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Shopping Cart
-                </h3>
-                <p className="text-sm text-gray-500 mt-1">
-                  {cartData.data.items.length}{' '}
-                  {cartData.data.items.length === 1 ? 'item' : 'items'}
-                </p>
-              </div>
-
-              {/* Cart Items */}
-              <div className="flex-1 overflow-y-auto max-h-[320px]">
-                <ul className="divide-y divide-gray-100">
-                  {cartData.data.items.map((item, index) => (
-                    <li
-                      key={index}
-                      className="p-4 hover:bg-gray-50 transition-colors duration-200"
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0">
-                          <img
-                            src={item.course.thumbnail || '/placeholder.svg'}
-                            className="w-16 h-12 rounded-lg object-cover border border-gray-200"
-                            alt={item.course.title}
-                          />
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-medium text-gray-900 line-clamp-2 leading-5">
-                            {item.course.title}
-                          </h4>
-                          <p className="text-lg font-semibold text-blue-600 mt-2">
-                            ${item.course.price}
-                          </p>
-                        </div>
-
-                        <button
-                          onClick={e => {
-                            e.stopPropagation()
-                            removeItem(cartData!.data!._id, item._id)
-                          }}
-                          className="flex-shrink-0 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors duration-200"
-                          aria-label="Remove item"
-                        >
-                          <BadgeMinus className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Footer */}
-              <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-medium text-gray-700">
-                    Total:
-                  </span>
-                  <span className="text-xl font-bold text-gray-900">
-                    ${cartData.totalAmount}
-                  </span>
-                </div>
-
-                <div className="flex gap-3">
-                  <Link to="/cart" className="flex-1">
-                    <button className="w-full border border-gray-300 text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">
-                      View Cart
-                    </button>
-                  </Link>
-
-                  <button
-                    onClick={routeCheckout}
-                    className="flex-1 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-medium shadow-md px-4 py-2 rounded-md"
-                  >
-                    Checkout
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center px-6 py-12">
-              <div className="w-32 h-32 mb-6 opacity-60">
-                <img
-                  src="/assets/empty-cart.svg"
-                  alt="Empty cart"
-                  className="w-full h-full"
-                />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Your cart is empty
-              </h3>
-              <p className="text-sm text-gray-500 text-center">
-                Add some courses to get started with your learning journey
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-      {notificationOpen && (
-        <div
-          id="notificationDropdown"
-          className="absolute right-0 mt-2 w-[440px] max-h-[600px] bg-white rounded-xl shadow-xl border border-gray-100 z-[1000] overflow-hidden"
-        >
-          {/* Header */}
-          <div className="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-indigo-50">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Bell className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Notifications
-                </h3>
-                {unreadCount > 0 && (
-                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                    {unreadCount}
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-3">
-                <Link to="/notification">
-                  <button className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1 rounded-md text-sm">
-                    View All
-                  </button>
-                </Link>
-                {unreadCount > 0 && (
-                  <button
-                    onClick={markAllAsRead}
-                    disabled={markingAllRead}
-                    className="text-gray-600 hover:text-gray-700 hover:bg-gray-100 disabled:opacity-50 px-3 py-1 rounded-md text-sm flex items-center"
-                  >
-                    {markingAllRead ? (
-                      <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                    ) : (
-                      <CheckCheck className="w-4 h-4 mr-1" />
-                    )}
-                    Mark All Read
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Notifications List */}
-          <div className="flex-1 overflow-y-auto max-h-[400px]">
-            {notificationData && notificationData.length > 0 ? (
-              <div className="divide-y divide-gray-100">
-                {notificationData.map((notification, index) => (
-                  <div
-                    key={notification._id || index}
-                    className={`p-4 hover:bg-gray-50 transition-all duration-200 cursor-pointer relative ${
-                      !notification.isRead
-                        ? 'bg-blue-50/30 border-l-4 border-l-blue-500'
-                        : ''
-                    }`}
-                    onClick={() => handleNotificationClick(notification)}
-                  >
-                    <div className="flex items-start gap-4">
-                      {/* Notification Icon/Image */}
-                      <div className="flex-shrink-0">
-                        {notification.imageUrl ? (
-                          <img
-                            src={notification.imageUrl || '/placeholder.svg'}
-                            alt="Notification"
-                            className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
-                          />
-                        ) : (
-                          <div
-                            className={`w-12 h-12 rounded-full flex items-center justify-center ${getNotificationColor(
-                              notification.type
-                            )}`}
-                          >
-                            {getNotificationIcon(notification.type)}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Notification Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between">
-                          <h4
-                            className={`text-sm font-medium line-clamp-2 leading-5 ${
-                              !notification.isRead
-                                ? 'text-gray-900'
-                                : 'text-gray-700'
-                            }`}
-                          >
-                            {notification.title}
-                          </h4>
-                          {!notification.isRead && (
-                            <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></div>
-                          )}
-                        </div>
-
-                        <p className="text-sm text-gray-600 mt-1 line-clamp-2 leading-5">
-                          {notification.message}
-                        </p>
-
-                        <div className="flex items-center justify-between mt-3">
-                          <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
-                            {notification.type
-                              .replace(/([A-Z])/g, ' $1')
-                              .trim()}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {formatDateTime(notification.createdAt)}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Mark as Read Button */}
-                      {!notification.isRead && (
-                        <button
-                          onClick={e => {
-                            e.stopPropagation()
-                            markAsRead(notification._id)
-                          }}
-                          disabled={loading}
-                          className="flex-shrink-0 p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors duration-200 disabled:opacity-50"
-                          aria-label="Mark as read"
-                        >
-                          {loading ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <Check className="w-4 h-4" />
-                          )}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              /* Empty State */
-              <div className="flex flex-col items-center justify-center px-6 py-16">
-                <div className="w-20 h-20 mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-                  <Bell className="w-10 h-10 text-gray-400" />
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No notifications yet
-                </h3>
-                <p className="text-sm text-gray-500 text-center max-w-sm">
-                  When you have new notifications, they'll appear here to keep
-                  you updated.
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Footer */}
-          {notificationData && notificationData.length > 0 && (
-            <div className="px-6 py-3 border-t border-gray-100 bg-gray-50">
-              <Link to="/notification">
-                <button className="w-full border border-gray-300 text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">
-                  View All Notifications
-                </button>
-              </Link>
-            </div>
-          )}
         </div>
       )}
     </header>
