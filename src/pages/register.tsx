@@ -15,6 +15,7 @@ import {
   DollarSign,
   Map,
   Globe,
+  Calendar,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -26,141 +27,110 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import logo from '../assets/icon/logo.png'
+import { DobInput } from '@/components/ui/dob-input'
+import { PasswordInput } from '@/components/ui/password-input'
+import { createHttp } from '@/services/httpFactory'
 export default function ModernRegister() {
   const [activeTab, setActiveTab] = useState('student')
-  const [chips, setChips] = useState([])
-  const [inputValue, setInputValue] = useState('')
-  const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const [previewImage, setPreviewImage] = useState(null)
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
-
-  const [user, setUser] = useState({
-    image: '',
-  })
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null)
 
   const handleTabChange = (value: any) => {
     setActiveTab(value)
   }
 
-  const handleKeyDown = (e: any) => {
-    // if (e.key === "Enter" && inputValue.trim() !== "") {
-    //   e.preventDefault();
-    //   if (!chips.includes(inputValue.trim())) {
-    //     setChips([...chips, inputValue.trim()]);
-    //   }
-    //   setInputValue("");
-    // }
-  }
-
-  const handleDelete = (chipToDelete: any) => {
-    // setChips(chips.filter((chip) => chip !== chipToDelete));
-  }
-
-  const uploadImage = async (file: any) => {
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // formData.append(
-    //   "upload_preset",
-    //   process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_PRESET || ""
-    // );
-    // formData.append(
-    //   "api_key",
-    //   process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY || ""
-    // );
-    // try {
-    //   setUploading(true);
-    //   const xhr = new XMLHttpRequest();
-    //   xhr.open(
-    //     "POST",
-    //     `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_PRESET}/image/upload`
-    //   );
-    //   xhr.upload.onprogress = (event) => {
-    //     if (event.lengthComputable) {
-    //       const percentComplete = (event.loaded / event.total) * 100;
-    //       setUploadProgress(percentComplete);
-    //     }
-    //   };
-    //   xhr.onload = () => {
-    //     if (xhr.status === 200) {
-    //       const data = JSON.parse(xhr.responseText);
-    //       setUser({ ...user, image: data.secure_url });
-    //       setUploading(false);
-    //       setUploadProgress(0);
-    //     } else {
-    //       console.error("Image upload failed: ", xhr.responseText);
-    //       toast.error("Image upload failed");
-    //       setUploading(false);
-    //     }
-    //   };
-    //   xhr.onerror = () => {
-    //     console.error("Image upload failed.");
-    //     toast.error("Image upload failed");
-    //     setUploading(false);
-    //   };
-    //   xhr.send(formData);
-    // } catch (error) {
-    //   console.error("Image upload failed: ", error);
-    //   toast.error("Image upload failed");
-    //   setUploading(false);
-    // }
-  }
-
-  const handleImageChange = (e: any) => {
-    // const file = e.target.files?.[0];
-    // if (file) {
-    //   // Create a preview
-    //   const reader = new FileReader();
-    //   reader.onloadend = () => {
-    //     setPreviewImage(reader.result);
-    //   };
-    //   reader.readAsDataURL(file);
-    //   uploadImage(file);
-    // }
-  }
-
   const registerUser = async (e: any) => {
-    // e.preventDefault();
-    // setIsSubmitting(true);
-    // const formData = new FormData(e.currentTarget);
-    // formData.append("image", user.image);
-    // formData.append(
-    //   "role",
-    //   activeTab === "instructor" ? "instructor" : "student"
-    // );
-    // chips.forEach((chip) => {
-    //   formData.append("expartise", chip);
-    // });
-    // try {
-    //   const toastID = toast.loading("Creating your account...");
-    //   const res = await fetch("/api/register/", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
-    //   const data = await res.json();
-    //   toast.dismiss(toastID);
-    //   if (res.status < 200 || res.status >= 300) {
-    //     toast.error(data.message || "Registration failed");
-    //   } else {
-    //     // ✅ Insert user into Firebase Firestore after successful registration
-    //     await insertUser({
-    //       id: data.userid,
-    //       name: formData.get("name"),
-    //       email: formData.get("email"),
-    //       image: user.image,
-    //       role: activeTab === "instructor" ? "instructor" : "student",
-    //       deviceToken: "", // push token if needed
-    //     });
-    //     toast.success("Account created successfully!");
-    //     router.push("/login");
-    //   }
-    // } catch (error) {
-    //   console.error("Failed to create user: ", error);
-    //   toast.error("Registration failed. Please try again.");
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      const formData = new FormData(e.currentTarget)
+
+      // Prepare the data object for API call
+      const userData = {
+        firstName: formData.get('firstName') as string,
+        lastName: formData.get('lastName') as string,
+        userame: formData.get('userName') as string,
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+        phoneNumber: formData.get('phone') as string,
+        address: formData.get('address') as string,
+        dob: dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : null, // Format as YYYY-MM-DD
+        roleName: 'user',
+        loginType: '',
+      }
+
+      // Validate required fields
+      if (
+        !userData.firstName ||
+        !userData.lastName ||
+        !userData.email ||
+        !userData.password
+      ) {
+        toast.error('Please fill in all required fields')
+        return
+      }
+
+      if (!userData.dob) {
+        toast.error('Please select your date of birth')
+        return
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(userData.email)) {
+        toast.error('Please enter a valid email address')
+        return
+      }
+
+      // Validate password length
+      if (userData.password.length < 6) {
+        toast.error('Password must be at least 6 characters long')
+        return
+      }
+
+      const toastId = toast.loading('Creating your account...')
+
+      // Create HTTP client
+      const registerApi = createHttp('http://139.59.97.252:8080')
+
+      // Make API call
+      const response = await registerApi.post('/users', userData)
+
+      toast.dismiss(toastId)
+
+      if (response.data) {
+        toast.success('Account created successfully!')
+
+        // Redirect to login page
+        navigate('/login')
+      } else {
+        throw new Error('Registration failed')
+      }
+    } catch (error: any) {
+      console.error('Registration error:', error)
+
+      let errorMessage = 'Registration failed. Please try again.'
+
+      // Handle different types of errors
+      if (error.response?.status === 400) {
+        errorMessage = error.response.data?.message || 'Invalid data provided'
+      } else if (error.response?.status === 409) {
+        errorMessage = 'An account with this email already exists'
+      } else if (error.response?.status === 422) {
+        errorMessage = 'Please check your input data'
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message
+      } else if (error.message) {
+        errorMessage = error.message
+      }
+
+      toast.error(errorMessage)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -287,18 +257,7 @@ export default function ModernRegister() {
           </div>
 
           <Card className="border-slate-200 shadow-sm">
-            <CardHeader className="pb-4">
-              <Tabs
-                defaultValue="student"
-                onValueChange={handleTabChange}
-                className="w-full"
-              >
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="student">Student</TabsTrigger>
-                  <TabsTrigger value="instructor">Instructor</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </CardHeader>
+            <CardHeader className="pb-4"></CardHeader>
 
             <CardContent>
               <form onSubmit={registerUser} className="space-y-5">
@@ -307,18 +266,62 @@ export default function ModernRegister() {
                   <div className="space-y-4">
                     <div className="relative">
                       <Label
-                        htmlFor="name"
+                        htmlFor="firstName"
                         className="text-sm font-medium text-slate-700"
                       >
-                        Full Name
+                        First Name
                       </Label>
                       <div className="mt-1 relative rounded-md">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                           <User className="h-5 w-5 text-slate-400" />
                         </div>
                         <Input
-                          id="name"
-                          name="name"
+                          id="firstName"
+                          name="firstName"
+                          type="text"
+                          placeholder="John "
+                          className="pl-10 bg-white"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="relative">
+                      <Label
+                        htmlFor="lastName"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Last Name
+                      </Label>
+                      <div className="mt-1 relative rounded-md">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <User className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <Input
+                          id="lastName"
+                          name="lastName"
+                          type="text"
+                          placeholder="Doe"
+                          className="pl-10 bg-white"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="relative">
+                      <Label
+                        htmlFor="userName"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        UserName
+                      </Label>
+                      <div className="mt-1 relative rounded-md">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <User className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <Input
+                          id="userName"
+                          name="userName"
                           type="text"
                           placeholder="John Doe"
                           className="pl-10 bg-white"
@@ -357,233 +360,110 @@ export default function ModernRegister() {
                         Password
                       </Label>
                       <div className="mt-1 relative rounded-md">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <KeyRound className="h-5 w-5 text-slate-400" />
-                        </div>
-                        <Input
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                        <PasswordInput
                           id="password"
                           name="password"
-                          type="password"
                           placeholder="••••••••"
+                          className="bg-white"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="relative">
+                      <Label
+                        htmlFor="phone"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Phone
+                      </Label>
+                      <div className="mt-1 relative rounded-md">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Phone className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          placeholder="(+84) 123 456 7890"
                           className="pl-10 bg-white"
                           required
                         />
                       </div>
                     </div>
-                  </div>
-
-                  {/* Instructor-specific fields */}
-                  {activeTab === 'instructor' && (
-                    <div className="space-y-5 pt-2 border-t border-slate-100">
-                      <div className="relative">
-                        <Label
-                          htmlFor="phone"
-                          className="text-sm font-medium text-slate-700"
-                        >
-                          Phone Number
-                        </Label>
-                        <div className="mt-1 relative rounded-md">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Phone className="h-5 w-5 text-slate-400" />
-                          </div>
-                          <Input
-                            id="phone"
-                            name="phone"
-                            type="text"
-                            placeholder="+1 (555) 123-4567"
-                            className="pl-10 bg-white"
-                            required
-                          />
-                        </div>
+                    <div className="relative">
+                      <Label
+                        htmlFor="dob"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Date of Birth
+                      </Label>
+                      <div className="mt-1 relative rounded-md">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                        <DobInput
+                          value={dateOfBirth}
+                          onChange={setDateOfBirth}
+                          placeholder="Select your date of birth"
+                          className="pl-10 bg-white"
+                          required
+                        />
                       </div>
+                    </div>
 
-                      <div className="relative">
-                        <Label
-                          htmlFor="profession"
-                          className="text-sm font-medium text-slate-700"
-                        >
-                          Profession
-                        </Label>
-                        <div className="mt-1 relative rounded-md">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Briefcase className="h-5 w-5 text-slate-400" />
-                          </div>
-                          <Input
-                            id="profession"
-                            name="profession"
-                            type="text"
-                            placeholder="Software Engineer, Math Teacher, etc."
-                            className="pl-10 bg-white"
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label
-                          htmlFor="about"
-                          className="text-sm font-medium text-slate-700"
-                        >
-                          About Yourself
-                        </Label>
+                    <div className="relative">
+                      <Label
+                        htmlFor="address"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Address
+                      </Label>
+                      <div className="mt-1 relative rounded-md">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
                         <Textarea
-                          id="about"
-                          name="about"
-                          placeholder="Share your experience, qualifications, and teaching style..."
+                          id="address"
+                          name="address"
+                          placeholder="123 Main St, City, Country"
                           className="min-h-[100px] bg-white"
                           required
                         />
                       </div>
+                    </div>
 
-                      <div className="space-y-2">
-                        <Label
-                          htmlFor="image"
-                          className="text-sm font-medium text-slate-700"
-                        >
-                          Profile Image
-                        </Label>
-                        <div className="flex items-center space-x-4">
-                          <div className="relative flex-shrink-0">
-                            {previewImage ? (
-                              <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-indigo-200">
-                                <img
-                                  src={previewImage || '/placeholder.svg'}
-                                  alt="Profile preview"
-                                  className="object-cover"
-                                />
-                              </div>
-                            ) : (
-                              <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center border-2 border-dashed border-slate-200">
-                                <User className="h-8 w-8 text-slate-400" />
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="flex-grow">
-                            <label htmlFor="image" className="cursor-pointer">
-                              <div className="flex items-center space-x-2 px-4 py-2 bg-white border border-slate-200 rounded-md hover:bg-slate-50 transition-colors">
-                                <Upload className="h-4 w-4 text-indigo-500" />
-                                <span className="text-sm text-slate-700">
-                                  Upload photo
-                                </span>
-                              </div>
-                              <Input
-                                id="image"
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="hidden"
-                                required
-                              />
-                            </label>
-                            {uploading && (
-                              <div className="mt-2">
-                                <Progress
-                                  value={uploadProgress}
-                                  className="h-1.5"
-                                />
-                                <p className="text-xs text-slate-500 mt-1">
-                                  Uploading: {Math.round(uploadProgress)}%
-                                </p>
-                              </div>
-                            )}
-                          </div>
+                    <div className="relative">
+                      <Label
+                        htmlFor="role"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Role
+                      </Label>
+                      <div className="mt-1 relative rounded-md">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Briefcase className="h-5 w-5 text-slate-400" />
                         </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label
-                          htmlFor="skill"
-                          className="text-sm font-medium text-slate-700"
+                        <Tabs
+                          defaultValue="student"
+                          onValueChange={handleTabChange}
+                          className="w-full"
                         >
-                          Areas of Expertise
-                        </Label>
-                        <div className="p-3 bg-white border border-slate-200 rounded-md min-h-[80px]">
-                          <div className="flex flex-wrap gap-2 mb-2">
-                            {chips.map((chip, index) => (
-                              <Badge
-                                key={index}
-                                variant="secondary"
-                                className="flex items-center gap-1 bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
-                              >
-                                {chip}
-                                <button
-                                  type="button"
-                                  onClick={() => handleDelete(chip)}
-                                  className="ml-1 rounded-full hover:bg-indigo-200 p-0.5"
-                                >
-                                  <XCircle className="h-3.5 w-3.5" />
-                                </button>
-                              </Badge>
-                            ))}
-                          </div>
-                          <div className="relative">
-                            <Input
-                              id="expartise"
-                              value={inputValue}
-                              onChange={e => setInputValue(e.target.value)}
-                              onKeyDown={handleKeyDown}
-                              placeholder="Type a skill and press Enter (e.g., Mathematics, Programming)"
-                              className="border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-sm"
-                            />
-                          </div>
-                          <p className="text-xs text-slate-500 mt-2">
-                            Add your areas of expertise to help students find
-                            you
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="relative">
-                        <Label
-                          htmlFor="hourly-rate"
-                          className="text-sm font-medium text-slate-700"
-                        >
-                          Hourly Rate ($)
-                        </Label>
-                        <div className="mt-1 relative rounded-md">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <DollarSign className="h-5 w-5 text-slate-400" />
-                          </div>
-                          <Input
-                            id="hourly-rate"
-                            name="hourly-rate"
-                            type="number"
-                            placeholder="0"
-                            className="pl-10 bg-white"
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="relative">
-                        <Label
-                          htmlFor="country"
-                          className="text-sm font-medium text-slate-700"
-                        >
-                          Country
-                        </Label>
-                        <div className="mt-1 relative rounded-md">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Globe className="h-5 w-5 text-slate-400" />
-                          </div>
-                          <Input
-                            id="country"
-                            name="country"
-                            type="text"
-                            placeholder="USA"
-                            className="pl-10 bg-white"
-                            required
-                          />
-                        </div>
+                          <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="student">Student</TabsTrigger>
+                            <TabsTrigger value="instructor">
+                              Instructor
+                            </TabsTrigger>
+                          </TabsList>
+                        </Tabs>
                       </div>
                     </div>
-                  )}
+                  </div>
+
+                  {/* Instructor-specific fields */}
 
                   <div className="pt-4">
                     <Button
                       type="submit"
                       className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
-                      disabled={isSubmitting || uploading}
+                      disabled={isSubmitting}
                     >
                       {isSubmitting ? 'Creating Account...' : 'Create Account'}
                       <ChevronRight className="ml-2 h-4 w-4" />
