@@ -1,30 +1,11 @@
-import axios from 'axios'
-import type { AxiosInstance } from 'axios'
+import AxiosInstance from '@/services/axios'
 
-export function createHttp(baseURL: string): AxiosInstance {
-  const instance = axios.create({
-    baseURL,
-    withCredentials: true,
-  })
+export const createHttp = (baseUrl?: string) => {
+  const instance = AxiosInstance
 
-  // Request Interceptor
-  // instance.interceptors.request.use(config => {
-  //   const token = localStorage.getItem('access-token')
-  //   if (token) config.headers.Authorization = `Bearer ${token}`
-  //   return config
-  // })
-
-  // Response Interceptor
-  instance.interceptors.response.use(
-    res => res,
-    err => {
-      if (err.response?.status === 401) {
-        // ví dụ: redirect login
-        // window.location.href = "/login"
-      }
-      return Promise.reject(err)
-    }
-  )
+  if (baseUrl) {
+    instance.defaults.baseURL = baseUrl
+  }
 
   return instance
 }
