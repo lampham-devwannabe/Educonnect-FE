@@ -1,13 +1,6 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import {
-  Star,
-  ArrowRight,
-  ArrowLeft,
-  Calendar,
-  MessagesSquare,
-} from 'lucide-react'
+import { ArrowRight, ArrowLeft, Calendar, MessagesSquare } from 'lucide-react'
 
-// Replace Next.js imports with React Router
 import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import InfoTitle from './infoTitle'
@@ -19,10 +12,6 @@ interface Post {
   title: string
   image: string[]
   createdAt: string
-}
-
-interface RatingStarsProps {
-  rating: number
 }
 
 interface MostPopularPostProps {
@@ -91,26 +80,6 @@ const MostPopularPost: React.FC<MostPopularPostProps> = () => {
     }
     getPosts()
   }, [])
-
-  const RatingStars: React.FC<RatingStarsProps> = ({ rating }) => {
-    return (
-      <div className="flex items-center justify-left mt-2">
-        {[1, 2, 3, 4, 5].map((star: number) => (
-          <Star
-            key={star}
-            className={`w-4 h-4 mr-1 ${
-              star <= Math.round(rating)
-                ? 'text-[#FC6441] fill-current'
-                : 'text-gray-300'
-            }`}
-          />
-        ))}
-        <span className=" text-sm px-2  text-gray-700">
-          {rating.toFixed(1)}k
-        </span>
-      </div>
-    )
-  }
 
   return (
     <div className=" w-full ">

@@ -9,8 +9,7 @@ import type { User } from '@/models/user'
 
 const Instructor: React.FC = () => {
   const [userData, setUserData] = useState<User[]>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [currentPage] = useState(1)
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -26,7 +25,6 @@ const Instructor: React.FC = () => {
 
       const data = await res.json()
       setUserData(data.data)
-      setTotalPages(Math.ceil(data.total / 5))
     } catch (error) {
       console.error('Error fetching user data:', error)
     }
@@ -120,7 +118,7 @@ const Instructor: React.FC = () => {
                     <div className="relative h-64 overflow-hidden">
                       <img
                         src={mentor.image || '/placeholder.svg'}
-                        alt={`${mentor.name} - ${mentor.profession}`}
+                        alt={`${mentor.firstName + ' ' + mentor.lastName} - ${mentor.profession}`}
                         width={300}
                         height={300}
                         className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
@@ -130,7 +128,7 @@ const Instructor: React.FC = () => {
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
                           <h3 className="font-bold leading-tight">
-                            {mentor.name}
+                            {mentor.firstName + ' ' + mentor.lastName}
                           </h3>
                           <p className="text-sm text-gray-200">
                             {mentor.profession}

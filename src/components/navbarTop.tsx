@@ -14,7 +14,7 @@ const NavbarTop: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <h5 className="text-sm">+8801754713136</h5>
+              <h5 className="text-sm">0987654JQK</h5>
             </a>
           </div>
           <div className="nav-text flex gap-1 items-center">
@@ -24,7 +24,7 @@ const NavbarTop: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <h5 className="text-sm">arcadexit.tech@gmail.com</h5>
+              <h5 className="text-sm">toiyeufbt@fbt.edu.vn</h5>
             </a>
           </div>
           <div className="nav-text flex gap-1 items-center">
@@ -34,7 +34,7 @@ const NavbarTop: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <h5 className="text-sm">238/A, Gulshan 1, Dhaka - Bangladesh.</h5>
+              <h5 className="text-sm">Hoa Lac Hi-tech Park</h5>
             </a>
           </div>
         </div>

@@ -29,17 +29,17 @@ import { Progress } from '../components/ui/progress'
 import { formatDistanceToNow } from 'date-fns'
 import { Badge } from '../components/ui/badge'
 import BecomeInstructorModal from '../components/become-instructor-modal'
+import { UpdateProfileModal } from '@/components/update-profile-modal'
 import { useEnrollPlanHooks } from '../hooks/useMentorPlanEnrollHooks'
 import { MentorList } from './mentor-list'
 import type { User } from '../models/user'
 import { createHttp } from '@/services/httpFactory'
+import { toast } from 'react-hot-toast'
 
 const StudentProfile: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-  const openModal = () => setIsModalOpen(true)
-  const closeModal = () => setIsModalOpen(false)
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false)
 
-  const { enrollListData, fetchEnrollList } = useEnrollListHooks()
+  const { enrollListData } = useEnrollListHooks()
   const [hoveredCard, setHoveredCard] = useState<string>('')
   const [user, setUser] = useState<User>({} as User)
 
@@ -55,7 +55,8 @@ const StudentProfile: React.FC = () => {
           console.log('User Data:', data.result)
           setUser({
             id: data.result.userId,
-            name: data.result.lastName + ' ' + data.result.firstName,
+            lastName: data.result.lastName,
+            firstName: data.result.firstName,
             email: data.result.email,
             image: data.result.image,
             expertise: data.result.expertise,
@@ -71,37 +72,9 @@ const StudentProfile: React.FC = () => {
     fetchUserData()
   }, [])
 
-  const [showForm, setShowForm] = useState<boolean>(false)
-  const [newSkills, setNewSkills] = useState<string>('')
-
-  const handleAddExpertise = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    // Split by comma or newline, trim each skill, remove empties, and remove duplicates
-    const skillsToAdd = newSkills
-      .split(/[\n,]+/)
-      .map(s => s.trim())
-      .filter(s => s.length > 0)
-
-    if (skillsToAdd.length === 0) return
-
-    // Combine old skills + new skills, dedupe
-    const currentExpertise = user?.expertise || []
-    const combinedSkills = Array.from(
-      new Set([...currentExpertise, ...skillsToAdd])
-    )
-
-    // Update user data
-    setUser(prev => {
-      if (!prev) return prev
-      return {
-        ...prev,
-        expertise: combinedSkills,
-      }
-    })
-
-    setNewSkills('')
-    setShowForm(false)
+  const handleProfileUpdate = (updatedUser: User) => {
+    setUser(updatedUser)
+    toast.success('Profile updated successfully')
   }
 
   return (
@@ -119,37 +92,16 @@ const StudentProfile: React.FC = () => {
                   Manage your account information
                 </p>
               </div>
-
-              {user?.role !== 'admin' && user?.id && (
-                <BecomeInstructorModal
-                  userId={user.id}
-                  userData={{
-                    id: user?.id || '',
-                    name: user?.name || '',
-                    email: user?.email || '',
-                    role: user?.role || 'student',
-                    token: user?.token || '',
-                    image: user?.image,
-                    phone: user?.phone,
-                    gender: user?.gender,
-                    profession: user?.profession,
-                    about: user?.about,
-                    country: user?.country,
-                    expertise: user?.expertise,
-                    languages: user?.languages,
-                    certificates: user?.certificates,
-                  }}
-                  trigger={
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-                    >
-                      <Edit className="mr-2 h-4 w-4" />
-                      Update Profile
-                    </Button>
-                  }
-                />
+              {user?.id && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                  onClick={() => setIsUpdateModalOpen(true)}
+                >
+                  <Edit className="mr-2 h-4 w-4" />
+                  Update Profile
+                </Button>
               )}
             </div>
           </CardHeader>
@@ -164,7 +116,7 @@ const StudentProfile: React.FC = () => {
                       user?.image ||
                       '/placeholder.svg?height=400&width=400&query=professional headshot'
                     }
-                    alt={user?.name || 'User Image'}
+                    alt={user?.lastName + ' ' + user?.firstName || 'User Image'}
                     className="rounded-2xl w-40 h-40 object-cover shadow-lg border-4 border-white"
                   />
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white flex items-center justify-center">
@@ -184,7 +136,7 @@ const StudentProfile: React.FC = () => {
               <div className="flex-1 space-y-6">
                 <div>
                   <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                    {user?.name || 'User Name'}
+                    {user?.lastName + ' ' + user?.firstName || 'User Name'}
                   </h2>
                   <p className="text-lg text-gray-600 mb-4">
                     {user?.profession || ''}
@@ -287,6 +239,16 @@ const StudentProfile: React.FC = () => {
           </CardContent>
         </Card>
 
+        {/* Update Profile Modal */}
+        {user?.id && (
+          <UpdateProfileModal
+            isOpen={isUpdateModalOpen}
+            onClose={() => setIsUpdateModalOpen(false)}
+            userData={user}
+            onProfileUpdate={handleProfileUpdate}
+          />
+        )}
+
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 mt-5">
           <div>
             <h1 className="text-xl lg:text-2xl font-bold capitalize">
@@ -301,7 +263,8 @@ const StudentProfile: React.FC = () => {
               userId={user.id}
               userData={{
                 id: user.id,
-                name: user?.name || '',
+                firstName: user?.firstName || '',
+                lastName: user?.lastName || '',
                 email: user?.email || '',
                 image: user?.image,
                 phone: user?.phone,
@@ -309,7 +272,6 @@ const StudentProfile: React.FC = () => {
               }}
               trigger={
                 <Button
-                  onClick={openModal}
                   className="mt-4 md:mt-0 px-6 py-3 text-white font-semibold text-base
                   bg-[#5943E3] hover:bg-[#4735b5]
                   shadow-lg hover:shadow-xl transition-all duration-800

@@ -9,14 +9,16 @@ const NavbarBottomComponent: React.FC = () => {
     const getUserInfo = () => {
       const token = localStorage.getItem('access-token') ?? ''
       const _id = localStorage.getItem('user_id') ?? ''
-      const name = localStorage.getItem('name') ?? ''
+      const firstName = localStorage.getItem('firstName') ?? ''
+      const lastName = localStorage.getItem('lastName') ?? ''
       const image = localStorage.getItem('image') ?? ''
       const role = localStorage.getItem('role') ?? ''
       const email = localStorage.getItem('email') ?? ''
 
       setUserInfo({
         id: _id,
-        name,
+        firstName,
+        lastName,
         image,
         token,
         role,

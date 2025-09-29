@@ -8,7 +8,8 @@ const getUserFromLocalStorage = (): User => {
     return {
       token: '',
       id: '',
-      name: '',
+      firstName: '',
+      lastName: '',
       image: '',
       role: '',
       email: '',
@@ -17,7 +18,8 @@ const getUserFromLocalStorage = (): User => {
   return {
     token: localStorage.getItem('access-token') ?? '',
     id: localStorage.getItem('user_id') ?? '',
-    name: localStorage.getItem('name') ?? '',
+    firstName: localStorage.getItem('firstName') ?? '',
+    lastName: localStorage.getItem('lastName') ?? '',
     image: localStorage.getItem('image') ?? '',
     role: localStorage.getItem('role') ?? '',
     email: localStorage.getItem('email') ?? '',

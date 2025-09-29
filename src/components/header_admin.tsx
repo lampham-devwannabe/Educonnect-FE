@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
 import { Button } from './ui/button'
-import { CircleUser, Search, Menu } from 'lucide-react'
+import { Search, Menu } from 'lucide-react'
 import { Input } from './ui/input'
 
 // import {
