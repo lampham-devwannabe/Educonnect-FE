@@ -32,6 +32,7 @@ import {
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import type { User } from '@/models/user'
+import { createHttp } from '@/services/httpFactory'
 
 interface BecomeInstructorModalProps {
   userId: string
@@ -60,7 +61,8 @@ export default function BecomeInstructorModal({
   // Form data
   const [formUserData, setformUserData] = useState<User>({
     id: userData?.id || '',
-    name: userData?.name || '',
+    firstName: userData?.firstName || '',
+    lastName: userData?.lastName || '',
     email: userData?.email || '',
     image: userData?.image || '',
     phone: userData?.phone || '',
@@ -78,7 +80,8 @@ export default function BecomeInstructorModal({
     // Set initial form data
     setformUserData({
       id: userData?.id || '',
-      name: userData?.name || '',
+      firstName: userData?.firstName || '',
+      lastName: userData?.lastName || '',
       email: userData?.email || '',
       image: userData?.image || '',
       phone: userData?.phone || '',
@@ -108,11 +111,6 @@ export default function BecomeInstructorModal({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
-    setformUserData(prev => ({ ...prev, [name]: value }))
-  }
-
-  // Handle select change
-  const handleSelectChange = (name: string, value: string) => {
     setformUserData(prev => ({ ...prev, [name]: value }))
   }
 
@@ -226,87 +224,42 @@ export default function BecomeInstructorModal({
     }
   }
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    // Validate required fields
-    const requiredFields: Array<keyof User> = [
-      'name',
-      'email',
-      'image',
-      'profession',
-      'about',
-      'country',
-    ]
-
-    for (const field of requiredFields) {
-      if (!formUserData[field]) {
-        toast.error(
-          `${field.charAt(0).toUpperCase() + field.slice(1)} is required`
-        )
-        return
-      }
-    }
-
-    if (expertise.length === 0) {
-      toast.error('At least one area of expertise is required')
-      return
-    }
-
-    if (languages.length === 0) {
-      toast.error('At least one language is required')
-      return
-    }
-
-    if (certificates.length === 0) {
-      toast.error('At least one certificate is required')
-      return
-    }
-
     setIsSubmitting(true)
-    const submitData = new FormData()
-
-    // Add user ID
-    submitData.append('userid', userId)
-
-    // Add all form fields
-    Object.entries(formUserData).forEach(([key, value]) => {
-      if (value !== undefined) {
-        submitData.append(
-          key,
-          typeof value === 'object' ? JSON.stringify(value) : String(value)
-        )
-      }
-    })
-
-    // Add arrays as JSON strings
-    submitData.append('expartise', JSON.stringify(expertise))
-    submitData.append('language', JSON.stringify(languages))
-    submitData.append('certificate', JSON.stringify(certificates))
+    const toastId = toast.loading('Updating profile...')
 
     try {
-      const toastId = toast.loading('Submitting your application...')
+      const profileApi = createHttp('http://139.59.97.252:8080')
+      const updateData = {
+        firstName: formUserData.firstName,
+        lastName: formUserData.lastName,
+        email: formUserData.email,
+        phone: formUserData.phone || undefined,
+        bio: formUserData.about || undefined,
+        country: formUserData.country || undefined,
+        profession: formUserData.profession || undefined,
+        image: formUserData.image || undefined,
+        expertise: expertise,
+        languages: languages,
+        certificates: certificates,
+        hourlyRate: formUserData.hourlyRate,
+      }
 
-      const response = await fetch('/api/user/update/mentor', {
-        method: 'POST',
-        body: submitData,
-      })
+      const res = await profileApi.put(`/users/${userId}`, updateData)
 
-      const data = await response.json()
-      toast.dismiss(toastId)
-
-      if (response.ok) {
-        toast.success('Your application has been submitted successfully!')
+      if (res.data.code === 1000) {
+        toast.success('Profile updated successfully', { id: toastId })
         setOpen(false)
-        // here reload the page or redirect to another page
         window.location.reload()
       } else {
-        toast.error(data.message || 'Failed to submit application')
+        toast.error(res.data.result?.message || 'Update failed', {
+          id: toastId,
+        })
       }
-    } catch (error) {
-      console.error('Error submitting application:', error)
-      toast.error('An error occurred. Please try again.')
+    } catch (error: any) {
+      console.error('Error updating profile:', error)
+      toast.error(error.message || 'Failed to update profile', { id: toastId })
     } finally {
       setIsSubmitting(false)
     }
@@ -327,7 +280,7 @@ export default function BecomeInstructorModal({
         </DialogHeader>
 
         <ScrollArea className="max-h-[calc(90vh-180px)] pr-4">
-          <form onSubmit={handleSubmit} className="space-y-6 py-4">
+          <form onSubmit={handleUpdateProfile} className="space-y-6 py-4">
             <div className="space-y-4">
               {/* Basic Information */}
               <div className="space-y-4">
@@ -335,20 +288,40 @@ export default function BecomeInstructorModal({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name" className="text-sm font-medium">
-                      Full Name <span className="text-red-500">*</span>
+                    <Label htmlFor="firstName" className="text-sm font-medium">
+                      First Name <span className="text-red-500">*</span>
                     </Label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <UserIcon className="h-4 w-4 text-slate-400" />
                       </div>
                       <Input
-                        id="name"
-                        name="name"
-                        value={formUserData.name}
+                        id="firstName"
+                        name="firstName"
+                        value={formUserData.firstName}
                         onChange={handleInputChange}
                         className="pl-9"
-                        placeholder="Your full name"
+                        placeholder="Your first name"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-sm font-medium">
+                      Last Name <span className="text-red-500">*</span>
+                    </Label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <UserIcon className="h-4 w-4 text-slate-400" />
+                      </div>
+                      <Input
+                        id="lastName"
+                        name="lastName"
+                        value={formUserData.lastName}
+                        onChange={handleInputChange}
+                        className="pl-9"
+                        placeholder="Your last name"
                         required
                       />
                     </div>
@@ -695,7 +668,7 @@ export default function BecomeInstructorModal({
           </Button>
           <Button
             type="submit"
-            onClick={handleSubmit}
+            onClick={handleUpdateProfile}
             className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
             disabled={isSubmitting}
           >

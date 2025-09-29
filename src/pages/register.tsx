@@ -1,45 +1,22 @@
-import React from 'react'
-
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom' // thay cho next/navigation
 import toast from 'react-hot-toast'
-import {
-  XCircle,
-  Upload,
-  AtSign,
-  KeyRound,
-  Phone,
-  Briefcase,
-  User,
-  ChevronRight,
-  DollarSign,
-  Map,
-  Globe,
-  Calendar,
-} from 'lucide-react'
+import { AtSign, Phone, Briefcase, User, ChevronRight } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Progress } from '@/components/ui/progress'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
 import logo from '../assets/icon/logo.png'
 import { DobInput } from '@/components/ui/dob-input'
 import { PasswordInput } from '@/components/ui/password-input'
 import { createHttp } from '@/services/httpFactory'
 export default function ModernRegister() {
-  const [activeTab, setActiveTab] = useState('student')
-
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null)
-
-  const handleTabChange = (value: any) => {
-    setActiveTab(value)
-  }
 
   const registerUser = async (e: any) => {
     e.preventDefault()
@@ -441,11 +418,7 @@ export default function ModernRegister() {
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                           <Briefcase className="h-5 w-5 text-slate-400" />
                         </div>
-                        <Tabs
-                          defaultValue="student"
-                          onValueChange={handleTabChange}
-                          className="w-full"
-                        >
+                        <Tabs defaultValue="student" className="w-full">
                           <TabsList className="grid w-full grid-cols-2">
                             <TabsTrigger value="student">Student</TabsTrigger>
                             <TabsTrigger value="instructor">

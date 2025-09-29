@@ -47,7 +47,6 @@ export function BannerList({
   onStatusChange,
   onEdit,
   onDelete,
-  onPositionChange,
 }: BannerListProps) {
   return (
     <Card className="w-full">

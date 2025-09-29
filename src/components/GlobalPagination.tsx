@@ -26,10 +26,8 @@ const GlobalPagination: React.FC<GlobalPaginationProps> = ({
   currentPageDataLength,
   onPageChange,
 }: GlobalPaginationProps) => {
-  // 👇 Tính range số trang động
   const getPageNumbers = (): (number | 'ellipsis')[] => {
     const maxVisible = 5
-    const pages: (number | 'ellipsis')[] = []
 
     if (totalPages <= maxVisible) {
       return Array.from({ length: totalPages }, (_, i) => i + 1)

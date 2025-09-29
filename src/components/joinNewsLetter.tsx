@@ -1,4 +1,3 @@
-import React from 'react'
 import flowerImg from '../assets/custom-image/flower-icon.png'
 import circleImg from '../assets/custom-image/circle-icon.png'
 const JoinNewsLetter = () => {

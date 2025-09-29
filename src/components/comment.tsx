@@ -151,16 +151,16 @@ const Comment: React.FC<CommentProps> = ({ postId, currentUserId }) => {
                         comment.user.image ||
                         '/placeholder.svg?height=40&width=40'
                       }
-                      alt={comment.user.name}
+                      alt={comment.user.lastName + ' ' + comment.user.firstName}
                     />
-                    <AvatarFallback>
-                      {comment.user.name.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
+                    <AvatarFallback>{comment.user.firstName}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <div className="bg-gray-50 p-3 rounded-lg">
                       <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-medium">{comment.user.name}</h3>
+                        <h3 className="font-medium">
+                          {comment.user.firstName + ' ' + comment.user.lastName}
+                        </h3>
                         <p className="text-xs text-gray-500">
                           {formatDistanceToNow(new Date(comment.createdAt), {
                             addSuffix: true,
@@ -266,19 +266,23 @@ const Comment: React.FC<CommentProps> = ({ postId, currentUserId }) => {
                                     reply.user.image ||
                                     '/placeholder.svg?height=32&width=32'
                                   }
-                                  alt={reply.user.name}
+                                  alt={
+                                    reply.user.firstName +
+                                    ' ' +
+                                    reply.user.lastName
+                                  }
                                 />
                                 <AvatarFallback>
-                                  {reply.user.name
-                                    .substring(0, 2)
-                                    .toUpperCase()}
+                                  {reply.user.firstName}
                                 </AvatarFallback>
                               </Avatar>
                               <div className="flex-1">
                                 <div className="bg-gray-50 p-3 rounded-lg">
                                   <div className="flex items-center justify-between mb-1">
                                     <h4 className="font-medium text-sm">
-                                      {reply.user.name}
+                                      {reply.user.firstName +
+                                        ' ' +
+                                        reply.user.lastName}
                                     </h4>
                                     <p className="text-xs text-gray-500">
                                       {formatDistanceToNow(

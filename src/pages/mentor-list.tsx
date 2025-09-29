@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -74,20 +73,24 @@ export function MentorList({
                     <Avatar className="h-16 w-16 ring-2 ring-white shadow-sm flex-shrink-0">
                       <AvatarImage
                         src={enrollment.mentor.image || '/placeholder.svg'}
-                        alt={enrollment.mentor.name}
+                        alt={enrollment.mentor.firstName}
                       />
                       <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold text-lg">
-                        {enrollment.mentor.name
-                          .split(' ')
-                          .map(n => n[0])
-                          .join('')}
+                        {enrollment.mentor.firstName +
+                          ' ' +
+                          enrollment.mentor.lastName
+                            .split(' ')
+                            .map(n => n[0])
+                            .join('')}
                       </AvatarFallback>
                     </Avatar>
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="font-semibold text-xl text-gray-900 truncate">
-                          {enrollment.mentor.name}
+                          {enrollment.mentor.firstName +
+                            ' ' +
+                            enrollment.mentor.lastName}
                         </h3>
                         <Badge
                           variant={active ? 'default' : 'secondary'}

@@ -165,10 +165,18 @@ const EnhancedCourse: React.FC = () => {
                   <div className="flex gap-3 mt-4">
                     <img
                       src={course.instructor?.image}
-                      alt={course.instructor?.name || 'Instructor'}
+                      alt={
+                        course.instructor?.firstName +
+                          ' ' +
+                          course.instructor?.lastName || 'Instructor'
+                      }
                       className="w-8 h-8 rounded-full object-cover"
                     />
-                    <h3>{course.instructor?.name}</h3>
+                    <h3>
+                      {course.instructor?.firstName +
+                        ' ' +
+                        course.instructor?.lastName || 'Instructor'}
+                    </h3>
                   </div>
                   <p className="mt-3 mb-3 text-gray-500 text-md">
                     {course.instructor?.profession}

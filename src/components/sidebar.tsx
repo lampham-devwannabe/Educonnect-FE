@@ -947,13 +947,13 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="w-full justify-start">
                 <Avatar className="mr-2 h-8 w-8">
-                  <AvatarImage src={user.image} alt={user.name} />
-                  <AvatarFallback>
-                    {user.name?.substring(0, 2) || 'UN'}
-                  </AvatarFallback>
+                  <AvatarImage src={user.image} alt={user.firstName} />
+                  <AvatarFallback>{user.firstName || 'UN'}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col items-start">
-                  <span className="text-sm font-medium">{user.name}</span>
+                  <span className="text-sm font-medium">
+                    {user.firstName + ' ' + user.lastName || 'User'}
+                  </span>
                   <span className="text-xs text-muted-foreground">
                     {user.role}
                   </span>
@@ -965,7 +965,7 @@ const Sidebar: React.FC<SidebarProps> = ({ user }) => {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {user.name}
+                    {user.firstName + ' ' + user.lastName || 'User'}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user.role}

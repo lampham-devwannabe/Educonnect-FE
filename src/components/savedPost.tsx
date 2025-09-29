@@ -109,7 +109,9 @@ const SavedPost: React.FC = () => {
                         />
                         <div>
                           <h3 className="text-sm font-semibold text-gray-900">
-                            {post?.user?.name || 'Unknown'}
+                            {post?.user?.firstName +
+                              ' ' +
+                              post?.user?.lastName || 'Unknown'}
                           </h3>
                         </div>
                       </div>
