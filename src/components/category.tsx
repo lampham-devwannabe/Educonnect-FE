@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Skeleton } from './ui/skeleton'
 import { ChevronRight } from 'lucide-react'
 import { Button } from './ui/button'
-import http from '../services/http'
+import { createHttp } from '../services/httpFactory'
 import type { Category } from '@/models/category'
 
 const Category = () => {
@@ -12,6 +12,7 @@ const Category = () => {
   useEffect(() => {
     const getCategory = async () => {
       try {
+        const http = createHttp(import.meta.env.VITE_API_BASE_URL)
         const res = await http.get<{ data: Category[] }>('/category')
         setCategoryData(res.data.data)
       } catch (error) {

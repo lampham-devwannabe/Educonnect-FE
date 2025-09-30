@@ -1,38 +1,32 @@
-import React from 'react'
-
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom' // thay cho next/navigation
 import toast from 'react-hot-toast'
 import {
-  XCircle,
-  Upload,
   AtSign,
-  KeyRound,
   Phone,
   Briefcase,
   User,
   ChevronRight,
-  DollarSign,
-  Map,
-  Globe,
-  Calendar,
+  Info,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Progress } from '@/components/ui/progress'
+
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
+
 import logo from '../assets/icon/logo.png'
 import { DobInput } from '@/components/ui/dob-input'
 import { PasswordInput } from '@/components/ui/password-input'
-import { createHttp } from '@/services/httpFactory'
-export default function ModernRegister() {
-  const [activeTab, setActiveTab] = useState('student')
 
+import { useAuth, type RegisterFormData } from '@/providers/AuthProvider'
+
+export default function Register() {
+  const [activeTab, setActiveTab] = useState('student')
+  const { register } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null)
@@ -49,10 +43,10 @@ export default function ModernRegister() {
       const formData = new FormData(e.currentTarget)
 
       // Prepare the data object for API call
-      const userData = {
+      const userData: RegisterFormData = {
         firstName: formData.get('firstName') as string,
         lastName: formData.get('lastName') as string,
-        userame: formData.get('userName') as string,
+        username: formData.get('userName') as string,
         email: formData.get('email') as string,
         password: formData.get('password') as string,
         phoneNumber: formData.get('phone') as string,
@@ -93,15 +87,12 @@ export default function ModernRegister() {
 
       const toastId = toast.loading('Creating your account...')
 
-      // Create HTTP client
-      const registerApi = createHttp('http://139.59.97.252:8080')
-
       // Make API call
-      const response = await registerApi.post('/users', userData)
+      const response = await register(userData)
 
       toast.dismiss(toastId)
 
-      if (response.data) {
+      if (response) {
         toast.success('Account created successfully!')
 
         // Redirect to login page
@@ -273,7 +264,7 @@ export default function ModernRegister() {
                       </Label>
                       <div className="mt-1 relative rounded-md">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <User className="h-5 w-5 text-slate-400" />
+                          <Info className="h-5 w-5 text-slate-400" />
                         </div>
                         <Input
                           id="firstName"
@@ -295,7 +286,7 @@ export default function ModernRegister() {
                       </Label>
                       <div className="mt-1 relative rounded-md">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <User className="h-5 w-5 text-slate-400" />
+                          <Info className="h-5 w-5 text-slate-400" />
                         </div>
                         <Input
                           id="lastName"

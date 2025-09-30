@@ -9,6 +9,20 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<any>
   logout: () => Promise<void>
   refreshUserToken: () => Promise<boolean>
+  register: (authData: RegisterFormData) => Promise<any>
+}
+
+export interface RegisterFormData {
+  firstName: string
+  lastName: string
+  username: string
+  email: string
+  password: string
+  phoneNumber: string
+  address: string
+  dob: string | null
+  roleName: string
+  loginType: string
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -118,6 +132,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
+  const register = async (authData: RegisterFormData) => {
+    try {
+      const response = await axios.post('/users', authData)
+      if (response.data.code === 1000) {
+        return response.data
+      } else {
+        throw new Error(response.data.message || 'Registration failed')
+      }
+    } catch (error) {
+      console.error('Registration error:', error)
+      throw error
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -127,6 +155,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         login,
         logout,
         refreshUserToken,
+        register,
       }}
     >
       {children}

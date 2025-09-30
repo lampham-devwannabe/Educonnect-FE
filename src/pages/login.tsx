@@ -14,8 +14,9 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import logo from '../assets/icon/logo.png'
-import { createHttp } from '@/services/httpFactory'
+
 import { useAuth } from '@/providers/AuthProvider'
+import { PasswordInput } from '@/components/ui/password-input'
 
 function Login() {
   const navigate = useNavigate()

@@ -12,7 +12,7 @@ import InfoTitle from './infoTitle'
 import { Button } from './ui/button'
 import Slider from 'react-slick'
 import { Link } from 'react-router-dom'
-import http from '../services/http'
+import { createHttp } from '../services/httpFactory'
 import type { Course } from '@/models/course'
 import textCircle from '../assets/custom-image/textCircle.png'
 interface BestRatedCourseProps {
@@ -58,6 +58,7 @@ const BestRatedCourse: React.FC<BestRatedCourseProps> = () => {
   useEffect(() => {
     const getCourses = async () => {
       try {
+        const http = createHttp(import.meta.env.VITE_API_BASE_URL || '')
         const res = await http.post('/course', { page: 1, pagination: 4 })
         setCourses(res.data.data)
       } catch (error) {
