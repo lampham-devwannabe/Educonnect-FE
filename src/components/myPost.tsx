@@ -30,7 +30,7 @@ import { useUserDetailsHooks } from '../hooks/useUserHooks'
 import { PostsRightSidebar } from './postsRightSidebar'
 import Comment from './comment'
 import Swal from 'sweetalert2'
-import type { Post, NewPost } from '@/models/post'
+import type { NewPost } from '@/models/post'
 
 const MyPost: React.FC = () => {
   const [showComments, setShowComments] = useState<string | null>(null)
@@ -59,9 +59,6 @@ const MyPost: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [uploading, setUploading] = useState<boolean>(false)
   const [uploadProgress, setUploadProgress] = useState<number>(0)
-
-  // Fixing the fetchPosts reference to use fetchSinglePosts instead
-  const fetchPosts = fetchSinglePosts
 
   useEffect(() => {
     // Clean up image URLs when component unmounts to prevent memory leaks
@@ -148,55 +145,6 @@ const MyPost: React.FC = () => {
       })
   }
 
-  const handleBanUser = (post: Post): void => {
-    const formData = new FormData()
-    formData.append('postid', post._id)
-    formData.append('userid', post.user.id)
-    fetch('/api/post-feed/ban-post', {
-      method: 'POST',
-      body: formData,
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 200) {
-          fetchPosts() // Using the fixed reference
-        } else {
-          console.error('Error banning user:', data.message)
-        }
-      })
-      .catch(error => {
-        console.error('Error banning user:', error)
-      })
-  }
-
-  const handleWarnUser = (userId: string, message?: string): void => {
-    const formData = new FormData()
-    formData.append('userid', userId)
-    formData.append('title', 'Warning Notification')
-    formData.append(
-      'message',
-      message ??
-        'You have been warned for violating community guidelines and your post has been removed.'
-    )
-    formData.append('type', 'Other')
-    fetch('/api/notification/user', {
-      method: 'POST',
-      body: formData,
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 200) {
-          toast.success('User warned successfully')
-          fetchPosts() // Using the fixed reference
-        } else {
-          console.error('Error warning user:', data.message)
-        }
-      })
-      .catch(error => {
-        console.error('Error warning user:', error)
-      })
-  }
-
   const filteredPosts = posts.filter(post => {
     const matchesSearch =
       post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -212,9 +160,6 @@ const MyPost: React.FC = () => {
         toast.error('Please log in to like posts')
         return
       }
-
-      const post = posts.find(post => post._id === postId)
-      const isLiked = post?.liked || false
 
       const response = await fetch(`/api/post-feed/like`, {
         method: 'POST',

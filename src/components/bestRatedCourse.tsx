@@ -189,7 +189,11 @@ const BestRatedCourse: React.FC<BestRatedCourseProps> = () => {
                           height={50}
                           className="w-8 h-8 rounded-full"
                         />
-                        <h3>{course.instructor?.name}</h3>
+                        <h3>
+                          {course.instructor?.lastName +
+                            ' ' +
+                            course.instructor?.firstName}
+                        </h3>
                       </div>
                       <Button className="mt-2 text-sm font-normal h-8 bg-[--primary] px-3 py-0 rounded-full hover:bg-[--primary]  hover:text-white  text-white ">
                         Enroll <ArrowRight className="text-xs w-5 h-4" />

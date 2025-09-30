@@ -31,10 +31,6 @@ export default function Register() {
   const navigate = useNavigate()
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null)
 
-  const handleTabChange = (value: any) => {
-    setActiveTab(value)
-  }
-
   const registerUser = async (e: any) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -432,11 +428,7 @@ export default function Register() {
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                           <Briefcase className="h-5 w-5 text-slate-400" />
                         </div>
-                        <Tabs
-                          defaultValue="student"
-                          onValueChange={handleTabChange}
-                          className="w-full"
-                        >
+                        <Tabs defaultValue="student" className="w-full">
                           <TabsList className="grid w-full grid-cols-2">
                             <TabsTrigger value="student">Student</TabsTrigger>
                             <TabsTrigger value="instructor">

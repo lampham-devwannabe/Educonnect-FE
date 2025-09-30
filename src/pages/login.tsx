@@ -1,29 +1,17 @@
-import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom' // thay cho next/navigation
 import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import {
-  AtSign,
-  KeyRound,
-  ArrowRight,
-  GraduationCap,
-  UserCog,
-  ShieldCheck,
-} from 'lucide-react'
+import { AtSign, KeyRound, ArrowRight } from 'lucide-react'
 import logo from '../assets/icon/logo.png'
-
 import { useAuth } from '@/providers/AuthProvider'
 import { PasswordInput } from '@/components/ui/password-input'
 
 function Login() {
   const navigate = useNavigate()
   const { login } = useAuth()
-  const APPNAME = import.meta.env.VITE_APPNAME
-
-  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -34,18 +22,12 @@ function Login() {
       .value
 
     const toastID = toast.loading('Logging in...')
-    setLoading(true)
 
     try {
       const result = await login(username, password)
 
       if (result.code === 1000) {
         toast.success('Login successful!')
-        // if (result.user.role === 'admin' || result.user.role === 'instructor') {
-        //   navigate('/dashboard')
-        // } else {
-        //   navigate('/')
-        // }
         navigate('/')
       } else {
         toast.error(result.result.message || 'Login failed')
@@ -54,31 +36,7 @@ function Login() {
       toast.error('Something went wrong')
     } finally {
       toast.dismiss(toastID)
-      setLoading(false)
     }
-  }
-
-  const handleQuickLogin = async (email: string, password: string) => {
-    //   const toastID = toast.loading("Logging in...");
-    //   const result = await signIn("credentials", {
-    //     redirect: false,
-    //     email,
-    //     password,
-    //   });
-
-    //   console.log(session?.user);
-
-    //   toast.dismiss(toastID);
-    //   if (result?.error) {
-    //     toast.error(result.error);
-    //   } else {
-    //     if (session?.user?.role === "instructor" || session?.user?.role === "admin") {
-    //       router.push("/dashboard");
-    //     } else {
-    //       router.push("/");
-    //     }
-    //   }
-    navigate('/')
   }
 
   return (
@@ -212,9 +170,10 @@ function Login() {
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                       <KeyRound className="h-5 w-5 text-slate-400" />
                     </div>
-                    <PasswordInput
+                    <Input
                       id="password"
                       name="password"
+                      type="password"
                       autoComplete="current-password"
                       required
                       className="pl-10 bg-white border-slate-200 focus:border-indigo-500 focus:ring-indigo-500"
@@ -244,44 +203,6 @@ function Login() {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </form>
-
-            {/* Quick Login Buttons (only for SMART-ACADEMY) */}
-            {APPNAME === 'SMART-ACADEMY' && (
-              <div className="mt-8 space-y-3">
-                <p className="text-center text-sm text-slate-500">
-                  Quick Login (Demo Accounts)
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <Button
-                    onClick={() =>
-                      handleQuickLogin('student@arcadexit.com', '123456')
-                    }
-                    className="bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center justify-center gap-2"
-                  >
-                    <GraduationCap className="w-4 h-4" />
-                    Student
-                  </Button>
-                  <Button
-                    onClick={() =>
-                      handleQuickLogin('instructor@arcadexit.com', '123456')
-                    }
-                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center justify-center gap-2"
-                  >
-                    <UserCog className="w-4 h-4" />
-                    Instructor
-                  </Button>
-                  <Button
-                    onClick={() =>
-                      handleQuickLogin('admin@arcadexit.com', '123456')
-                    }
-                    className="bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center justify-center gap-2"
-                  >
-                    <ShieldCheck className="w-4 h-4" />
-                    Admin
-                  </Button>
-                </div>
-              </div>
-            )}
 
             <p className="mt-8 text-center text-sm text-slate-600">
               Don&apos;t have an account?{' '}

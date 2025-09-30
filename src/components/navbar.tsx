@@ -809,7 +809,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                   >
                     <img
                       src={user?.image || '/assets/default-avatar.png'}
-                      alt={user?.name || 'User avatar'}
+                      alt={user?.firstName || 'User avatar'}
                       className="rounded-full object-cover border border-gray-200 shadow-sm w-full h-full"
                     />
                   </div>
@@ -879,15 +879,11 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 )}
               </div>
             ) : (
-              <div className="flex gap-1 rounded-full bg-[--primary] py-3 px-6 text-gray-100 text-sm">
-                <Link to="/login">
-                  <h5 className="">Login</h5>
-                </Link>
-                /
-                <Link to="/register">
-                  <h5 className="">SignUp</h5>
-                </Link>
-              </div>
+              <Link to="/login">
+                <div className="flex gap-1 rounded-full bg-[--primary] py-3 px-6 text-gray-100 text-sm">
+                  <h5 className="">Login</h5>/<h5 className="">SignUp</h5>
+                </div>
+              </Link>
             )}
             {/* Language Switcher */}
             <LanguageSwitcher />

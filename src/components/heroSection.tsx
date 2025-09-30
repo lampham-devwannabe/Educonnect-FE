@@ -1,11 +1,5 @@
-import React, { use, useState } from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import {
-  GraduationCap,
-  LucideTvMinimalPlay,
-  SquareUser,
-  Users as UsersIcon,
-} from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 // Import ảnh bình thường trong React

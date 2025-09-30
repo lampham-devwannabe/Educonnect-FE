@@ -7,7 +7,8 @@ import type { User } from '@/models/user'
 export function getUserFromCookies(): User {
   return {
     id: Cookies.get('user_id') ?? '',
-    name: Cookies.get('name') || 'Guest',
+    firstName: Cookies.get('first_name') || '',
+    lastName: Cookies.get('last_name') || '',
     email: Cookies.get('email') || 'Not Provided',
     token: Cookies.get('access-token'),
     image: Cookies.get('image') || '/default-avatar.png',

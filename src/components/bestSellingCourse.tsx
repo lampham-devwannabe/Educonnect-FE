@@ -190,11 +190,19 @@ const BestSellingCourse: React.FC = () => {
                         <img
                           className="w-8 h-8 rounded-full"
                           src={course.instructor?.image}
-                          alt={course.instructor?.name}
+                          alt={
+                            course.instructor?.lastName +
+                            ' ' +
+                            course.instructor?.firstName
+                          }
                           width={50}
                           height={50}
                         />
-                        <h3>{course.instructor?.name}</h3>
+                        <h3>
+                          {course.instructor?.lastName +
+                            ' ' +
+                            course.instructor?.firstName}
+                        </h3>
                       </div>
                       <Button className="text-sm w-fit font-normal h-8 bg-[--primary] px-3 py-0 rounded-full hover:bg-[--primary]  hover:text-white  text-white ">
                         Enroll <ArrowRight className="text-xs w-5 h-4" />

@@ -264,7 +264,7 @@ const AllPosts: React.FC = () => {
   const filteredPosts = posts.filter(post => {
     const matchesSearch =
       post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      post.user.firstName.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesFilter = filter === 'all' || post.status === filter
     return matchesSearch && matchesFilter
   })
@@ -527,7 +527,9 @@ const AllPosts: React.FC = () => {
                                 />
                                 <div>
                                   <h3 className="text-sm font-semibold text-gray-900">
-                                    {post.user?.name || 'Unknown'}
+                                    {post.user?.firstName +
+                                      ' ' +
+                                      post.user?.lastName || 'Unknown'}
                                   </h3>
                                   <p className="text-xs text-gray-500">
                                     {new Date(post.createdAt).toLocaleString(

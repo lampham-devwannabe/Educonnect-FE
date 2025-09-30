@@ -97,9 +97,13 @@ const UpcomingCourse: React.FC = () => {
                       course.instructor.image ||
                       '/assets/custom-image/default-author.jpg'
                     }
-                    alt={`${course.instructor.name} avatar`}
+                    alt={`${course.instructor.firstName} avatar`}
                   />
-                  <h3>{course.instructor.name}</h3>
+                  <h3>
+                    {course.instructor.firstName +
+                      ' ' +
+                      course.instructor.lastName}
+                  </h3>
                 </div>
                 <p className="mt-3 mb-3 text-gray-500 text-md">
                   {course.instructor.profession}

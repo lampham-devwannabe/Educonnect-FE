@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { validateToken, refreshToken } from '../services/auth'
-import axios from '@/services/axios'
+import { createHttp } from '@/services/httpFactory'
 
 interface AuthContextType {
   isAuthenticated: boolean
@@ -27,6 +26,49 @@ export interface RegisterFormData {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
+// Improved token validation function
+const validateToken = async (token: string): Promise<{ isValid: boolean }> => {
+  try {
+    if (!token) {
+      return { isValid: false }
+    }
+
+    const api = createHttp('http://139.59.97.252:8080')
+    const response = await api.post('/auth/introspect', { token })
+
+    return {
+      isValid:
+        response.data.code === 1000 && response.data.result?.valid === true,
+    }
+  } catch (error) {
+    console.error('Token validation error:', error)
+    return { isValid: false }
+  }
+}
+
+// Improved token refresh function
+const refreshToken = async (token: string): Promise<string | null> => {
+  try {
+    if (!token) {
+      return null
+    }
+
+    const api = createHttp('http://139.59.97.252:8080')
+    const response = await api.post('/auth/refresh', { token })
+
+    if (response.data.code === 1000 && response.data.result?.token) {
+      const newToken = response.data.result.token
+      localStorage.setItem('access-token', newToken)
+      return newToken
+    }
+
+    return null
+  } catch (error) {
+    console.error('Token refresh error:', error)
+    return null
+  }
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -34,37 +76,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [user, setUser] = useState<any | null>(null)
 
-  // Check authentication status on mount
+  // Improved check authentication function
   useEffect(() => {
     const checkAuth = async () => {
+      setIsLoading(true)
+
       try {
         const token = localStorage.getItem('access-token')
 
-        // If no token, user is not authenticated but that's okay
+        // If no token, user is not authenticated
         if (!token) {
           setIsAuthenticated(false)
           setIsLoading(false)
           return
         }
 
-        // If token exists, validate it
+        // First try to validate the token
         const { isValid } = await validateToken(token)
-        setIsAuthenticated(isValid)
 
-        // Only fetch user info if token is valid
+        // If token is valid, set authenticated and fetch user info
         if (isValid) {
-          try {
-            const response = await axios.get('/users/my-info')
-            setUser(response.data)
-          } catch (error) {
-            console.error('Error fetching user info:', error)
-            // If we can't get user info, user might not be properly authenticated
-            // But we won't log them out automatically
-          }
+          setIsAuthenticated(true)
+          await fetchUserInfo()
+          setIsLoading(false)
+          return
+        }
+
+        // If token is invalid, try to refresh it
+        const newToken = await refreshToken(token)
+
+        if (newToken) {
+          // If refresh successful, set authenticated and fetch user info
+          setIsAuthenticated(true)
+          await fetchUserInfo()
+        } else {
+          // If refresh fails, user is not authenticated
+          setIsAuthenticated(false)
+          // Silent failure - don't redirect automatically
         }
       } catch (error) {
         console.error('Auth check error:', error)
-        // Don't set authenticated, but don't redirect either
         setIsAuthenticated(false)
       } finally {
         setIsLoading(false)
@@ -74,21 +125,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     checkAuth()
   }, [])
 
-  const login = async (username: string, password: string) => {
+  // Separate function to fetch user info
+  const fetchUserInfo = async () => {
     try {
-      const response = await axios.post('/auth/token', { username, password })
+      const api = createHttp('http://139.59.97.252:8080')
+      const token = localStorage.getItem('access-token')
+
+      if (!token) return
+
+      api.defaults.headers.common.Authorization = `Bearer ${token}`
+
+      const response = await api.get('/users/my-info')
 
       if (response.data.code === 1000) {
-        localStorage.setItem('access-token', response.data.result.token)
+        setUser(response.data.result)
+      } else {
+        console.error('Failed to fetch user info:', response.data)
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error)
+    }
+  }
+
+  const login = async (username: string, password: string) => {
+    try {
+      const api = createHttp('http://139.59.97.252:8080')
+      const response = await api.post('/auth/token', { username, password })
+
+      if (response.data.code === 1000 && response.data.result?.token) {
+        const token = response.data.result.token
+        localStorage.setItem('access-token', token)
         setIsAuthenticated(true)
 
         // Fetch user info
-        try {
-          const userResponse = await axios.get('/users/my-info')
-          setUser(userResponse.data)
-        } catch (userError) {
-          console.error('Error fetching user info:', userError)
-        }
+        await fetchUserInfo()
 
         return response.data
       }
@@ -106,7 +176,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // Try to invalidate the token on the server
     if (token) {
       try {
-        await axios.post('/auth/logout', { token })
+        const api = createHttp('http://139.59.97.252:8080')
+        await api.post('/auth/logout', { token })
       } catch (error) {
         console.error('Logout API error:', error)
       }
