@@ -1,8 +1,5 @@
-'use client'
-
-import React from 'react'
-
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -23,59 +20,63 @@ import {
   EyeOff,
   Sparkles,
 } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
-import { useRouter } from 'next/navigation'
+import { toast } from 'react-hot-toast'
+import { createHttp } from '@/services/httpFactory'
+
+type Step = 'email' | 'otp' | 'reset'
+
+interface ForgotPasswordResponse {
+  status: number
+  message?: string
+}
 
 export default function ForgotPasswordFlow() {
-  const [step, setStep] = useState('email')
-  const [email, setEmail] = useState('')
-  const [otp, setOtp] = useState(['', '', '', '', '', ''])
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const { toast } = useToast()
-  const router = useRouter()
+  const [step, setStep] = useState<Step>('email')
+  const [email, setEmail] = useState<string>('')
+  const [otp, setOtp] = useState<string[]>(['', '', '', '', '', ''])
+  const [newPassword, setNewPassword] = useState<string>('')
+  const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
+  const navigate = useNavigate()
 
-  const handleEmailSubmit = async e => {
+  // Create HTTP client
+  const api = createHttp('http://139.59.97.252:8080')
+
+  const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
     try {
-      const formData = new FormData()
-      formData.append('email', email)
-
-      const response = await fetch('/api/sendOTP', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const result = await response.json()
-
-      if (result.status === 200) {
-        setStep('otp')
-        toast({
-          title: 'Verification code sent',
-          description: 'Check your email for the 6-digit code',
-        })
-      } else {
-        throw new Error(result.message || 'Failed to send OTP')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to send verification code. Please try again.'
+      const response = await api.post<ForgotPasswordResponse>(
+        '/auth/forgot-password',
+        {
+          email: email,
+        }
       )
+
+      if (response.data.status === 200) {
+        setStep('otp')
+        toast.success('Verification code sent to your email')
+      } else {
+        throw new Error(response.data.message || 'Failed to send OTP')
+      }
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        'Failed to send verification code. Please try again.'
+      setError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleOtpChange = (index, value) => {
+  const handleOtpChange = (index: number, value: string) => {
     if (value.length > 1) return
 
     const newOtp = [...otp]
@@ -84,19 +85,26 @@ export default function ForgotPasswordFlow() {
 
     // Auto-focus next input
     if (value && index < 5) {
-      const nextInput = document.getElementById(`otp-${index + 1}`)
+      const nextInput = document.getElementById(
+        `otp-${index + 1}`
+      ) as HTMLInputElement
       nextInput?.focus()
     }
   }
 
-  const handleOtpKeyDown = (index, e) => {
+  const handleOtpKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-${index - 1}`)
+      const prevInput = document.getElementById(
+        `otp-${index - 1}`
+      ) as HTMLInputElement
       prevInput?.focus()
     }
   }
 
-  const handleOtpSubmit = async e => {
+  const handleOtpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
     setError('')
@@ -104,38 +112,33 @@ export default function ForgotPasswordFlow() {
     const enteredOtp = otp.join('')
 
     try {
-      const formData = new FormData()
-      formData.append('email', email)
-      formData.append('otp', enteredOtp)
-
-      const response = await fetch('/api/verify-OTP', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const result = await response.json()
-
-      if (result.status === 200) {
-        setStep('reset')
-        toast({
-          title: 'Code verified',
-          description: 'You can now reset your password',
-        })
-      } else {
-        throw new Error(result.message || 'Invalid verification code')
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Invalid verification code. Please try again.'
+      const response = await api.post<ForgotPasswordResponse>(
+        '/auth/verify-otp',
+        {
+          email: email,
+          otp: enteredOtp,
+        }
       )
+
+      if (response.data.status === 200) {
+        setStep('reset')
+        toast.success('Code verified successfully')
+      } else {
+        throw new Error(response.data.message || 'Invalid verification code')
+      }
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        'Invalid verification code. Please try again.'
+      setError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
   }
 
-  const handlePasswordReset = async e => {
+  const handlePasswordReset = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError('')
 
@@ -144,7 +147,7 @@ export default function ForgotPasswordFlow() {
       return
     }
 
-    if (newPassword.length < 6) {
+    if (newPassword.length < 8) {
       setError('Password must be at least 8 characters long')
       return
     }
@@ -152,28 +155,51 @@ export default function ForgotPasswordFlow() {
     setLoading(true)
 
     try {
-      // Simulate password reset API call
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      const response = await api.post<ForgotPasswordResponse>(
+        '/auth/reset-password',
+        {
+          email: email,
+          newPassword: newPassword,
+          otp: otp.join(''),
+        }
+      )
 
-      // Clear stored data
-      sessionStorage.removeItem('resetOtp')
-      sessionStorage.removeItem('resetEmail')
+      if (response.data.status === 200) {
+        toast.success(
+          'Password reset successful! You can now login with your new password'
+        )
 
-      toast({
-        title: 'Password reset successful',
-        description: 'You can now login with your new password',
-      })
+        // Reset form
+        setStep('email')
+        setEmail('')
+        setOtp(['', '', '', '', '', ''])
+        setNewPassword('')
+        setConfirmPassword('')
 
-      // Reset form
-      setStep('email')
-      setEmail('')
-      setOtp(['', '', '', '', '', ''])
-      setNewPassword('')
-      setConfirmPassword('')
+        navigate('/login')
+      } else {
+        throw new Error(response.data.message || 'Failed to reset password')
+      }
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        'Failed to reset password. Please try again.'
+      setError(errorMessage)
+      toast.error(errorMessage)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-      router.push('/login')
+  const resendOtp = async () => {
+    setLoading(true)
+    try {
+      await handleEmailSubmit({
+        preventDefault: () => {},
+      } as React.FormEvent<HTMLFormElement>)
     } catch (err) {
-      setError('Failed to reset password. Please try again.')
+      // Error handling is done in handleEmailSubmit
     } finally {
       setLoading(false)
     }
@@ -190,8 +216,7 @@ export default function ForgotPasswordFlow() {
           Forgot Password?
         </CardTitle>
         <CardDescription className="text-gray-600 text-base sm:text-lg leading-relaxed px-2 sm:px-0">
-          Enter your email address and we&apos;ll send you a secure verification
-          code
+          Enter your email address and we'll send you a secure verification code
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
@@ -215,10 +240,7 @@ export default function ForgotPasswordFlow() {
           </div>
 
           {error && (
-            <Alert
-              variant="destructive"
-              className="border-red-200 bg-red-50/80 backdrop-blur-sm"
-            >
+            <Alert className="border-red-200 bg-red-50/80 backdrop-blur-sm">
               <AlertDescription className="text-red-700 text-sm">
                 {error}
               </AlertDescription>
@@ -244,12 +266,13 @@ export default function ForgotPasswordFlow() {
           </Button>
 
           <div className="text-center">
-            <a
-              href="/login"
+            <button
+              type="button"
+              onClick={() => navigate('/login')}
               className="text-sm text-blue-600 hover:text-blue-700 font-medium hover:underline transition-colors"
             >
               ← Back to Login
-            </a>
+            </button>
           </div>
         </form>
       </CardContent>
@@ -290,10 +313,7 @@ export default function ForgotPasswordFlow() {
           </div>
 
           {error && (
-            <Alert
-              variant="destructive"
-              className="border-red-200 bg-red-50/80 backdrop-blur-sm"
-            >
+            <Alert className="border-red-200 bg-red-50/80 backdrop-blur-sm">
               <AlertDescription className="text-red-700 text-sm">
                 {error}
               </AlertDescription>
@@ -326,7 +346,7 @@ export default function ForgotPasswordFlow() {
             </button>
             <button
               type="button"
-              onClick={() => handleEmailSubmit({ preventDefault: () => {} })}
+              onClick={resendOtp}
               className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
               disabled={loading}
             >
@@ -417,10 +437,7 @@ export default function ForgotPasswordFlow() {
           </div>
 
           {error && (
-            <Alert
-              variant="destructive"
-              className="border-red-200 bg-red-50/80 backdrop-blur-sm"
-            >
+            <Alert className="border-red-200 bg-red-50/80 backdrop-blur-sm">
               <AlertDescription className="text-red-700 text-sm">
                 {error}
               </AlertDescription>

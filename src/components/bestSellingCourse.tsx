@@ -15,6 +15,7 @@ import type { Settings } from 'react-slick'
 import { Link } from 'react-router-dom'
 import type { Course } from '@/models/course'
 import textCircle from '@assets/custom-image/textCircle.png'
+import { useTranslation } from 'react-i18next'
 const RatingStars: React.FC<{ rating: number }> = ({ rating }) => {
   return (
     <div className="flex items-center justify-left mt-2">
@@ -34,6 +35,7 @@ const RatingStars: React.FC<{ rating: number }> = ({ rating }) => {
 }
 
 const BestSellingCourse: React.FC = () => {
+  const { t } = useTranslation()
   const sliderRef = useRef<Slider>(null)
   const [courses, setCourses] = useState<Course[]>([])
 
@@ -98,7 +100,7 @@ const BestSellingCourse: React.FC = () => {
         <div className="lg:flex justify-between items-center text-left  lg:pt-10 pt-0 pb-10">
           <div className="relative lg:w-1/2 lg:pr-20">
             <h5 className="text-sm bg-white px-5 py-1 inline-block text-[--primary] uppercase rounded-full mb-2">
-              Bestselling Courses
+              {t('bestSellingCourses')}
             </h5>
             <div className="absolute top-6 left-44">
               <img
@@ -107,15 +109,12 @@ const BestSellingCourse: React.FC = () => {
                 src={textCircle}
               ></img>
             </div>
-            <InfoTitle
-              heading="Creating A Community Of Life Long Learners."
-              description=""
-            />
+            <InfoTitle heading={t('Bsc_slogan')} description="" />
           </div>
           <div className="flex items-center gap-3">
             <Link to="/courselist">
               <Button className="text-white bg-[--primary] lg:text-lg text-sm  hover:text-white duration-100 lg:px-5 lg:py-2 px-2 py-1 rounded-full">
-                Explore courses
+                {t('exploreCourses')}
               </Button>
             </Link>
             <div className="flex gap-2 items-center">

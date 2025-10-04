@@ -6,18 +6,18 @@ import { ArrowRight } from 'lucide-react'
 import skillImg1 from '@assets/custom-image/skillImg.png'
 import starImg from '@assets/custom-image/starImg.png'
 import textCircle from '@assets/custom-image/textCircle.png'
+import { useTranslation } from 'react-i18next'
 
 const GrowSkills: React.FC = () => {
+  const { t } = useTranslation()
   const features = [
     {
-      title: 'Flexible Classes',
-      description:
-        'Suspendisse ultrice gravida dictum fusce placerat ultricies integer quis auctor elit sed vulputate mi sit.',
+      title: t('GrowSkills_intro1_title'),
+      description: t('GrowSkills_intro1_desc'),
     },
     {
-      title: 'Expert Instructors',
-      description:
-        'Suspendisse ultrice gravida dictum fusce placerat ultricies integer quis auctor elit sed vulputate mi sit.',
+      title: t('GrowSkills_intro2_title'),
+      description: t('GrowSkills_intro2_desc'),
     },
   ]
 
@@ -29,7 +29,7 @@ const GrowSkills: React.FC = () => {
       {/* Right Content */}
       <div className="relative lg:pl-16 lg:mt-0 mt-5">
         <h5 className="text-xs lg:text-sm bg-purple-100 px-5 py-1 inline-block text-[--primary] uppercase rounded-full mb-2">
-          Our About Us
+          {t('aboutUs')}
         </h5>
 
         {/* Circle Decoration */}
@@ -43,8 +43,8 @@ const GrowSkills: React.FC = () => {
 
         {/* Title + Description */}
         <InfoTitle
-          heading="Learn & Grow your skills From anywhere"
-          description="Are you interested to be a part of our community? You can be a part of our community by signing up as an instructor or organization. You can be a part of our community by signing up as an instructor or organization."
+          heading={t('GrowSkills_intro3_title')}
+          description={t('GrowSkills_intro3_desc')}
         />
 
         {/* Features List */}
@@ -66,7 +66,7 @@ const GrowSkills: React.FC = () => {
           <a href="/about">
             <Button className="bg-[--primary] p-0 rounded-full hover:bg-[--primary]  hover:text-white  text-white ">
               <span className="py-1 lg:py-2 pl-3 lg:pl-5 text-sm lg:text-md">
-                Load More
+                {t('loadMore')}
               </span>
               <ArrowRight className="lg:w-full w-7  h-7 lg:h-full text-sm p-1.5 lg:p-2.5 bg-[#644BFF] rounded-full ml-3" />
             </Button>
