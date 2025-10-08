@@ -164,7 +164,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
       const token = localStorage.getItem('access-token')
       await logoutApi.post('/auth/logout', { token })
       localStorage.removeItem('access-token')
-      window.location.href = '/'
+      window.location.href = '/login'
     } catch (error) {
       console.error('Logout failed:', error)
     }

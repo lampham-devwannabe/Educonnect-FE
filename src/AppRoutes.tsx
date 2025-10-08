@@ -6,6 +6,8 @@ import Login from './pages/login'
 import Profile from './pages/profile'
 import Home from './pages/homePage'
 import Register from './pages/register'
+import ForgotPassword from './pages/forgotPassword'
+import ResetPassword from './pages/reset-password'
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth()
@@ -54,6 +56,14 @@ const noLayoutRoutes = [
   {
     path: '/register',
     element: <Register />,
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />,
+  },
+  {
+    path: '/reset-password',
+    element: <ResetPassword />,
   },
 ]
 

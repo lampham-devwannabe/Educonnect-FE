@@ -1,22 +1,82 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom' // thay cho next/navigation
 import toast from 'react-hot-toast'
-import { AtSign, Phone, Briefcase, User, ChevronRight } from 'lucide-react'
+import {
+  AtSign,
+  Phone,
+  Briefcase,
+  User,
+  ChevronRight,
+  Info,
+} from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
 import logo from '../assets/icon/logo.png'
 import { DobInput } from '@/components/ui/dob-input'
 import { PasswordInput } from '@/components/ui/password-input'
-import { createHttp } from '@/services/httpFactory'
-export default function ModernRegister() {
+
+import { useAuth, type RegisterFormData } from '@/providers/AuthProvider'
+import type { PasswordStrength } from './reset-password'
+
+export default function Register() {
+  const [activeTab, setActiveTab] = useState('student')
+  const { register } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null)
+  const [password, setPassword] = useState<string>('')
+
+  const handleTabChange = (value: any) => {
+    setActiveTab(value)
+  }
+
+  const checkPasswordStrength = (password: string): PasswordStrength => {
+    let score = 0
+    const feedback: string[] = []
+
+    if (password.length >= 8) {
+      score += 1
+    } else {
+      feedback.push('At least 8 characters')
+    }
+
+    if (/[a-z]/.test(password)) {
+      score += 1
+    } else {
+      feedback.push('One lowercase letter')
+    }
+
+    if (/[A-Z]/.test(password)) {
+      score += 1
+    } else {
+      feedback.push('One uppercase letter')
+    }
+
+    if (/\d/.test(password)) {
+      score += 1
+    } else {
+      feedback.push('One number')
+    }
+
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      score += 1
+    } else {
+      feedback.push('One special character')
+    }
+
+    let color = 'bg-red-500'
+    if (score >= 3) color = 'bg-yellow-500'
+    if (score >= 4) color = 'bg-green-500'
+
+    return { score, feedback, color }
+  }
 
   const registerUser = async (e: any) => {
     e.preventDefault()
@@ -26,10 +86,10 @@ export default function ModernRegister() {
       const formData = new FormData(e.currentTarget)
 
       // Prepare the data object for API call
-      const userData = {
+      const userData: RegisterFormData = {
         firstName: formData.get('firstName') as string,
         lastName: formData.get('lastName') as string,
-        userame: formData.get('userName') as string,
+        username: formData.get('userName') as string,
         email: formData.get('email') as string,
         password: formData.get('password') as string,
         phoneNumber: formData.get('phone') as string,
@@ -70,15 +130,12 @@ export default function ModernRegister() {
 
       const toastId = toast.loading('Creating your account...')
 
-      // Create HTTP client
-      const registerApi = createHttp('http://139.59.97.252:8080')
-
       // Make API call
-      const response = await registerApi.post('/users', userData)
+      const response = await register(userData)
 
       toast.dismiss(toastId)
 
-      if (response.data) {
+      if (response) {
         toast.success('Account created successfully!')
 
         // Redirect to login page
@@ -109,6 +166,7 @@ export default function ModernRegister() {
       setIsSubmitting(false)
     }
   }
+  const passwordStrength = checkPasswordStrength(password)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col md:flex-row">
@@ -250,7 +308,7 @@ export default function ModernRegister() {
                       </Label>
                       <div className="mt-1 relative rounded-md">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <User className="h-5 w-5 text-slate-400" />
+                          <Info className="h-5 w-5 text-slate-400" />
                         </div>
                         <Input
                           id="firstName"
@@ -272,7 +330,7 @@ export default function ModernRegister() {
                       </Label>
                       <div className="mt-1 relative rounded-md">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <User className="h-5 w-5 text-slate-400" />
+                          <Info className="h-5 w-5 text-slate-400" />
                         </div>
                         <Input
                           id="lastName"
@@ -344,8 +402,52 @@ export default function ModernRegister() {
                           placeholder="••••••••"
                           className="bg-white"
                           required
+                          value={password}
+                          onChange={e => setPassword(e.target.value)}
                         />
                       </div>
+
+                      {password && (
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <div className="flex-1 bg-gray-200 rounded-full h-2">
+                              <div
+                                className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
+                                style={{
+                                  width: `${(passwordStrength.score / 5) * 100}%`,
+                                }}
+                              />
+                            </div>
+                            <span className="text-xs font-medium text-gray-600">
+                              {passwordStrength.score < 3
+                                ? 'Weak'
+                                : passwordStrength.score < 4
+                                  ? 'Good'
+                                  : 'Strong'}
+                            </span>
+                          </div>
+                          {passwordStrength.feedback.length > 0 && (
+                            <div className="text-xs text-gray-600">
+                              <p className="font-medium mb-1">
+                                Password must include:
+                              </p>
+                              <ul className="space-y-0.5">
+                                {passwordStrength.feedback.map(
+                                  (item, index) => (
+                                    <li
+                                      key={index}
+                                      className="flex items-center space-x-1"
+                                    >
+                                      <span className="w-1 h-1 bg-gray-400 rounded-full" />
+                                      <span>{item}</span>
+                                    </li>
+                                  )
+                                )}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     <div className="relative">
@@ -418,7 +520,11 @@ export default function ModernRegister() {
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                           <Briefcase className="h-5 w-5 text-slate-400" />
                         </div>
-                        <Tabs defaultValue="student" className="w-full">
+                        <Tabs
+                          defaultValue="student"
+                          onValueChange={handleTabChange}
+                          className="w-full"
+                        >
                           <TabsList className="grid w-full grid-cols-2">
                             <TabsTrigger value="student">Student</TabsTrigger>
                             <TabsTrigger value="instructor">
