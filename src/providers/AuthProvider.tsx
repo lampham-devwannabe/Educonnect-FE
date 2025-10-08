@@ -205,7 +205,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const register = async (authData: RegisterFormData) => {
     try {
-      const response = await axios.post('/users', authData)
+      const api = createHttp('http://139.59.97.252:8080')
+      const response = await api.post('/users', authData)
       if (response.data.code === 1000) {
         return response.data
       } else {

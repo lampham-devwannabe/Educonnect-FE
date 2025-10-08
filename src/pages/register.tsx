@@ -23,6 +23,7 @@ import { DobInput } from '@/components/ui/dob-input'
 import { PasswordInput } from '@/components/ui/password-input'
 
 import { useAuth, type RegisterFormData } from '@/providers/AuthProvider'
+import type { PasswordStrength } from './reset-password'
 
 export default function Register() {
   const [activeTab, setActiveTab] = useState('student')
@@ -30,10 +31,53 @@ export default function Register() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null)
+  const [password, setPassword] = useState<string>('')
 
   const handleTabChange = (value: any) => {
     setActiveTab(value)
   }
+
+  const checkPasswordStrength = (password: string): PasswordStrength => {
+    let score = 0
+    const feedback: string[] = []
+
+    if (password.length >= 8) {
+      score += 1
+    } else {
+      feedback.push('At least 8 characters')
+    }
+
+    if (/[a-z]/.test(password)) {
+      score += 1
+    } else {
+      feedback.push('One lowercase letter')
+    }
+
+    if (/[A-Z]/.test(password)) {
+      score += 1
+    } else {
+      feedback.push('One uppercase letter')
+    }
+
+    if (/\d/.test(password)) {
+      score += 1
+    } else {
+      feedback.push('One number')
+    }
+
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      score += 1
+    } else {
+      feedback.push('One special character')
+    }
+
+    let color = 'bg-red-500'
+    if (score >= 3) color = 'bg-yellow-500'
+    if (score >= 4) color = 'bg-green-500'
+
+    return { score, feedback, color }
+  }
+
   const registerUser = async (e: any) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -122,6 +166,7 @@ export default function Register() {
       setIsSubmitting(false)
     }
   }
+  const passwordStrength = checkPasswordStrength(password)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col md:flex-row">
@@ -357,8 +402,52 @@ export default function Register() {
                           placeholder="••••••••"
                           className="bg-white"
                           required
+                          value={password}
+                          onChange={e => setPassword(e.target.value)}
                         />
                       </div>
+
+                      {password && (
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <div className="flex-1 bg-gray-200 rounded-full h-2">
+                              <div
+                                className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
+                                style={{
+                                  width: `${(passwordStrength.score / 5) * 100}%`,
+                                }}
+                              />
+                            </div>
+                            <span className="text-xs font-medium text-gray-600">
+                              {passwordStrength.score < 3
+                                ? 'Weak'
+                                : passwordStrength.score < 4
+                                  ? 'Good'
+                                  : 'Strong'}
+                            </span>
+                          </div>
+                          {passwordStrength.feedback.length > 0 && (
+                            <div className="text-xs text-gray-600">
+                              <p className="font-medium mb-1">
+                                Password must include:
+                              </p>
+                              <ul className="space-y-0.5">
+                                {passwordStrength.feedback.map(
+                                  (item, index) => (
+                                    <li
+                                      key={index}
+                                      className="flex items-center space-x-1"
+                                    >
+                                      <span className="w-1 h-1 bg-gray-400 rounded-full" />
+                                      <span>{item}</span>
+                                    </li>
+                                  )
+                                )}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     <div className="relative">
