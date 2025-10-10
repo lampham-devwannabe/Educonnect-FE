@@ -1,25 +1,37 @@
 import { useNavigate } from 'react-router-dom' // thay cho next/navigation
-import toast from 'react-hot-toast'
+import { toast } from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import { AtSign, KeyRound, ArrowRight } from 'lucide-react'
-import logo from '../assets/icon/logo.png'
+import { KeyRound, ArrowRight, User } from 'lucide-react'
+import logo from '@/assets/icon/logo.png'
 import { useAuth } from '@/providers/AuthProvider'
 import { PasswordInput } from '@/components/ui/password-input'
+import { useTranslation } from 'react-i18next'
 
 function Login() {
   const navigate = useNavigate()
   const { login } = useAuth()
-
+  const { t } = useTranslation()
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const form = event.currentTarget as HTMLFormElement
-    const username = (form.elements.namedItem('email') as HTMLInputElement)
-      .value
-    const password = (form.elements.namedItem('password') as HTMLInputElement)
-      .value
+    const username = (
+      form.elements.namedItem('username') as HTMLInputElement
+    ).value.trim()
+    const password = (
+      form.elements.namedItem('password') as HTMLInputElement
+    ).value.trim()
+
+    if (!username) {
+      toast.error(t('loginPage.usernameRequired') || 'Username is required')
+      return
+    }
+
+    if (!password) {
+      toast.error(t('loginPage.passwordRequired') || 'Password is required')
+      return
+    }
 
     const toastID = toast.loading('Logging in...')
 
@@ -27,13 +39,16 @@ function Login() {
       const result = await login(username, password)
 
       if (result.code === 1000) {
-        toast.success('Login successful!')
-        navigate('/')
+        toast.success(t('loginPage.loginSuccess'))
+        setTimeout(() => {
+          navigate('/')
+        }, 500)
       } else {
-        toast.error(result.result.message || 'Login failed')
+        toast.error(result.result.message || t('loginPage.loginFailed'))
+        console.error('Login error:', result)
       }
     } catch (err) {
-      toast.error('Something went wrong')
+      toast.error(t('loginPage.somethingWentWrong'))
     } finally {
       toast.dismiss(toastID)
     }
@@ -67,7 +82,7 @@ function Login() {
               <a href="/">
                 <img
                   src={logo}
-                  alt="Smart Academy Logo"
+                  alt={`${t('loginPage.smartAcademy')} Logo`}
                   width={80}
                   height={80}
                   className="object-contain"
@@ -90,10 +105,12 @@ function Login() {
           </div>
 
           <div className="text-center max-w-md">
-            <h2 className="text-2xl font-bold mb-3">Welcome Back!</h2>
-            <p className="text-white/80">
-              Continue your learning journey with access to thousands of courses
-              and expert instructors.
+            <h2 className="text-2xl font-bold mb-3">
+              {t('loginPage.welcomeBack')}
+            </h2>{' '}
+            {/* ← Use translation */}
+            <p className="text-white/80 leading-relaxed">
+              {t('loginPage.welcomeDescription')} {/* ← Use translation */}
             </p>
           </div>
         </div>
@@ -107,7 +124,7 @@ function Login() {
               <a href="/">
                 <img
                   src={logo}
-                  alt="Smart Academy Logo"
+                  alt={`${t('loginPage.smartAcademy')} Logo`}
                   width={100}
                   height={100}
                   className="object-contain"
@@ -116,11 +133,9 @@ function Login() {
             </div>
 
             <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-              Welcome Back
+              {t('loginPage.welcomeBack')}
             </h1>
-            <p className="mt-2 text-slate-600">
-              Sign in to your Smart Academy account
-            </p>
+            <p className="mt-2 text-slate-600">{t('loginPage.subtitle')}</p>
           </div>
 
           <div className="mt-10">
@@ -129,23 +144,23 @@ function Login() {
                 {/* Email */}
                 <div className="space-y-2">
                   <Label
-                    htmlFor="email"
+                    htmlFor="username"
                     className="text-sm font-medium text-slate-700"
                   >
-                    Email
+                    {t('loginPage.username')}
                   </Label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <AtSign className="h-5 w-5 text-slate-400" />
+                      <User className="h-5 w-5 text-slate-400" />
                     </div>
                     <Input
-                      id="email"
-                      name="email"
+                      id="username"
+                      name="username"
                       type="text"
-                      autoComplete="email"
+                      autoComplete="username"
                       required
                       className="pl-10 bg-white border-slate-200 focus:border-indigo-500 focus:ring-indigo-500"
-                      placeholder="you@example.com"
+                      placeholder={t('loginPage.username')}
                     />
                   </div>
                 </div>
@@ -157,13 +172,13 @@ function Login() {
                       htmlFor="password"
                       className="text-sm font-medium text-slate-700"
                     >
-                      Password
+                      {t('loginPage.password')}
                     </Label>
                     <a
                       href="/forgot-password"
                       className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
                     >
-                      Forgot password?
+                      {t('loginPage.forgotPassword')}
                     </a>
                   </div>
                   <div className="relative">
@@ -181,7 +196,7 @@ function Login() {
                   </div>
                 </div>
 
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                   <div className="flex items-center space-x-2">
                     <Checkbox id="remember" />
                     <Label
@@ -191,25 +206,25 @@ function Login() {
                       Remember me
                     </Label>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <Button
                 type="submit"
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg shadow-md transition-all duration-200 flex items-center justify-center gap-2 group"
               >
-                Sign in
+                {t('loginPage.signIn')}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </form>
 
             <p className="mt-8 text-center text-sm text-slate-600">
-              Don&apos;t have an account?{' '}
+              {t('loginPage.noAccount')} {/* ← Use translation */}
               <a
                 href="/register"
                 className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
               >
-                Sign up now
+                {t('loginPage.signUpNow')}
               </a>
             </p>
           </div>

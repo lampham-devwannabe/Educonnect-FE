@@ -1,0 +1,96 @@
+
+
+.clear{
+    clear:both;
+}
+.overview-menu span{
+    margin-left: -10px;
+}
+.video-icon .vbox-item svg{
+    color:rgb(147 51 234);
+    width:50px;
+    height: 50px;
+}
+.video-content .video-icon svg{
+    width: 25px;
+    height: 25px;
+    color:#fff;
+    fill:#7E22CE;
+}
+.home-icon svg{
+    margin-top:1px;
+    width: 20px;
+    height: 20px;
+}
+.zap-icon svg{
+    fill:green;
+    color:#fff;
+    width:24px;
+    height: 24px;
+}
+.price-part{
+    width:400px;
+}
+.price-text{
+    margin-top: 10px;
+}
+.fire-icon svg{
+    fill:rgb(150, 148, 148);
+    color:rgb(105, 105, 105);
+}
+.mentor-icon{
+    margin-top: 5px;
+}
+.details-icon svg{
+    color:#949494;
+}
+.skill-part .skill-text{
+    padding-right:80px;
+}
+.skill-text3{
+    padding-right: 60px;
+}
+.skill-text3 h5{ 
+    font-weight: 500;
+    font-size: 14px;
+    margin-right: 5px;
+    margin-top:5px;
+    border-radius:50px;
+    background-color: #f0f0f0;
+    float:left;
+    padding:5px 10px;
+    cursor:pointer;
+
+}
+.free-trial-text{
+    border-radius: 10px;
+}
+.skill-text3 h5:hover{
+    background-color: #d8d7d7;
+}
+.free-trial-text svg{
+    fill:#13C2A8;
+    color:#fff;
+    margin-top:2px;
+    width: 22px;
+    height: 22px;
+}
+
+/* mentor part */
+.mentor-button svg{
+    margin-top: 1px;
+    width:22px;
+    height: 22px;
+    fill:#21A391;
+    color:#fff;
+}
+.save-text svg{
+    margin-top:2px;
+    fill: #b1b1b1;
+    color: #fff;
+}
+.open-icon svg{
+    width:20px;
+    height: 20px;
+    margin-right: 5px;
+}

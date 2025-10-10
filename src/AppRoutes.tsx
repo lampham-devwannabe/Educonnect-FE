@@ -1,13 +1,17 @@
 import React from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/providers/AuthProvider'
-import Layout from '@/components/layout'
-import Login from './pages/login'
-import Profile from './pages/profile'
-import Home from './pages/homePage'
-import Register from './pages/register'
-import ForgotPassword from './pages/forgotPassword'
-import ResetPassword from './pages/reset-password'
+import PublicLayout from '@/layouts/publicLayout'
+import AuthenLayout from '@/layouts/authenLayout'
+import Login from '@/pages/authen/login'
+import Profile from './pages/public/profile'
+import Home from './pages/public/homePage'
+import Register from '@/pages/authen/register'
+import ForgotPassword from '@/pages/authen/forgotPassword'
+import ResetPassword from '@/pages/authen/reset-password'
+import path from 'path'
+import MentorDetails from './pages/public/mentor/page'
+import AllMentor from './pages/public/mentorlist/page'
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth()
@@ -46,9 +50,17 @@ const publicRoutes = [
     path: '/',
     element: <Home />,
   },
+  {
+    path: '/mentor',
+    element: <MentorDetails />,
+  },
+  {
+    path: '/mentorlist',
+    element: <AllMentor />,
+  },
 ]
 
-const noLayoutRoutes = [
+const authenRoutes = [
   {
     path: '/login',
     element: <Login />,
@@ -75,7 +87,7 @@ const AppRoutes = () => {
         <Route
           key={route.path}
           path={route.path}
-          element={<Layout>{route.element}</Layout>}
+          element={<PublicLayout>{route.element}</PublicLayout>}
         />
       ))}
 
@@ -86,15 +98,19 @@ const AppRoutes = () => {
           path={route.path}
           element={
             <ProtectedRoute>
-              <Layout>{route.element}</Layout>
+              <PublicLayout>{route.element}</PublicLayout>
             </ProtectedRoute>
           }
         />
       ))}
 
-      {/* No layout routes */}
-      {noLayoutRoutes.map(route => (
-        <Route key={route.path} path={route.path} element={route.element} />
+      {/* Authentication layout routes */}
+      {authenRoutes.map(route => (
+        <Route
+          key={route.path}
+          path={route.path}
+          element={<AuthenLayout>{route.element}</AuthenLayout>}
+        />
       ))}
 
       {/* Catch all unmatched routes */}
