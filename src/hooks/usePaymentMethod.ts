@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react'
 
 // Define interface for payment method
 interface PaymentMethod {
-  // Add specific properties based on your actual payment method structure
-  [key: string]: any
+  _id: string
+  name: string
+  description: string
+  image?: string
+  codeName: string
 }
 
 export const usePaymentMethod = (): {

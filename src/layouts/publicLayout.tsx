@@ -10,7 +10,7 @@ interface LayoutProps {
   children: React.ReactNode
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const PublicLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <CartProvider>
       <NavbarTop />
@@ -24,4 +24,4 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   )
 }
 
-export default Layout
+export default PublicLayout

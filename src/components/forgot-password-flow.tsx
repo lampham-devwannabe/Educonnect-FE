@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { createHttp } from '@/services/httpFactory'
+import { useTranslation } from 'react-i18next'
 
 type Step = 'email' | 'success'
 
@@ -39,7 +40,7 @@ export default function ForgotPasswordFlow() {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const navigate = useNavigate()
-
+  const { t } = useTranslation() // ← Already imported
   // Create HTTP client
   const api = createHttp('http://139.59.97.252:8080')
 
@@ -63,15 +64,17 @@ export default function ForgotPasswordFlow() {
         }
 
         setStep('success')
-        toast.success('Password reset link sent to your email')
+        toast.success(t('forgotPasswordPage.emailSentSuccess')) // ← Already using translation
       } else {
-        throw new Error(response.data.message || 'Failed to send reset link')
+        throw new Error(
+          response.data.message || t('forgotPasswordPage.emailSendFailed')
+        )
       }
     } catch (err: any) {
       const errorMessage =
         err.response?.data?.message ||
         err.message ||
-        'Failed to send password reset link. Please try again.'
+        t('forgotPasswordPage.emailSendFailed')
       setError(errorMessage)
       toast.error(errorMessage)
     } finally {
@@ -81,7 +84,7 @@ export default function ForgotPasswordFlow() {
 
   const handleResendEmail = async () => {
     if (!email) {
-      toast.error('Email is required')
+      toast.error(t('forgotPasswordPage.invalidEmail')) // ← Use translation
       return
     }
 
@@ -102,15 +105,17 @@ export default function ForgotPasswordFlow() {
           setResetToken(response.data.data.resetToken)
         }
 
-        toast.success('Password reset link sent again to your email')
+        toast.success(t('forgotPasswordPage.emailSentSuccess')) // ← Use translation
       } else {
-        throw new Error(response.data.message || 'Failed to send reset link')
+        throw new Error(
+          response.data.message || t('forgotPasswordPage.emailSendFailed')
+        )
       }
     } catch (err: any) {
       const errorMessage =
         err.response?.data?.message ||
         err.message ||
-        'Failed to send password reset link. Please try again.'
+        t('forgotPasswordPage.emailSendFailed')
       setError(errorMessage)
       toast.error(errorMessage)
     } finally {
@@ -124,7 +129,7 @@ export default function ForgotPasswordFlow() {
       navigate(`/reset-password?token=${resetToken}`)
     } else {
       // If no token, show message to check email
-      toast('Please check your email for the reset link')
+      toast(t('forgotPasswordPage.resetLinkSent')) // ← Use translation
     }
   }
 
@@ -136,11 +141,10 @@ export default function ForgotPasswordFlow() {
           <Mail className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
         </div>
         <CardTitle className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-          Forgot Password?
+          {t('forgotPasswordPage.title')} {/* ← Use translation */}
         </CardTitle>
         <CardDescription className="text-gray-600 text-base sm:text-lg leading-relaxed px-2 sm:px-0">
-          Enter your email address and we'll send you a secure password reset
-          link
+          {t('forgotPasswordPage.subtitle')} {/* ← Use translation */}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
@@ -150,14 +154,14 @@ export default function ForgotPasswordFlow() {
               htmlFor="email"
               className="text-sm font-semibold text-gray-800"
             >
-              Email Address
+              {t('forgotPasswordPage.email')} {/* ← Use translation */}
             </Label>
             <Input
               id="email"
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder={t('forgotPasswordPage.emailPlaceholder')}
               required
               className="h-12 sm:h-14 border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl text-sm sm:text-base transition-all duration-300"
             />
@@ -179,12 +183,14 @@ export default function ForgotPasswordFlow() {
             {loading ? (
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Sending...</span>
+                <span>{t('forgotPasswordPage.sendingResetLink')}</span>{' '}
+                {/* ← Use translation */}
               </div>
             ) : (
               <div className="flex items-center space-x-2">
                 <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span>Send Reset Link</span>
+                <span>{t('forgotPasswordPage.sendResetLink')}</span>{' '}
+                {/* ← Use translation */}
               </div>
             )}
           </Button>
@@ -195,7 +201,7 @@ export default function ForgotPasswordFlow() {
               onClick={() => navigate('/login')}
               className="text-sm text-blue-600 hover:text-blue-700 font-medium hover:underline transition-colors"
             >
-              ← Back to Login
+              ← {t('forgotPasswordPage.backToLogin')} {/* ← Use translation */}
             </button>
           </div>
         </form>
@@ -211,10 +217,14 @@ export default function ForgotPasswordFlow() {
           <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
         </div>
         <CardTitle className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-          Check Your Email
+          {t('forgotPasswordPage.checkEmail')} {/* ← Use translation */}
         </CardTitle>
         <CardDescription className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed px-2 sm:px-0">
-          We've sent a password reset link to{' '}
+          {t('forgotPasswordPage.resetLinkSent').replace(
+            'your email address',
+            ''
+          )}{' '}
+          {/* ← Use translation */}
           <span className="font-semibold text-gray-800 break-all">{email}</span>
         </CardDescription>
       </CardHeader>
@@ -225,12 +235,15 @@ export default function ForgotPasswordFlow() {
               <Mail className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
               <div className="space-y-2">
                 <h3 className="font-semibold text-blue-900 text-sm sm:text-base">
-                  What's next?
+                  {t('forgotPasswordPage.step2')}? {/* ← Use translation */}
                 </h3>
                 <ul className="text-blue-700 text-xs sm:text-sm space-y-1">
-                  <li>• Check your email inbox (and spam folder)</li>
-                  <li>• Click the reset link in the email</li>
-                  <li>• Create your new password</li>
+                  <li>• {t('forgotPasswordPage.step1Desc')}</li>{' '}
+                  {/* ← Use translation */}
+                  <li>• {t('forgotPasswordPage.step2Desc')}</li>{' '}
+                  {/* ← Use translation */}
+                  <li>• {t('forgotPasswordPage.step3Desc')}</li>{' '}
+                  {/* ← Use translation */}
                   <li>• Sign in with your new password</li>
                 </ul>
               </div>
@@ -244,7 +257,8 @@ export default function ForgotPasswordFlow() {
             >
               <div className="flex items-center space-x-2">
                 <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span>Reset Password Now</span>
+                <span>{t('resetPasswordPage.resetPassword')} Now</span>{' '}
+                {/* ← Use translation */}
               </div>
             </Button>
           )}
@@ -256,7 +270,11 @@ export default function ForgotPasswordFlow() {
               className="flex items-center text-gray-600 hover:text-gray-800 font-medium transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
-              Back
+              {t('forgotPasswordPage.backToLogin').replace(
+                'Back to Login',
+                'Back'
+              )}{' '}
+              {/* ← Use translation */}
             </button>
             <button
               type="button"
@@ -264,7 +282,7 @@ export default function ForgotPasswordFlow() {
               className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
               disabled={loading}
             >
-              Resend Email
+              {t('forgotPasswordPage.resendLink')} {/* ← Use translation */}
             </button>
           </div>
 
@@ -274,7 +292,7 @@ export default function ForgotPasswordFlow() {
               onClick={() => navigate('/login')}
               className="text-sm text-gray-600 hover:text-gray-800 font-medium hover:underline transition-colors"
             >
-              ← Back to Login
+              ← {t('forgotPasswordPage.backToLogin')} {/* ← Use translation */}
             </button>
           </div>
         </div>
@@ -299,25 +317,28 @@ export default function ForgotPasswordFlow() {
                 <Mail className="w-10 h-10 xl:w-12 xl:h-12 text-white" />
               </div>
               <h2 className="text-3xl xl:text-4xl font-bold leading-tight">
-                Secure Password Recovery
+                {t('forgotPasswordPage.secureReset')} {/* ← Use translation */}
               </h2>
               <p className="text-lg xl:text-xl text-blue-100 leading-relaxed">
-                Your account security is our top priority. We'll send you a
-                secure reset link to your email address.
+                {t('forgotPasswordPage.secureResetDescription')}{' '}
+                {/* ← Use translation */}
               </p>
               <div className="flex items-center justify-center space-x-6 xl:space-x-8 pt-6 xl:pt-8">
                 <div className="text-center">
                   <div className="w-10 h-10 xl:w-12 xl:h-12 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-2">
                     <Mail className="w-5 h-5 xl:w-6 xl:h-6" />
                   </div>
-                  <p className="text-xs xl:text-sm text-blue-100">Email Link</p>
+                  <p className="text-xs xl:text-sm text-blue-100">
+                    {t('forgotPasswordPage.step1')}
+                  </p>{' '}
+                  {/* ← Use translation */}
                 </div>
                 <div className="text-center">
                   <div className="w-10 h-10 xl:w-12 xl:h-12 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-2">
                     <CheckCircle className="w-5 h-5 xl:w-6 xl:h-6" />
                   </div>
                   <p className="text-xs xl:text-sm text-blue-100">
-                    Secure Reset
+                    {t('forgotPasswordPage.step3')} {/* ← Use translation */}
                   </p>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom' // thay cho next/navigation
-import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
+import { useTranslation } from 'react-i18next' // ← Add this import
 import {
   AtSign,
   Phone,
@@ -8,6 +9,8 @@ import {
   User,
   ChevronRight,
   Info,
+  CheckCircle,
+  AlertCircle,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -18,7 +21,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-import logo from '../assets/icon/logo.png'
+import logo from '@/assets/icon/logo.png'
 import { DobInput } from '@/components/ui/dob-input'
 import { PasswordInput } from '@/components/ui/password-input'
 
@@ -32,6 +35,8 @@ export default function Register() {
   const navigate = useNavigate()
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null)
   const [password, setPassword] = useState<string>('')
+  const [confirmPassword, setConfirmPassword] = useState<string>('') // ← Thêm state này
+  const { t } = useTranslation() // ← Add this hook
 
   const handleTabChange = (value: any) => {
     setActiveTab(value)
@@ -44,31 +49,31 @@ export default function Register() {
     if (password.length >= 8) {
       score += 1
     } else {
-      feedback.push('At least 8 characters')
+      feedback.push(t('registerPage.atLeast8Characters')) // ← Use translation
     }
 
     if (/[a-z]/.test(password)) {
       score += 1
     } else {
-      feedback.push('One lowercase letter')
+      feedback.push(t('registerPage.oneLowercaseLetter')) // ← Use translation
     }
 
     if (/[A-Z]/.test(password)) {
       score += 1
     } else {
-      feedback.push('One uppercase letter')
+      feedback.push(t('registerPage.oneUppercaseLetter')) // ← Use translation
     }
 
     if (/\d/.test(password)) {
       score += 1
     } else {
-      feedback.push('One number')
+      feedback.push(t('registerPage.oneNumber')) // ← Use translation
     }
 
     if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
       score += 1
     } else {
-      feedback.push('One special character')
+      feedback.push(t('registerPage.oneSpecialCharacter')) // ← Use translation
     }
 
     let color = 'bg-red-500'
@@ -87,48 +92,38 @@ export default function Register() {
 
       // Prepare the data object for API call
       const userData: RegisterFormData = {
-        firstName: formData.get('firstName') as string,
-        lastName: formData.get('lastName') as string,
-        username: formData.get('userName') as string,
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-        phoneNumber: formData.get('phone') as string,
-        address: formData.get('address') as string,
-        dob: dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : null, // Format as YYYY-MM-DD
-        roleName: 'user',
+        firstName: (formData.get('firstName') as string)?.trim() || '',
+        lastName: (formData.get('lastName') as string)?.trim() || '',
+        username: (formData.get('userName') as string)?.trim() || '',
+        email: (formData.get('email') as string)?.trim() || '',
+        password: (formData.get('password') as string)?.trim() || '',
+        phoneNumber: (formData.get('phone') as string)?.trim() || '',
+        address: (formData.get('address') as string)?.trim() || '',
+        dob: dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : null,
+        roleName: activeTab === 'student' ? 'Student' : 'Teacher',
         loginType: '',
       }
 
-      // Validate required fields
-      if (
-        !userData.firstName ||
-        !userData.lastName ||
-        !userData.email ||
-        !userData.password
-      ) {
-        toast.error('Please fill in all required fields')
-        return
-      }
-
-      if (!userData.dob) {
-        toast.error('Please select your date of birth')
+      if (password !== confirmPassword) {
+        toast.error(t('registerPage.passwordsDoNotMatch')) // ← Use translation
         return
       }
 
       // Validate email format
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!emailRegex.test(userData.email)) {
-        toast.error('Please enter a valid email address')
+        toast.error(t('registerPage.validEmailRequired')) // ← Use translation
         return
       }
 
-      // Validate password length
-      if (userData.password.length < 6) {
-        toast.error('Password must be at least 6 characters long')
+      // Validate password strength
+      const passwordStrength = checkPasswordStrength(userData.password)
+      if (passwordStrength.score < 3) {
+        toast.error(t('registerPage.passwordTooWeak')) // ← Use translation
         return
       }
 
-      const toastId = toast.loading('Creating your account...')
+      const toastId = toast.loading(t('registerPage.creatingYourAccount')) // ← Use translation
 
       // Make API call
       const response = await register(userData)
@@ -136,9 +131,7 @@ export default function Register() {
       toast.dismiss(toastId)
 
       if (response) {
-        toast.success('Account created successfully!')
-
-        // Redirect to login page
+        toast.success(t('registerPage.accountCreatedSuccess')) // ← Use translation
         navigate('/login')
       } else {
         throw new Error('Registration failed')
@@ -146,26 +139,29 @@ export default function Register() {
     } catch (error: any) {
       console.error('Registration error:', error)
 
-      let errorMessage = 'Registration failed. Please try again.'
+      let errorMessage = t('registerPage.registrationFailed') // ← Use translation
 
-      // Handle different types of errors
+      // Handle different types of errors with translations
       if (error.response?.status === 400) {
-        errorMessage = error.response.data?.message || 'Invalid data provided'
+        errorMessage =
+          error.response.data?.message || t('registerPage.invalidDataProvided')
       } else if (error.response?.status === 409) {
-        errorMessage = 'An account with this email already exists'
+        errorMessage = t('registerPage.accountAlreadyExists')
       } else if (error.response?.status === 422) {
-        errorMessage = 'Please check your input data'
+        errorMessage = t('registerPage.checkInputData')
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message
       } else if (error.message) {
         errorMessage = error.message
       }
 
+      toast.dismissAll()
       toast.error(errorMessage)
     } finally {
       setIsSubmitting(false)
     }
   }
+
   const passwordStrength = checkPasswordStrength(password)
 
   return (
@@ -200,7 +196,7 @@ export default function Register() {
             <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/20 transform rotate-3">
               <img
                 src={logo}
-                alt="Smart Academy Logo"
+                alt={`${t('registerPage.smartAcademy')} Logo`} // ← Use translation
                 width={80}
                 height={80}
                 className="object-contain"
@@ -225,25 +221,24 @@ export default function Register() {
           {/* Testimonial or tagline */}
           <div className="text-center max-w-md">
             <h2 className="text-2xl font-bold mb-3">
-              Unlock Your Learning Potential
+              {t('registerPage.unlockPotential')} {/* ← Use translation */}
             </h2>
             <p className="text-white/80">
-              Join thousands of students and instructors in our global learning
-              community.
+              {t('registerPage.joinCommunity')} {/* ← Use translation */}
             </p>
 
             {/* Testimonial */}
             <div className="mt-8 bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20">
               <p className="italic text-white/90">
-                Smart Academy transformed my learning experience. The
-                instructors are amazing!
+                {t('registerPage.testimonial')} {/* ← Use translation */}
               </p>
               <div className="mt-3 flex items-center justify-center">
                 <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-2">
                   <User className="h-4 w-4 text-white" />
                 </div>
                 <span className="text-sm font-medium">
-                  Sarah Johnson, Student
+                  {t('registerPage.testimonialAuthor')}{' '}
+                  {/* ← Use translation */}
                 </span>
               </div>
             </div>
@@ -253,15 +248,24 @@ export default function Register() {
           <div className="mt-8 flex justify-around w-full max-w-md">
             <div className="text-center">
               <div className="text-2xl font-bold">10k+</div>
-              <div className="text-xs text-white/70">Students</div>
+              <div className="text-xs text-white/70">
+                {t('registerPage.studentsCount')}
+              </div>{' '}
+              {/* ← Use translation */}
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold">500+</div>
-              <div className="text-xs text-white/70">Instructors</div>
+              <div className="text-xs text-white/70">
+                {t('registerPage.instructorsCount')}
+              </div>{' '}
+              {/* ← Use translation */}
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold">1.2k+</div>
-              <div className="text-xs text-white/70">Courses</div>
+              <div className="text-xs text-white/70">
+                {t('registerPage.coursesCount')}
+              </div>{' '}
+              {/* ← Use translation */}
             </div>
           </div>
         </div>
@@ -275,7 +279,7 @@ export default function Register() {
               <a href="/" className="inline-block">
                 <img
                   src={logo}
-                  alt="Smart Academy Logo"
+                  alt={`${t('registerPage.smartAcademy')} Logo`} // ← Use translation
                   width={100}
                   height={100}
                   className="object-contain"
@@ -284,10 +288,10 @@ export default function Register() {
             </div>
 
             <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-              Create Your Account
+              {t('registerPage.title')} {/* ← Use translation */}
             </h1>
             <p className="mt-2 text-slate-600">
-              Join Smart Academy and start your learning journey
+              {t('registerPage.subtitle')} {/* ← Use translation */}
             </p>
           </div>
 
@@ -297,46 +301,24 @@ export default function Register() {
             <CardContent>
               <form onSubmit={registerUser} className="space-y-5">
                 <div className="space-y-4">
-                  {/* Basic Information - Both Student and Instructor */}
+                  {/* Basic Information */}
                   <div className="space-y-4">
                     <div className="relative">
                       <Label
-                        htmlFor="firstName"
+                        htmlFor="email"
                         className="text-sm font-medium text-slate-700"
                       >
-                        First Name
+                        {t('registerPage.email')} {/* ← Use translation */}
                       </Label>
                       <div className="mt-1 relative rounded-md">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <Info className="h-5 w-5 text-slate-400" />
+                          <AtSign className="h-5 w-5 text-slate-400" />
                         </div>
                         <Input
-                          id="firstName"
-                          name="firstName"
-                          type="text"
-                          placeholder="John "
-                          className="pl-10 bg-white"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="relative">
-                      <Label
-                        htmlFor="lastName"
-                        className="text-sm font-medium text-slate-700"
-                      >
-                        Last Name
-                      </Label>
-                      <div className="mt-1 relative rounded-md">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <Info className="h-5 w-5 text-slate-400" />
-                        </div>
-                        <Input
-                          id="lastName"
-                          name="lastName"
-                          type="text"
-                          placeholder="Doe"
+                          id="email"
+                          name="email"
+                          type="email"
+                          placeholder={t('registerPage.emailPlaceholder')} // ← Use translation
                           className="pl-10 bg-white"
                           required
                         />
@@ -348,7 +330,7 @@ export default function Register() {
                         htmlFor="userName"
                         className="text-sm font-medium text-slate-700"
                       >
-                        UserName
+                        {t('registerPage.username')} {/* ← Use translation */}
                       </Label>
                       <div className="mt-1 relative rounded-md">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -358,29 +340,7 @@ export default function Register() {
                           id="userName"
                           name="userName"
                           type="text"
-                          placeholder="John Doe"
-                          className="pl-10 bg-white"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="relative">
-                      <Label
-                        htmlFor="email"
-                        className="text-sm font-medium text-slate-700"
-                      >
-                        Email Address
-                      </Label>
-                      <div className="mt-1 relative rounded-md">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <AtSign className="h-5 w-5 text-slate-400" />
-                        </div>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          placeholder="you@example.com"
+                          placeholder={t('registerPage.usernamePlaceholder')} // ← Use translation
                           className="pl-10 bg-white"
                           required
                         />
@@ -392,14 +352,13 @@ export default function Register() {
                         htmlFor="password"
                         className="text-sm font-medium text-slate-700"
                       >
-                        Password
+                        {t('registerPage.password')} {/* ← Use translation */}
                       </Label>
                       <div className="mt-1 relative rounded-md">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
                         <PasswordInput
                           id="password"
                           name="password"
-                          placeholder="••••••••"
+                          placeholder={t('registerPage.passwordPlaceholder')} // ← Use translation
                           className="bg-white"
                           required
                           value={password}
@@ -408,7 +367,7 @@ export default function Register() {
                       </div>
 
                       {password && (
-                        <div className="space-y-2">
+                        <div className="mt-2 space-y-2">
                           <div className="flex items-center space-x-2">
                             <div className="flex-1 bg-gray-200 rounded-full h-2">
                               <div
@@ -420,16 +379,20 @@ export default function Register() {
                             </div>
                             <span className="text-xs font-medium text-gray-600">
                               {passwordStrength.score < 3
-                                ? 'Weak'
+                                ? t('registerPage.passwordStrengthWeak') // ← Use translation
                                 : passwordStrength.score < 4
-                                  ? 'Good'
-                                  : 'Strong'}
+                                  ? t('registerPage.passwordStrengthGood') // ← Use translation
+                                  : t(
+                                      'registerPage.passwordStrengthStrong'
+                                    )}{' '}
+                              {/* ← Use translation */}
                             </span>
                           </div>
                           {passwordStrength.feedback.length > 0 && (
                             <div className="text-xs text-gray-600">
                               <p className="font-medium mb-1">
-                                Password must include:
+                                {t('registerPage.passwordMustInclude')}{' '}
+                                {/* ← Use translation */}
                               </p>
                               <ul className="space-y-0.5">
                                 {passwordStrength.feedback.map(
@@ -452,61 +415,48 @@ export default function Register() {
 
                     <div className="relative">
                       <Label
-                        htmlFor="phone"
+                        htmlFor="confirmPassword"
                         className="text-sm font-medium text-slate-700"
                       >
-                        Phone
+                        {t('registerPage.confirmPassword')}{' '}
+                        {/* ← Use translation */}
                       </Label>
                       <div className="mt-1 relative rounded-md">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <Phone className="h-5 w-5 text-slate-400" />
-                        </div>
-                        <Input
-                          id="phone"
-                          name="phone"
-                          type="tel"
-                          placeholder="(+84) 123 456 7890"
-                          className="pl-10 bg-white"
+                        <PasswordInput
+                          id="confirmPassword"
+                          name="confirmPassword"
+                          placeholder={t(
+                            'registerPage.confirmPasswordPlaceholder'
+                          )} // ← Use translation
+                          className="bg-white"
                           required
+                          value={confirmPassword}
+                          onChange={e => setConfirmPassword(e.target.value)}
                         />
                       </div>
-                    </div>
-                    <div className="relative">
-                      <Label
-                        htmlFor="dob"
-                        className="text-sm font-medium text-slate-700"
-                      >
-                        Date of Birth
-                      </Label>
-                      <div className="mt-1 relative rounded-md">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
-                        <DobInput
-                          value={dateOfBirth}
-                          onChange={setDateOfBirth}
-                          placeholder="Select your date of birth"
-                          className="pl-10 bg-white"
-                          required
-                        />
-                      </div>
-                    </div>
 
-                    <div className="relative">
-                      <Label
-                        htmlFor="address"
-                        className="text-sm font-medium text-slate-700"
-                      >
-                        Address
-                      </Label>
-                      <div className="mt-1 relative rounded-md">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
-                        <Textarea
-                          id="address"
-                          name="address"
-                          placeholder="123 Main St, City, Country"
-                          className="min-h-[100px] bg-white"
-                          required
-                        />
-                      </div>
+                      {/* Password Match Indicator */}
+                      {confirmPassword && (
+                        <div className="mt-2 flex items-center space-x-2 text-xs">
+                          {password === confirmPassword ? (
+                            <>
+                              <CheckCircle className="w-4 h-4 text-green-600" />
+                              <span className="text-green-600">
+                                {t('registerPage.passwordsMatch')}{' '}
+                                {/* ← Use translation */}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <AlertCircle className="w-4 h-4 text-red-600" />
+                              <span className="text-red-600">
+                                {t('registerPage.passwordsDontMatch')}{' '}
+                                {/* ← Use translation */}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     <div className="relative">
@@ -514,7 +464,7 @@ export default function Register() {
                         htmlFor="role"
                         className="text-sm font-medium text-slate-700"
                       >
-                        Role
+                        {t('registerPage.role')} {/* ← Use translation */}
                       </Label>
                       <div className="mt-1 relative rounded-md">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -526,9 +476,13 @@ export default function Register() {
                           className="w-full"
                         >
                           <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="student">Student</TabsTrigger>
-                            <TabsTrigger value="instructor">
-                              Instructor
+                            <TabsTrigger value="student">
+                              {t('registerPage.student')}{' '}
+                              {/* ← Use translation */}
+                            </TabsTrigger>
+                            <TabsTrigger value="teacher">
+                              {t('registerPage.teacher')}{' '}
+                              {/* ← Use translation */}
                             </TabsTrigger>
                           </TabsList>
                         </Tabs>
@@ -536,15 +490,22 @@ export default function Register() {
                     </div>
                   </div>
 
-                  {/* Instructor-specific fields */}
-
                   <div className="pt-4">
                     <Button
                       type="submit"
                       className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
-                      disabled={isSubmitting}
+                      disabled={
+                        isSubmitting ||
+                        !password ||
+                        !confirmPassword ||
+                        password !== confirmPassword ||
+                        passwordStrength.score < 3
+                      }
                     >
-                      {isSubmitting ? 'Creating Account...' : 'Create Account'}
+                      {isSubmitting
+                        ? t('registerPage.creatingAccount') // ← Use translation
+                        : t('registerPage.createAccount')}{' '}
+                      {/* ← Use translation */}
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                   </div>
@@ -554,25 +515,25 @@ export default function Register() {
 
             <CardFooter className="flex justify-center border-t pt-4">
               <p className="text-sm text-slate-600">
-                Already have an account?{' '}
+                {t('registerPage.alreadyHaveAccount')} {/* ← Use translation */}
                 <a
                   href="/login"
                   className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
                 >
-                  Sign in
+                  {t('registerPage.signIn')} {/* ← Use translation */}
                 </a>
               </p>
             </CardFooter>
           </Card>
 
           <div className="text-center text-xs text-slate-500">
-            By creating an account, you agree to our{' '}
+            {t('registerPage.termsText')} {/* ← Use translation */}
             <a href="/terms" className="text-indigo-600 hover:underline">
-              Terms of Service
+              {t('registerPage.termsOfService')} {/* ← Use translation */}
             </a>{' '}
-            and{' '}
+            {t('registerPage.and')} {/* ← Use translation */}
             <a href="/privacy" className="text-indigo-600 hover:underline">
-              Privacy Policy
+              {t('registerPage.privacyPolicy')} {/* ← Use translation */}
             </a>
           </div>
         </div>

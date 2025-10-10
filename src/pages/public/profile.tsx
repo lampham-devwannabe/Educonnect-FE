@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react'
-import { Button } from '../components/ui/button'
+import { Button } from '../../components/ui/button'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardFooter,
-} from '../components/ui/card'
-import { ScrollArea } from '../components/ui/scroll-area'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
+} from '../../components/ui/card'
+import { ScrollArea } from '../../components/ui/scroll-area'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '../../components/ui/tabs'
 import {
   Calendar,
   GraduationCap,
@@ -23,16 +28,16 @@ import {
   Languages,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useEnrollListHooks } from '../hooks/useEntrollListHooks'
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar'
-import { Progress } from '../components/ui/progress'
+import { useEnrollListHooks } from '../../hooks/useEntrollListHooks'
+import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar'
+import { Progress } from '../../components/ui/progress'
 import { formatDistanceToNow } from 'date-fns'
-import { Badge } from '../components/ui/badge'
-import BecomeInstructorModal from '../components/become-instructor-modal'
+import { Badge } from '../../components/ui/badge'
+import BecomeInstructorModal from '../../components/become-instructor-modal'
 import { UpdateProfileModal } from '@/components/update-profile-modal'
-import { useEnrollPlanHooks } from '../hooks/useMentorPlanEnrollHooks'
-import { MentorList } from './mentor-list'
-import type { User } from '../models/user'
+import { useEnrollPlanHooks } from '../../hooks/useMentorPlanEnrollHooks'
+import { MentorList } from '../mentor-list'
+import type { User } from '../../models/user'
 import { createHttp } from '@/services/httpFactory'
 import { toast } from 'react-hot-toast'
 
